@@ -137,11 +137,11 @@ Always provide detailed financial reasoning and cite specific financial principl
         prompt = self._create_financial_analysis_prompt(document, analysis_type)
         
         try:
-            # Try OpenAI first (GPT-4 is excellent for financial reasoning)
+            # OpenAI
             if self.openai_client:
                 response = await self._call_openai(prompt)
-            elif self.anthropic_client:
-                response = await self._call_anthropic(prompt)
+            # elif self.anthropic_client:
+            #     response = await self._call_anthropic(prompt)
             else:
                 raise ValueError("No LLM client available")
             
