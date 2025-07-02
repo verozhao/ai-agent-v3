@@ -324,28 +324,28 @@ def get_production_test_cases() -> List[Dict[str, Any]]:
 async def run_production_financial_agent_tests():
     """Run comprehensive production tests of the financial document specialist"""
     
-    print("🏦 GOOGLE-LEVEL FINANCIAL DOCUMENT SPECIALIST AGENT")
+    print("FINANCIAL DOCUMENT SPECIALIST AGENT")
     print("=" * 80)
     print("Real LLM Reasoning • Specialized Financial Intelligence • Production Architecture")
     print("=" * 80)
     
     # Check for required environment variables
     if not os.getenv("OPENAI_API_KEY") and not os.getenv("ANTHROPIC_API_KEY"):
-        print("⚠️  WARNING: No LLM API keys found!")
+        print("WARNING: No LLM API keys found!")
         print("Please set OPENAI_API_KEY or ANTHROPIC_API_KEY environment variables")
         print("The system will use mock responses for demonstration")
         print()
     
     # Initialize the financial specialist agent
-    print("🤖 Initializing Google-Level Financial Document Specialist...")
+    print("Initializing Google-Level Financial Document Specialist...")
     try:
         agent = FinancialDocumentSpecialistAgent()
         feedback_loop = ProductionFeedbackLoop(agent)
-        print("✅ Financial Specialist Agent initialized successfully")
+        print("Financial Specialist Agent initialized successfully")
         
         # Display agent capabilities
         status = agent.get_agent_status()
-        print(f"\n📊 Agent Status:")
+        print(f"\nAgent Status:")
         print(f"   Agent ID: {status['agent_id']}")
         print(f"   Type: {status['type']}")
         print(f"   Financial Rules Loaded: {status['financial_rules_loaded']}")
@@ -353,35 +353,35 @@ async def run_production_financial_agent_tests():
         
         # Display LLM integration status
         llm_metrics = status['llm_metrics']
-        print(f"\n🧠 LLM Integration Status:")
+        print(f"\nLLM Integration Status:")
         print(f"   Total LLM Calls: {llm_metrics['total_calls']}")
         print(f"   Successful Calls: {llm_metrics['successful_calls']}")
         print(f"   Average Response Time: {llm_metrics['avg_response_time']:.2f}s")
         
     except Exception as e:
-        print(f"❌ Failed to initialize agent: {e}")
+        print(f"Failed to initialize agent: {e}")
         return
     
     # Get production test cases
     test_cases = get_production_test_cases()
     results_summary = []
     
-    print(f"\n📋 Processing {len(test_cases)} Production Financial Documents")
+    print(f"\nProcessing {len(test_cases)} Production Financial Documents")
     print("=" * 80)
     
     for i, test_case in enumerate(test_cases, 1):
-        print(f"\n🔍 TEST CASE {i}: {test_case['name']}")
+        print(f"\nTEST CASE {i}: {test_case['name']}")
         print(f"Document Type: {test_case['document_type']}")
         print(f"Description: {test_case['description']}")
         print("-" * 60)
         
         # Display input document
-        print("📥 INPUT FINANCIAL DOCUMENT:")
+        print("INPUT FINANCIAL DOCUMENT:")
         for field, value in test_case['document'].items():
             print(f"   {field}: {value}")
         
         # Process through financial specialist
-        print(f"\n⚙️  PROCESSING THROUGH FINANCIAL SPECIALIST AGENT...")
+        print(f"\nPROCESSING THROUGH FINANCIAL SPECIALIST AGENT...")
         
         try:
             start_time = time.time()
@@ -393,7 +393,7 @@ async def run_production_financial_agent_tests():
             
             # Check if processing was successful
             if result.get("processing_failed", False):
-                print(f"❌ Processing failed: {result.get('error', 'Unknown error')}")
+                print(f"Processing failed: {result.get('error', 'Unknown error')}")
                 results_summary.append({
                     "test_case": test_case['name'],
                     "success": False,
@@ -403,7 +403,7 @@ async def run_production_financial_agent_tests():
             
             # Display analysis results
             analysis = result.get("analysis", {})
-            print(f"\n🧠 FINANCIAL ANALYSIS RESULTS:")
+            print(f"\nFINANCIAL ANALYSIS RESULTS:")
             print(f"   Overall Confidence: {result.get('confidence_score', 0):.1%}")
             print(f"   Processing Time: {processing_time:.2f}s")
             
@@ -416,20 +416,20 @@ async def run_production_financial_agent_tests():
             # Show validation results
             validation_results = analysis.get("validation_results", {})
             if validation_results:
-                print(f"\n   📊 Financial Validations:")
+                print(f"\n   Financial Validations:")
                 for validation_name, validation_result in validation_results.items():
                     if isinstance(validation_result, dict):
                         is_valid = validation_result.get("is_valid", True)
-                        status = "✅" if is_valid else "❌"
+                        status = "valid" if is_valid else "not valid"
                         print(f"      {status} {validation_name}: {'Valid' if is_valid else 'Issues detected'}")
             
             # Display corrections made
             corrections = result.get("corrections", [])
-            print(f"\n✏️  FINANCIAL CORRECTIONS APPLIED ({len(corrections)}):")
+            print(f"\nFINANCIAL CORRECTIONS APPLIED ({len(corrections)}):")
             
             if corrections:
                 for correction in corrections:
-                    print(f"   🔧 {correction['field']}:")
+                    print(f"   {correction['field']}:")
                     print(f"      Original: {correction['original_value']}")
                     print(f"      Corrected: {correction['corrected_value']}")
                     print(f"      Type: {correction['correction_type']}")
@@ -441,17 +441,17 @@ async def run_production_financial_agent_tests():
             
             # Display corrected document
             corrected_doc = result.get("corrected_document", {})
-            print(f"\n📤 CORRECTED FINANCIAL DOCUMENT:")
+            print(f"\nCORRECTED FINANCIAL DOCUMENT:")
             for field, value in corrected_doc.items():
                 original_value = test_case['document'].get(field)
                 if value != original_value:
-                    print(f"   {field}: {value} ✅ (corrected from {original_value})")
+                    print(f"   {field}: {value} (corrected from {original_value})")
                 else:
                     print(f"   {field}: {value}")
             
             # Compare with ground truth
             ground_truth = test_case['ground_truth']
-            print(f"\n🎯 GROUND TRUTH COMPARISON:")
+            print(f"\nGROUND TRUTH COMPARISON:")
             correct_fields = 0
             total_fields = len(ground_truth)
             
@@ -460,7 +460,7 @@ async def run_production_financial_agent_tests():
                 is_correct = actual_value == expected_value
                 correct_fields += is_correct
                 
-                status = "✅" if is_correct else "❌"
+                status = "valid" if is_correct else "not valid"
                 print(f"   {status} {field}: Expected {expected_value}, Got {actual_value}")
             
             # Calculate accuracy
@@ -484,20 +484,20 @@ async def run_production_financial_agent_tests():
                 "financial_validation": len(validation_results) > 0
             })
             
-            print(f"\n📊 TEST RESULT: {test_accuracy:.1%} accuracy ({correct_fields}/{total_fields} fields correct)")
+            print(f"\nTEST RESULT: {test_accuracy:.1%} accuracy ({correct_fields}/{total_fields} fields correct)")
             
             if test_accuracy == 1.0:
-                print("   🎉 PERFECT FINANCIAL DOCUMENT CORRECTION!")
+                print("   PERFECT FINANCIAL DOCUMENT CORRECTION!")
             elif test_accuracy >= 0.8:
-                print("   🌟 EXCELLENT FINANCIAL ANALYSIS")
+                print("   EXCELLENT FINANCIAL ANALYSIS")
             elif test_accuracy >= 0.6:
-                print("   👍 GOOD FINANCIAL PROCESSING")
+                print("   GOOD FINANCIAL PROCESSING")
             else:
-                print("   🔄 LEARNING OPPORTUNITY - Analyzing for improvements")
+                print("   LEARNING OPPORTUNITY - Analyzing for improvements")
             
         except Exception as e:
             logger.error(f"Error in test case {i}: {e}")
-            print(f"   ❌ ERROR: {str(e)}")
+            print(f"   ERROR: {str(e)}")
             results_summary.append({
                 "test_case": test_case['name'],
                 "success": False,
@@ -506,7 +506,7 @@ async def run_production_financial_agent_tests():
     
     # Final performance analysis
     print(f"\n{'=' * 80}")
-    print("📈 GOOGLE-LEVEL FINANCIAL AGENT PERFORMANCE ANALYSIS")
+    print("FINANCIAL AGENT PERFORMANCE ANALYSIS")
     print(f"{'=' * 80}")
     
     successful_tests = [r for r in results_summary if r.get("success", False)]
@@ -517,7 +517,7 @@ async def run_production_financial_agent_tests():
         avg_processing_time = sum(r['processing_time'] for r in successful_tests) / len(successful_tests)
         avg_confidence = sum(r['confidence'] for r in successful_tests) / len(successful_tests)
         
-        print(f"\n🎯 OVERALL PERFORMANCE:")
+        print(f"\nOVERALL PERFORMANCE:")
         print(f"   Financial Document Accuracy: {avg_accuracy:.1%}")
         print(f"   Total Corrections Applied: {total_corrections}")
         print(f"   Average Processing Time: {avg_processing_time:.2f}s")
@@ -528,7 +528,7 @@ async def run_production_financial_agent_tests():
         performance_summary = feedback_loop.get_performance_summary()
         accuracy_metrics = performance_summary["accuracy_metrics"]
         
-        print(f"\n🔄 LEARNING & ADAPTATION METRICS:")
+        print(f"\nLEARNING & ADAPTATION METRICS:")
         print(f"   Total Documents Processed: {accuracy_metrics['total_documents']}")
         print(f"   Correction Accuracy Rate: {accuracy_metrics['overall_accuracy']:.1%}")
         print(f"   Accurate Corrections: {accuracy_metrics['accurate_corrections']}")
@@ -536,14 +536,14 @@ async def run_production_financial_agent_tests():
         print(f"   False Positives: {accuracy_metrics['false_positives']}")
         
         # Show detailed test results
-        print(f"\n📋 DETAILED FINANCIAL TEST RESULTS:")
+        print(f"\nDETAILED FINANCIAL TEST RESULTS:")
         for result in results_summary:
             if result.get("success", False):
-                status = "🎉" if result['accuracy'] == 1.0 else "🌟" if result['accuracy'] >= 0.8 else "👍" if result['accuracy'] >= 0.6 else "🔄"
+                status = "success" if result['accuracy'] == 1.0 else "half success" if result['accuracy'] >= 0.8 else "good" if result['accuracy'] >= 0.6 else "not success"
                 print(f"   {status} {result['test_case']}: {result['accuracy']:.1%} "
                       f"({result['corrections_made']} corrections, {result['processing_time']:.2f}s)")
             else:
-                print(f"   ❌ {result['test_case']}: Failed - {result.get('error', 'Unknown error')}")
+                print(f"   {result['test_case']}: Failed - {result.get('error', 'Unknown error')}")
         
         # Final agent status
         final_status = agent.get_agent_status()
@@ -554,26 +554,26 @@ async def run_production_financial_agent_tests():
         print(f"   Learning Iterations: {final_status['performance_metrics']['learning_iterations']}")
         
         # Assessment
-        print(f"\n💡 SYSTEM ASSESSMENT:")
+        print(f"\n SYSTEM ASSESSMENT:")
         if avg_accuracy >= 0.95:
-            print("   🚀 EXCEPTIONAL: Production-ready Google-level financial intelligence!")
-            print("   🎯 The agent demonstrates sophisticated financial reasoning and domain expertise.")
-            print("   💼 Ready for deployment in enterprise financial document processing.")
+            print("    EXCEPTIONAL: Production-ready Google-level financial intelligence!")
+            print("   The agent demonstrates sophisticated financial reasoning and domain expertise.")
+            print("   Ready for deployment in enterprise financial document processing.")
         elif avg_accuracy >= 0.85:
-            print("   🌟 EXCELLENT: High-quality financial document processing with real intelligence.")
-            print("   📈 Strong performance with continuous learning and improvement.")
-            print("   🔧 Suitable for production with ongoing monitoring.")
+            print("   EXCELLENT: High-quality financial document processing with real intelligence.")
+            print("   Strong performance with continuous learning and improvement.")
+            print("   Suitable for production with ongoing monitoring.")
         elif avg_accuracy >= 0.75:
-            print("   👍 GOOD: Solid financial analysis capabilities with room for optimization.")
-            print("   📚 System demonstrates learning and adaptation to financial patterns.")
-            print("   🔄 Recommended for continued training and refinement.")
+            print("   GOOD: Solid financial analysis capabilities with room for optimization.")
+            print("   System demonstrates learning and adaptation to financial patterns.")
+            print("   Recommended for continued training and refinement.")
         else:
-            print("   🔄 LEARNING PHASE: Agent is actively learning financial document patterns.")
-            print("   📖 Continued exposure to financial documents will improve performance.")
-            print("   🎯 Shows promise for specialized financial document processing.")
+            print("   LEARNING PHASE: Agent is actively learning financial document patterns.")
+            print("   Continued exposure to financial documents will improve performance.")
+            print("   Shows promise for specialized financial document processing.")
     
     else:
-        print("   ❌ No successful test cases - system requires troubleshooting")
+        print("   No successful test cases - system requires troubleshooting")
     
     print(f"\n🏁 GOOGLE-LEVEL FINANCIAL DOCUMENT SPECIALIST EVALUATION COMPLETE")
     print("✨ This system demonstrates true financial intelligence with real LLM reasoning!")
