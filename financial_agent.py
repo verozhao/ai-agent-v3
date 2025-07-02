@@ -544,7 +544,7 @@ class FinancialToolkit:
 
 class FinancialDocumentSpecialistAgent:
     """
-    Google-level Financial Document Specialist Agent
+    Financial Document Specialist Agent
     Real LLM reasoning + Financial domain expertise + Production architecture
     """
     
@@ -570,7 +570,7 @@ class FinancialDocumentSpecialistAgent:
         # Specialized knowledge
         self.financial_rules = self._load_financial_rules()
         
-        logger.info("Google-level Financial Document Specialist Agent initialized")
+        logger.info("Financial Document Specialist Agent initialized")
     
     def _initialize_pattern_library(self) -> Dict[str, Any]:
         """Initialize financial pattern recognition library"""
@@ -1038,7 +1038,7 @@ Provide insights for improving financial document analysis accuracy."""
         return {
             "agent_id": self.agent_id,
             "name": self.name,
-            "type": "Google-Level Financial Document Specialist",
+            "type": "Financial Document Specialist",
             "performance_metrics": self.performance_metrics,
             "llm_metrics": self.llm_engine.metrics,
             "correction_history_size": len(self.correction_history),

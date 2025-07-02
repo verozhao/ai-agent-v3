@@ -337,7 +337,7 @@ async def run_production_financial_agent_tests():
         print()
     
     # Initialize the financial specialist agent
-    print("Initializing Google-Level Financial Document Specialist...")
+    print("Initializing Financial Document Specialist...")
     try:
         agent = FinancialDocumentSpecialistAgent()
         feedback_loop = ProductionFeedbackLoop(agent)
@@ -547,7 +547,7 @@ async def run_production_financial_agent_tests():
         
         # Final agent status
         final_status = agent.get_agent_status()
-        print(f"\n🤖 FINANCIAL AGENT FINAL STATUS:")
+        print(f"\n FINANCIAL AGENT FINAL STATUS:")
         print(f"   Documents Processed: {final_status['performance_metrics']['documents_processed']}")
         print(f"   Total Corrections Made: {final_status['performance_metrics']['corrections_made']}")
         print(f"   LLM Calls Made: {final_status['llm_metrics']['total_calls']}")
@@ -556,7 +556,7 @@ async def run_production_financial_agent_tests():
         # Assessment
         print(f"\n SYSTEM ASSESSMENT:")
         if avg_accuracy >= 0.95:
-            print("    EXCEPTIONAL: Production-ready Google-level financial intelligence!")
+            print("    EXCEPTIONAL: Production-ready financial intelligence!")
             print("   The agent demonstrates sophisticated financial reasoning and domain expertise.")
             print("   Ready for deployment in enterprise financial document processing.")
         elif avg_accuracy >= 0.85:
@@ -575,13 +575,13 @@ async def run_production_financial_agent_tests():
     else:
         print("   No successful test cases - system requires troubleshooting")
     
-    print(f"\n🏁 GOOGLE-LEVEL FINANCIAL DOCUMENT SPECIALIST EVALUATION COMPLETE")
-    print("✨ This system demonstrates true financial intelligence with real LLM reasoning!")
-    print("💼 Ready for production deployment in financial document processing workflows.")
+    print(f"\n🏁 FINANCIAL DOCUMENT SPECIALIST EVALUATION COMPLETE")
+    print("This system demonstrates true financial intelligence with real LLM reasoning!")
+    print("Ready for production deployment in financial document processing workflows.")
 
 def check_requirements():
     """Check if all requirements are met for production deployment"""
-    print("🔍 PRODUCTION READINESS CHECK")
+    print("PRODUCTION READINESS CHECK")
     print("-" * 40)
     
     checks = {
@@ -594,22 +594,21 @@ def check_requirements():
     
     all_passed = True
     for check_name, passed in checks.items():
-        status = "✅" if passed else "❌"
+        status = "success" if passed else "not success"
         print(f"   {status} {check_name}")
         if not passed:
             all_passed = False
     
     if all_passed:
-        print("🚀 System ready for production deployment!")
+        print("System ready for production deployment!")
     else:
-        print("⚠️  Some checks failed - review requirements before deployment")
+        print("Some checks failed - review requirements before deployment")
     
     print()
     return all_passed
 
 if __name__ == "__main__":
-    print("🤖 Starting Google-Level Financial Document Specialist Agent...")
-    print("⚡ Real LLM Integration • Financial Domain Expertise • Production Architecture")
+    print("Starting Financial Document Specialist Agent...")
     print()
     
     # Check production readiness
