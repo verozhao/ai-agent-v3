@@ -25,7 +25,7 @@ class TestDataGenerator:
     def get_abry_partners_test_documents() -> List[Dict[str, Any]]:
         """
         Generate test documents based on Abry Partners example from meeting
-        Simulates the real document extraction scenarios Grant mentioned
+        Simulates the real document extraction scenarios
         """
         return [
             {
@@ -497,7 +497,6 @@ class TetrixTestSuite:
         print("Testing end-to-end workflow simulation...")
         
         try:
-            # Simulate the complete workflow Grant described:
             # 1. Document extraction → 2. Analytics API → 3. AI processing → 4. Improvement
             
             test_doc = self.test_data_generator.get_abry_partners_test_documents()[0]

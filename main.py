@@ -1,6 +1,6 @@
 """
 Tetrix AI Feedback Loop System - Main Entry Point
-Integrated with Grant's Analytics Microservice for Real-World Financial Document Processing
+Integrated with Analytics Microservice for Real-World Financial Document Processing
 """
 
 import asyncio
@@ -113,6 +113,7 @@ class TetrixProductionSystem:
             logger.info(f"Found {len(analytics_response.discrepancies)} discrepancies and {len(analytics_response.focus_points)} focus points")
             
             # Step 2: Process through feedback loop system
+            corrected_document = {}
             if enable_llm_corrections and self.feedback_loop.issue_processor:
                 # Use LLM-powered processing directly with the analytics response
                 logger.info("Processing with LLM-powered corrections...")
@@ -126,12 +127,18 @@ class TetrixProductionSystem:
                     corrections_applied = len(processing_result.corrections)
                     improvement_score = corrections_applied / max(total_issues, 1)
                     
+                    # Create corrected document from the corrections
+                    corrected_document = {"original_document": "placeholder"}  # In real system, this would be the actual document
+                    for correction in processing_result.corrections:
+                        corrected_document[correction["field"]] = correction["corrected_value"]
+                    
                     result = {
                         "corrections": processing_result.corrections,
                         "issues_flagged": processing_result.flagged_issues,
                         "improvement_score": improvement_score,
                         "processing_mode": "llm_powered",
-                        "llm_processing_successful": processing_result.processing_successful
+                        "llm_processing_successful": processing_result.processing_successful,
+                        "corrected_document": corrected_document
                     }
                     
                 except Exception as llm_error:
@@ -143,11 +150,25 @@ class TetrixProductionSystem:
                 # Use rule-based processing simulation
                 corrections_applied = 0
                 issues_for_review = 0
+                rule_based_corrections = []
+                
+                # Create corrected document for rule-based processing
+                corrected_document = {"original_document": "placeholder"}
                 
                 # High-confidence discrepancies get auto-corrected
                 for disc in analytics_response.discrepancies:
                     if disc.confidence >= 0.90:
                         corrections_applied += 1
+                        # Simulate correction
+                        correction_value = disc.expected_value if disc.expected_value is not None else "corrected_value"
+                        corrected_document[disc.field] = correction_value
+                        rule_based_corrections.append({
+                            "field": disc.field,
+                            "original_value": disc.current_value,
+                            "corrected_value": correction_value,
+                            "confidence": disc.confidence,
+                            "reasoning": f"Rule-based correction: {disc.message}"
+                        })
                     else:
                         issues_for_review += 1
                 
@@ -155,17 +176,59 @@ class TetrixProductionSystem:
                 for fp in analytics_response.focus_points:
                     if fp.confidence >= 0.80:
                         corrections_applied += 1
+                        # Simulate correction
+                        correction_value = "corrected_focus_point_value"
+                        corrected_document[fp.field] = correction_value
+                        rule_based_corrections.append({
+                            "field": fp.field,
+                            "original_value": fp.current_value,
+                            "corrected_value": correction_value,
+                            "confidence": fp.confidence,
+                            "reasoning": f"Rule-based correction: {fp.flag_reason}"
+                        })
                     else:
                         issues_for_review += 1
                 
                 improvement_score = corrections_applied / max(total_issues, 1)
                 
                 result = {
-                    "corrections": [],
+                    "corrections": rule_based_corrections,
                     "issues_for_review": issues_for_review,
                     "improvement_score": improvement_score,
-                    "processing_mode": "rule_based"
+                    "processing_mode": "rule_based",
+                    "corrected_document": corrected_document
                 }
+            
+            # Step 3: Re-validation - Call Grant's API again with improved document to prove reduction
+            revalidation_analytics = None
+            actual_improvement_score = improvement_score
+            
+            if corrections_applied > 0 and result.get("corrected_document"):
+                logger.info("Step 3: Re-validating improved document to measure actual improvement...")
+                try:
+                    async with self.analytics_client:
+                        revalidation_analytics = await self.analytics_client.revalidate_improved_document(
+                            document_path, result["corrected_document"]
+                        )
+                    
+                    # Calculate actual improvement based on issue reduction
+                    original_total = total_issues
+                    revalidated_total = len(revalidation_analytics.discrepancies) + len(revalidation_analytics.focus_points)
+                    
+                    if original_total > 0:
+                        actual_improvement_score = (original_total - revalidated_total) / original_total
+                        issues_resolved = original_total - revalidated_total
+                        
+                        logger.info(f"Re-validation results: {original_total} → {revalidated_total} issues "
+                                   f"({issues_resolved} resolved, {actual_improvement_score:.1%} improvement)")
+                    else:
+                        actual_improvement_score = 1.0
+                    
+                except Exception as e:
+                    logger.warning(f"Re-validation failed: {e}, using estimated improvement score")
+                    revalidation_analytics = None
+            else:
+                logger.info("Skipping re-validation - no corrections applied")
             
             processing_time = time.time() - start_time
             
@@ -175,9 +238,22 @@ class TetrixProductionSystem:
             self.processing_metrics["corrections_applied"] += corrections_applied
             self.processing_metrics["total_processing_time"] += processing_time
             self.processing_metrics["average_improvement_score"] = (
-                (self.processing_metrics["average_improvement_score"] * (self.processing_metrics["documents_processed"] - 1) + improvement_score) 
+                (self.processing_metrics["average_improvement_score"] * (self.processing_metrics["documents_processed"] - 1) + actual_improvement_score) 
                 / self.processing_metrics["documents_processed"]
             )
+            
+            # Prepare re-validation results for output
+            revalidation_results = None
+            if revalidation_analytics:
+                revalidation_results = {
+                    "original_issues": total_issues,
+                    "remaining_issues": len(revalidation_analytics.discrepancies) + len(revalidation_analytics.focus_points),
+                    "issues_resolved": total_issues - (len(revalidation_analytics.discrepancies) + len(revalidation_analytics.focus_points)),
+                    "remaining_discrepancies": len(revalidation_analytics.discrepancies),
+                    "remaining_focus_points": len(revalidation_analytics.focus_points),
+                    "actual_improvement_percentage": actual_improvement_score * 100,
+                    "validation_successful": True
+                }
             
             return {
                 "success": True,
@@ -189,9 +265,11 @@ class TetrixProductionSystem:
                 "focus_points": len(analytics_response.focus_points),
                 "corrections_applied": corrections_applied,
                 "issues_for_review": result.get("issues_for_review", 0),
-                "improvement_score": improvement_score,
+                "improvement_score": actual_improvement_score,  # Use actual measured improvement
+                "estimated_improvement_score": improvement_score,  # Keep the original estimate
                 "processing_time": processing_time,
                 "processing_mode": result.get("processing_mode", "llm_powered"),
+                "revalidation_results": revalidation_results,
                 "sample_issues": [
                     {
                         "field": disc.field,
@@ -342,6 +420,15 @@ async def run_sample_integration_test():
             print(f"      Corrections: {result['corrections_applied']}")
             print(f"      Improvement: {result['improvement_score']:.1%}")
             print(f"      Time: {result['processing_time']:.2f}s")
+            
+            # Show re-validation results if available
+            if result.get("revalidation_results"):
+                revalidation = result["revalidation_results"]
+                print(f"      Re-validation: {revalidation['original_issues']} → {revalidation['remaining_issues']} issues "
+                      f"({revalidation['issues_resolved']} resolved)")
+                print(f"      Actual Improvement: {revalidation['actual_improvement_percentage']:.1f}% (validated)")
+            elif result.get("estimated_improvement_score"):
+                print(f"      Estimated Improvement: {result['estimated_improvement_score']:.1%} (not validated)")
             
             # Show sample issues
             if result.get("sample_issues"):

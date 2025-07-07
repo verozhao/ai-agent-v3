@@ -431,6 +431,95 @@ class CombinedIssueProcessor:
         
         return stats
     
+    async def process_all_issues(self, discrepancies: List[Discrepancy], 
+                                focus_points: List[FocusPoint], 
+                                document: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Process all discrepancies and focus points directly"""
+        
+        if document is None:
+            document = {}
+        
+        start_time = time.time()
+        results = {
+            "processing_timestamp": datetime.now().isoformat(),
+            "discrepancy_results": [],
+            "focus_point_results": [],
+            "corrections": [],
+            "flagged_issues": [],
+            "processing_successful": True
+        }
+        
+        # Process discrepancies
+        logger.info(f"Processing {len(discrepancies)} discrepancies...")
+        
+        for discrepancy in discrepancies:
+            try:
+                result = await self.discrepancy_processor.process_issue(
+                    discrepancy, document, {}
+                )
+                results["discrepancy_results"].append(asdict(result))
+                
+                # Track corrections
+                if result.action_taken == "corrected" and result.confidence >= 0.85:
+                    results["corrections"].append({
+                        "field": result.field,
+                        "original_value": result.original_value,
+                        "corrected_value": result.suggested_value,
+                        "confidence": result.confidence,
+                        "reasoning": result.reasoning
+                    })
+                    self.processing_stats["corrections_applied"] += 1
+                
+                self.processing_stats["discrepancies_processed"] += 1
+                
+            except Exception as e:
+                logger.error(f"Error processing discrepancy {discrepancy.discrepancy_id}: {e}")
+                results["processing_successful"] = False
+        
+        # Process focus points
+        logger.info(f"Processing {len(focus_points)} focus points...")
+        
+        for focus_point in focus_points:
+            try:
+                result = await self.focus_point_processor.process_issue(
+                    focus_point, document, {}
+                )
+                results["focus_point_results"].append(asdict(result))
+                
+                # Track corrections and flags
+                if result.action_taken == "corrected" and result.confidence >= 0.80:
+                    results["corrections"].append({
+                        "field": result.field,
+                        "original_value": result.original_value,
+                        "corrected_value": result.suggested_value,
+                        "confidence": result.confidence,
+                        "reasoning": result.reasoning
+                    })
+                    self.processing_stats["corrections_applied"] += 1
+                elif result.action_taken == "flagged":
+                    results["flagged_issues"].append({
+                        "field": result.field,
+                        "issue": result.reasoning,
+                        "confidence": result.confidence
+                    })
+                    self.processing_stats["issues_flagged"] += 1
+                elif result.action_taken == "escalated":
+                    self.processing_stats["issues_escalated"] += 1
+                
+                self.processing_stats["focus_points_processed"] += 1
+                
+            except Exception as e:
+                logger.error(f"Error processing focus point {focus_point.focus_point_id}: {e}")
+                results["processing_successful"] = False
+        
+        self.processing_stats["total_issues"] += len(discrepancies) + len(focus_points)
+        
+        total_processing_time = time.time() - start_time
+        logger.info(f"Direct issue processing complete: {len(results['corrections'])} corrections, "
+                   f"{len(results['flagged_issues'])} flagged, {total_processing_time:.2f}s")
+        
+        return results
+    
     def reset_stats(self):
         """Reset processing statistics"""
         self.processing_stats = {

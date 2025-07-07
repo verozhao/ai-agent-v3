@@ -1,6 +1,6 @@
 """
 Tetrix AI Feedback Loop System
-Complete integration between Grant's analytics microservice and AI-powered document correction
+Complete integration between analytics microservice and AI-powered document correction
 """
 
 import asyncio
@@ -103,19 +103,25 @@ class TetrixFeedbackLoopSystem:
             }
         
         # Test LLM engine
-        try:
-            test_response = await self.llm_engine.reason_about_document(
-                {"test": "connectivity_test"}, "test"
-            )
-            connectivity_results["llm_engine"] = {
-                "available": True,
-                "model_used": test_response.get("model_used", "unknown"),
-                "response_time": test_response.get("response_time", 0)
-            }
-        except Exception as e:
+        if self.llm_engine:
+            try:
+                test_response = await self.llm_engine.reason_about_document(
+                    {"test": "connectivity_test"}, "test"
+                )
+                connectivity_results["llm_engine"] = {
+                    "available": True,
+                    "model_used": test_response.get("model_used", "unknown"),
+                    "response_time": test_response.get("response_time", 0)
+                }
+            except Exception as e:
+                connectivity_results["llm_engine"] = {
+                    "available": False,
+                    "error": str(e)
+                }
+        else:
             connectivity_results["llm_engine"] = {
                 "available": False,
-                "error": str(e)
+                "error": "LLM engine not initialized (no API keys found)"
             }
         
         # Determine overall status
@@ -373,13 +379,28 @@ class TetrixFeedbackLoopSystem:
     
     def get_system_status(self) -> Dict[str, Any]:
         """Get comprehensive system status"""
-        return {
+        status = {
             "system_metrics": self.system_metrics,
             "analytics_client_metrics": self.analytics_client.get_metrics(),
-            "issue_processor_stats": self.issue_processor.get_processing_stats(),
-            "financial_agent_status": self.financial_agent.get_agent_status(),
             "status_timestamp": datetime.now().isoformat()
         }
+        
+        # Add issue processor stats if available
+        if self.issue_processor:
+            status["issue_processor_stats"] = self.issue_processor.get_processing_stats()
+        else:
+            status["issue_processor_stats"] = "not_initialized"
+            
+        # Add financial agent status if available
+        if self.financial_agent:
+            try:
+                status["financial_agent_status"] = self.financial_agent.get_agent_status()
+            except AttributeError:
+                status["financial_agent_status"] = "available_but_no_status_method"
+        else:
+            status["financial_agent_status"] = "not_initialized"
+            
+        return status
     
     async def evaluate_system_performance(self, test_documents: List[Dict[str, Any]], 
                                         ground_truths: List[Dict[str, Any]]) -> Dict[str, Any]:

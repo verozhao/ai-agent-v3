@@ -1,555 +1,305 @@
-2025-07-07 11:24:10,386 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:24:10,386 - analytics_client - INFO - Using mock analytics client
-2025-07-07 11:24:27,505 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:24:27,505 - analytics_client - INFO - Using mock analytics client
-2025-07-07 11:24:27,505 - analytics_client - INFO - Using mock analytics client
-2025-07-07 11:24:52,112 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:24:52,112 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:24:52,112 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:24:52,112 - feedback_loop_system - INFO - Rule-based processing mode (no LLM API keys found)
-2025-07-07 11:24:52,112 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
-2025-07-07 11:24:52,112 - __main__ - INFO - System components initialized successfully
-2025-07-07 11:24:52,112 - __main__ - INFO - Testing connectivity to Grant's analytics service...
-2025-07-07 11:24:52,223 - __main__ - WARNING - ⚠️ Failed to connect to Grant's analytics service
-2025-07-07 11:24:52,225 - __main__ - INFO - Starting batch processing of 3 documents
-2025-07-07 11:24:52,226 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:24:52,227 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:24:52,310 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:24:52,311 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:24:52,356 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:24:52,357 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:24:52,665 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:24:52,665 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:24:52,666 - __main__ - INFO - Found 21 discrepancies and 55 focus points
-2025-07-07 11:24:52,667 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 27.6% improvement
-2025-07-07 11:24:52,667 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:24:52,667 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:24:52,758 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:24:52,759 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:24:52,807 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:24:52,807 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:24:53,287 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:24:53,287 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:24:53,288 - __main__ - INFO - Found 35 discrepancies and 60 focus points
-2025-07-07 11:24:53,289 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 36.8% improvement
-2025-07-07 11:24:53,289 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:24:53,289 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:24:53,366 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:24:53,366 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:24:53,411 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:24:53,411 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:24:56,173 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:24:56,173 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:24:56,187 - __main__ - INFO - Found 15 discrepancies and 112 focus points
-2025-07-07 11:24:56,187 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 11.8% improvement
-2025-07-07 11:25:44,070 - main - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:25:44,070 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:25:44,070 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:25:44,070 - feedback_loop_system - INFO - Rule-based processing mode (no LLM API keys found)
-2025-07-07 11:25:44,070 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
-2025-07-07 11:25:44,070 - main - INFO - System components initialized successfully
-2025-07-07 11:25:44,070 - main - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:25:44,071 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:25:44,157 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:25:44,158 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:25:44,203 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:25:44,204 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:25:44,515 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:25:44,515 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:25:44,516 - main - INFO - Found 21 discrepancies and 55 focus points
-2025-07-07 11:27:44,883 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:27:44,884 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:27:44,884 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:27:44,884 - feedback_loop_system - INFO - Rule-based processing mode (no LLM API keys found)
-2025-07-07 11:27:44,884 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
-2025-07-07 11:27:44,884 - __main__ - INFO - System components initialized successfully
-2025-07-07 11:27:44,884 - __main__ - INFO - Testing connectivity to Grant's analytics service...
-2025-07-07 11:27:45,000 - __main__ - WARNING - ⚠️ Failed to connect to Grant's analytics service
-2025-07-07 11:27:45,002 - __main__ - INFO - Starting batch processing of 3 documents
-2025-07-07 11:27:45,002 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:27:45,003 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:27:45,096 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:27:45,096 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:27:45,144 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:27:45,145 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:27:45,514 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:27:45,514 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:27:45,516 - __main__ - INFO - Found 21 discrepancies and 55 focus points
-2025-07-07 11:27:45,516 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 27.6% improvement
-2025-07-07 11:27:45,516 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:27:45,516 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:27:45,602 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:27:45,602 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:27:45,654 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:27:45,654 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:27:46,111 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:27:46,111 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:27:46,112 - __main__ - INFO - Found 35 discrepancies and 60 focus points
-2025-07-07 11:27:46,113 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 36.8% improvement
-2025-07-07 11:27:46,113 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:27:46,113 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:27:46,196 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:27:46,196 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:27:46,243 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:27:46,244 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:27:49,162 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:27:49,162 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:27:49,177 - __main__ - INFO - Found 15 discrepancies and 112 focus points
-2025-07-07 11:27:49,177 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 11.8% improvement
-2025-07-07 11:29:07,401 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:29:07,401 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:29:07,401 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:29:07,451 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 11:29:07,487 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 11:29:07,501 - financial_agent - INFO - Fund database initialized with real data
-2025-07-07 11:29:07,501 - financial_agent - INFO - Financial Document Specialist Agent initialized
-2025-07-07 11:29:07,501 - feedback_loop_system - INFO - LLM-powered processing enabled
-2025-07-07 11:29:07,501 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
-2025-07-07 11:29:07,501 - __main__ - INFO - System components initialized successfully
-2025-07-07 11:29:07,501 - __main__ - INFO - Testing connectivity to Grant's analytics service...
-2025-07-07 11:29:07,605 - __main__ - WARNING - ⚠️ Failed to connect to Grant's analytics service
-2025-07-07 11:29:07,607 - __main__ - INFO - Starting batch processing of 3 documents
-2025-07-07 11:29:07,607 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:29:07,607 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:29:07,689 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:29:07,690 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:29:07,736 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:29:07,736 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:29:08,283 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:29:08,284 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:29:08,285 - __main__ - INFO - Found 21 discrepancies and 55 focus points
-2025-07-07 11:29:08,285 - __main__ - ERROR - Error processing document PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 'TetrixFeedbackLoopSystem' object has no attribute 'process_document_with_feedback_loop'
-2025-07-07 11:29:08,285 - __main__ - ERROR - ❌ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 'TetrixFeedbackLoopSystem' object has no attribute 'process_document_with_feedback_loop'
-2025-07-07 11:29:08,286 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:29:08,286 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:29:08,369 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:29:08,369 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:29:08,417 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:29:08,417 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:29:08,874 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:29:08,874 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:29:08,876 - __main__ - INFO - Found 35 discrepancies and 60 focus points
-2025-07-07 11:29:08,876 - __main__ - ERROR - Error processing document PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 'TetrixFeedbackLoopSystem' object has no attribute 'process_document_with_feedback_loop'
-2025-07-07 11:29:08,876 - __main__ - ERROR - ❌ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 'TetrixFeedbackLoopSystem' object has no attribute 'process_document_with_feedback_loop'
-2025-07-07 11:29:08,876 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:29:08,876 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:29:08,951 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:29:08,952 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:29:08,995 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:29:08,996 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:29:12,540 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:29:12,540 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:29:12,556 - __main__ - INFO - Found 15 discrepancies and 112 focus points
-2025-07-07 11:29:12,557 - __main__ - ERROR - Error processing document PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 'TetrixFeedbackLoopSystem' object has no attribute 'process_document_with_feedback_loop'
-2025-07-07 11:29:12,557 - __main__ - ERROR - ❌ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 'TetrixFeedbackLoopSystem' object has no attribute 'process_document_with_feedback_loop'
-2025-07-07 11:30:40,612 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:30:40,613 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:30:40,613 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:30:40,613 - feedback_loop_system - INFO - Rule-based processing mode (no LLM API keys found)
-2025-07-07 11:30:40,613 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
-2025-07-07 11:30:40,613 - __main__ - INFO - System components initialized successfully
-2025-07-07 11:30:40,613 - __main__ - INFO - Testing connectivity to Grant's analytics service...
-2025-07-07 11:30:40,724 - __main__ - WARNING - ⚠️ Failed to connect to Grant's analytics service
-2025-07-07 11:30:40,726 - __main__ - INFO - Starting batch processing of 3 documents
-2025-07-07 11:30:40,726 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:30:40,726 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:30:40,812 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:30:40,812 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:30:40,864 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:30:40,864 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:30:41,198 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:30:41,198 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:30:41,199 - __main__ - INFO - Found 21 discrepancies and 55 focus points
-2025-07-07 11:30:41,199 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 27.6% improvement
-2025-07-07 11:30:41,199 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:30:41,200 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:30:41,278 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:30:41,278 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:30:41,321 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:30:41,321 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:30:41,822 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:30:41,822 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:30:41,823 - __main__ - INFO - Found 35 discrepancies and 60 focus points
-2025-07-07 11:30:41,824 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 36.8% improvement
-2025-07-07 11:30:41,824 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:30:41,824 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:30:41,904 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:30:41,904 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:30:41,951 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:30:41,951 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:30:45,632 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:30:45,633 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:30:45,649 - __main__ - INFO - Found 15 discrepancies and 112 focus points
-2025-07-07 11:30:45,650 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 11.8% improvement
-2025-07-07 11:31:11,045 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:31:11,045 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:31:11,045 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:31:11,096 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 11:31:11,136 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 11:31:11,143 - financial_agent - INFO - Financial Document Specialist Agent initialized
-2025-07-07 11:31:11,143 - feedback_loop_system - INFO - LLM-powered processing enabled
-2025-07-07 11:31:11,143 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
-2025-07-07 11:31:11,144 - __main__ - INFO - System components initialized successfully
-2025-07-07 11:31:11,144 - __main__ - INFO - Testing connectivity to Grant's analytics service...
-2025-07-07 11:31:11,212 - __main__ - WARNING - ⚠️ Failed to connect to Grant's analytics service
-2025-07-07 11:31:11,214 - __main__ - INFO - Starting batch processing of 3 documents
-2025-07-07 11:31:11,214 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:31:11,214 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:31:11,297 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:31:11,297 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:31:11,341 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:31:11,341 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:31:11,908 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:31:11,908 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:31:11,910 - __main__ - INFO - Found 21 discrepancies and 55 focus points
-2025-07-07 11:31:11,910 - __main__ - ERROR - Error processing document PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: TetrixFeedbackLoopSystem.run_feedback_loop() got an unexpected keyword argument 'document_type'
-2025-07-07 11:31:11,910 - __main__ - ERROR - ❌ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: TetrixFeedbackLoopSystem.run_feedback_loop() got an unexpected keyword argument 'document_type'
-2025-07-07 11:31:11,910 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:31:11,910 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:31:11,991 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:31:11,991 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:31:12,035 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:31:12,036 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:31:12,527 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:31:12,527 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:31:12,528 - __main__ - INFO - Found 35 discrepancies and 60 focus points
-2025-07-07 11:31:12,528 - __main__ - ERROR - Error processing document PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: TetrixFeedbackLoopSystem.run_feedback_loop() got an unexpected keyword argument 'document_type'
-2025-07-07 11:31:12,528 - __main__ - ERROR - ❌ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: TetrixFeedbackLoopSystem.run_feedback_loop() got an unexpected keyword argument 'document_type'
-2025-07-07 11:31:12,528 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:31:12,528 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:31:12,609 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:31:12,609 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:31:12,654 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:31:12,654 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:31:16,422 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:31:16,422 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:31:16,438 - __main__ - INFO - Found 15 discrepancies and 112 focus points
-2025-07-07 11:31:16,438 - __main__ - ERROR - Error processing document PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: TetrixFeedbackLoopSystem.run_feedback_loop() got an unexpected keyword argument 'document_type'
-2025-07-07 11:31:16,439 - __main__ - ERROR - ❌ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: TetrixFeedbackLoopSystem.run_feedback_loop() got an unexpected keyword argument 'document_type'
-2025-07-07 11:32:40,311 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:32:40,311 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:32:40,311 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:32:40,311 - feedback_loop_system - INFO - Rule-based processing mode (no LLM API keys found)
-2025-07-07 11:32:40,311 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
-2025-07-07 11:32:40,311 - __main__ - INFO - System components initialized successfully
-2025-07-07 11:32:40,311 - __main__ - INFO - Testing connectivity to Grant's analytics service...
-2025-07-07 11:32:40,414 - __main__ - WARNING - ⚠️ Failed to connect to Grant's analytics service
-2025-07-07 11:32:40,415 - __main__ - INFO - Starting batch processing of 3 documents
-2025-07-07 11:32:40,415 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:32:40,416 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:32:40,498 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:32:40,498 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:32:40,544 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:32:40,545 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:32:40,906 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:32:40,907 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:32:40,908 - __main__ - INFO - Found 21 discrepancies and 55 focus points
-2025-07-07 11:32:40,909 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 27.6% improvement
-2025-07-07 11:32:40,909 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:32:40,909 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:32:40,989 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:32:40,990 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:32:41,035 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:32:41,036 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:32:41,605 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:32:41,605 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:32:41,607 - __main__ - INFO - Found 35 discrepancies and 60 focus points
-2025-07-07 11:32:41,607 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 36.8% improvement
-2025-07-07 11:32:41,607 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:32:41,607 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:32:41,686 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:32:41,687 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:32:41,731 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:32:41,731 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:32:44,744 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:32:44,744 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:32:44,759 - __main__ - INFO - Found 15 discrepancies and 112 focus points
-2025-07-07 11:32:44,759 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 11.8% improvement
-2025-07-07 11:33:27,019 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:33:27,019 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:33:27,019 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:33:27,060 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 11:33:27,093 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 11:33:27,106 - financial_agent - INFO - Financial Document Specialist Agent initialized
-2025-07-07 11:33:27,106 - feedback_loop_system - INFO - LLM-powered processing enabled
-2025-07-07 11:33:27,106 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
-2025-07-07 11:33:27,106 - __main__ - INFO - System components initialized successfully
-2025-07-07 11:33:27,106 - __main__ - INFO - Testing connectivity to Grant's analytics service...
-2025-07-07 11:33:27,176 - __main__ - WARNING - ⚠️ Failed to connect to Grant's analytics service
-2025-07-07 11:33:27,177 - __main__ - INFO - Starting batch processing of 3 documents
-2025-07-07 11:33:27,177 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:33:27,177 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:33:27,257 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:33:27,257 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:33:27,301 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:33:27,301 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:33:27,626 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:33:27,626 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:33:27,627 - __main__ - INFO - Found 21 discrepancies and 55 focus points
-2025-07-07 11:33:27,627 - feedback_loop_system - INFO - Starting feedback loop for document doc_1751902407_1760 at path PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:33:27,627 - feedback_loop_system - INFO - Step 1: Analyzing document with Grant's analytics system...
-2025-07-07 11:33:27,627 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:33:27,628 - analytics_client - WARNING - Strategy tasks_todo_get failed: 'NoneType' object has no attribute 'get'
-2025-07-07 11:33:27,628 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:33:27,628 - analytics_client - WARNING - Strategy tasks_todo_post failed: 'NoneType' object has no attribute 'post'
-2025-07-07 11:33:27,628 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:33:27,628 - analytics_client - WARNING - Strategy extraction_flags failed: 'NoneType' object has no attribute 'get'
-2025-07-07 11:33:27,628 - analytics_client - INFO - Trying strategy: flag_discrepancies_post
-2025-07-07 11:33:27,628 - analytics_client - WARNING - Strategy flag_discrepancies_post failed: 'NoneType' object has no attribute 'post'
-2025-07-07 11:33:27,628 - analytics_client - ERROR - All analytics endpoint strategies failed for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:33:27,628 - feedback_loop_system - INFO - Found 0 discrepancies and 0 focus points
-2025-07-07 11:33:27,628 - feedback_loop_system - INFO - Step 2: Processing issues with specialized AI agents...
-2025-07-07 11:33:27,628 - discrepancy_processor - INFO - Processing 0 discrepancies...
-2025-07-07 11:33:27,628 - discrepancy_processor - INFO - Processing 0 focus points...
-2025-07-07 11:33:27,628 - discrepancy_processor - INFO - Issue processing complete: 0 corrections, 0 flagged, 0.00s
-2025-07-07 11:33:27,628 - feedback_loop_system - INFO - Applied 0 corrections to document
-2025-07-07 11:33:27,628 - feedback_loop_system - INFO - Feedback loop completed successfully for doc_1751902407_1760 in 0.00s with 0 corrections
-2025-07-07 11:33:27,628 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 0.0% improvement
-2025-07-07 11:33:27,628 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:33:27,629 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:33:27,707 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:33:27,707 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:33:27,749 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:33:27,750 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:33:28,220 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:33:28,220 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:33:28,222 - __main__ - INFO - Found 35 discrepancies and 60 focus points
-2025-07-07 11:33:28,222 - feedback_loop_system - INFO - Starting feedback loop for document doc_1751902408_9361 at path PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:33:28,222 - feedback_loop_system - INFO - Step 1: Analyzing document with Grant's analytics system...
-2025-07-07 11:33:28,222 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:33:28,222 - analytics_client - WARNING - Strategy tasks_todo_get failed: 'NoneType' object has no attribute 'get'
-2025-07-07 11:33:28,222 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:33:28,222 - analytics_client - WARNING - Strategy tasks_todo_post failed: 'NoneType' object has no attribute 'post'
-2025-07-07 11:33:28,223 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:33:28,223 - analytics_client - WARNING - Strategy extraction_flags failed: 'NoneType' object has no attribute 'get'
-2025-07-07 11:33:28,223 - analytics_client - INFO - Trying strategy: flag_discrepancies_post
-2025-07-07 11:33:28,223 - analytics_client - WARNING - Strategy flag_discrepancies_post failed: 'NoneType' object has no attribute 'post'
-2025-07-07 11:33:28,223 - analytics_client - ERROR - All analytics endpoint strategies failed for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:33:28,223 - feedback_loop_system - INFO - Found 0 discrepancies and 0 focus points
-2025-07-07 11:33:28,223 - feedback_loop_system - INFO - Step 2: Processing issues with specialized AI agents...
-2025-07-07 11:33:28,223 - discrepancy_processor - INFO - Processing 0 discrepancies...
-2025-07-07 11:33:28,223 - discrepancy_processor - INFO - Processing 0 focus points...
-2025-07-07 11:33:28,223 - discrepancy_processor - INFO - Issue processing complete: 0 corrections, 0 flagged, 0.00s
-2025-07-07 11:33:28,223 - feedback_loop_system - INFO - Applied 0 corrections to document
-2025-07-07 11:33:28,223 - feedback_loop_system - INFO - Feedback loop completed successfully for doc_1751902408_9361 in 0.00s with 0 corrections
-2025-07-07 11:33:28,223 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 0.0% improvement
-2025-07-07 11:33:28,224 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:33:28,224 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:33:28,309 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:33:28,309 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:33:28,353 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:33:28,353 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:33:33,936 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:33:33,936 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:33:33,952 - __main__ - INFO - Found 15 discrepancies and 112 focus points
-2025-07-07 11:33:33,952 - feedback_loop_system - INFO - Starting feedback loop for document doc_1751902413_2359 at path PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:33:33,952 - feedback_loop_system - INFO - Step 1: Analyzing document with Grant's analytics system...
-2025-07-07 11:33:33,952 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:33:33,952 - analytics_client - WARNING - Strategy tasks_todo_get failed: 'NoneType' object has no attribute 'get'
-2025-07-07 11:33:33,952 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:33:33,952 - analytics_client - WARNING - Strategy tasks_todo_post failed: 'NoneType' object has no attribute 'post'
-2025-07-07 11:33:33,952 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:33:33,952 - analytics_client - WARNING - Strategy extraction_flags failed: 'NoneType' object has no attribute 'get'
-2025-07-07 11:33:33,953 - analytics_client - INFO - Trying strategy: flag_discrepancies_post
-2025-07-07 11:33:33,953 - analytics_client - WARNING - Strategy flag_discrepancies_post failed: 'NoneType' object has no attribute 'post'
-2025-07-07 11:33:33,953 - analytics_client - ERROR - All analytics endpoint strategies failed for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:33:33,953 - feedback_loop_system - INFO - Found 0 discrepancies and 0 focus points
-2025-07-07 11:33:33,953 - feedback_loop_system - INFO - Step 2: Processing issues with specialized AI agents...
-2025-07-07 11:33:33,953 - discrepancy_processor - INFO - Processing 0 discrepancies...
-2025-07-07 11:33:33,953 - discrepancy_processor - INFO - Processing 0 focus points...
-2025-07-07 11:33:33,953 - discrepancy_processor - INFO - Issue processing complete: 0 corrections, 0 flagged, 0.00s
-2025-07-07 11:33:33,953 - feedback_loop_system - INFO - Applied 0 corrections to document
-2025-07-07 11:33:33,953 - feedback_loop_system - INFO - Feedback loop completed successfully for doc_1751902413_2359 in 0.00s with 0 corrections
-2025-07-07 11:33:33,953 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 0.0% improvement
-2025-07-07 11:34:26,926 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:34:26,926 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:34:26,926 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:34:26,968 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 11:34:27,000 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 11:34:27,001 - financial_agent - INFO - Financial Document Specialist Agent initialized
-2025-07-07 11:34:27,001 - feedback_loop_system - INFO - LLM-powered processing enabled
-2025-07-07 11:34:27,002 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
-2025-07-07 11:34:27,002 - __main__ - INFO - System components initialized successfully
-2025-07-07 11:34:27,002 - __main__ - INFO - Testing connectivity to Grant's analytics service...
-2025-07-07 11:34:27,105 - __main__ - WARNING - ⚠️ Failed to connect to Grant's analytics service
-2025-07-07 11:34:27,106 - __main__ - INFO - Starting batch processing of 3 documents
-2025-07-07 11:34:27,107 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:34:27,107 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:34:27,185 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:34:27,185 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:34:27,229 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:34:27,229 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:34:27,858 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:34:27,858 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:34:27,859 - __main__ - INFO - Found 21 discrepancies and 55 focus points
-2025-07-07 11:34:27,860 - __main__ - INFO - Processing with LLM-powered corrections...
-2025-07-07 11:34:27,860 - __main__ - WARNING - LLM processing failed: 'CombinedIssueProcessor' object has no attribute 'process_all_issues', falling back to rule-based
-2025-07-07 11:34:27,860 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 27.6% improvement
-2025-07-07 11:34:27,860 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:34:27,860 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:34:27,942 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:34:27,942 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:34:27,986 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:34:27,986 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:34:28,406 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:34:28,406 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:34:28,407 - __main__ - INFO - Found 35 discrepancies and 60 focus points
-2025-07-07 11:34:28,407 - __main__ - INFO - Processing with LLM-powered corrections...
-2025-07-07 11:34:28,408 - __main__ - WARNING - LLM processing failed: 'CombinedIssueProcessor' object has no attribute 'process_all_issues', falling back to rule-based
-2025-07-07 11:34:28,408 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 36.8% improvement
-2025-07-07 11:34:28,408 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:34:28,408 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:34:28,486 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:34:28,487 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:34:28,532 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:34:28,533 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:34:32,056 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:34:32,056 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:34:32,070 - __main__ - INFO - Found 15 discrepancies and 112 focus points
-2025-07-07 11:34:32,070 - __main__ - INFO - Processing with LLM-powered corrections...
-2025-07-07 11:34:32,070 - __main__ - WARNING - LLM processing failed: 'CombinedIssueProcessor' object has no attribute 'process_all_issues', falling back to rule-based
-2025-07-07 11:34:32,070 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 11.8% improvement
-2025-07-07 11:35:39,179 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:35:39,180 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:35:39,180 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:35:39,225 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 11:35:39,262 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 11:35:39,263 - financial_agent - INFO - Financial Document Specialist Agent initialized
-2025-07-07 11:35:39,264 - feedback_loop_system - INFO - LLM-powered processing enabled
-2025-07-07 11:35:39,264 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
-2025-07-07 11:35:39,264 - __main__ - INFO - System components initialized successfully
-2025-07-07 11:35:39,264 - __main__ - INFO - Testing connectivity to Grant's analytics service...
-2025-07-07 11:35:39,373 - __main__ - WARNING - ⚠️ Failed to connect to Grant's analytics service
-2025-07-07 11:35:39,375 - __main__ - INFO - Starting batch processing of 3 documents
-2025-07-07 11:35:39,375 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:35:39,376 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:35:39,459 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:35:39,459 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:35:39,504 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:35:39,505 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:35:39,891 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:35:39,892 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:35:39,893 - __main__ - INFO - Found 21 discrepancies and 55 focus points
-2025-07-07 11:35:39,893 - __main__ - INFO - Processing with LLM-powered corrections...
-2025-07-07 11:35:39,893 - __main__ - WARNING - LLM processing failed: 'CombinedIssueProcessor' object has no attribute 'process_all_issues', falling back to rule-based
-2025-07-07 11:35:39,893 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 27.6% improvement
-2025-07-07 11:35:39,894 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:35:39,894 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:35:39,979 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:35:39,980 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:35:40,027 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:35:40,027 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:35:40,646 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:35:40,647 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:35:40,648 - __main__ - INFO - Found 35 discrepancies and 60 focus points
-2025-07-07 11:35:40,648 - __main__ - INFO - Processing with LLM-powered corrections...
-2025-07-07 11:35:40,648 - __main__ - WARNING - LLM processing failed: 'CombinedIssueProcessor' object has no attribute 'process_all_issues', falling back to rule-based
-2025-07-07 11:35:40,649 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 36.8% improvement
-2025-07-07 11:35:40,649 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:35:40,649 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:35:40,725 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:35:40,725 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:35:40,770 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:35:40,771 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:35:43,999 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:35:43,999 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:35:44,015 - __main__ - INFO - Found 15 discrepancies and 112 focus points
-2025-07-07 11:35:44,015 - __main__ - INFO - Processing with LLM-powered corrections...
-2025-07-07 11:35:44,015 - __main__ - WARNING - LLM processing failed: 'CombinedIssueProcessor' object has no attribute 'process_all_issues', falling back to rule-based
-2025-07-07 11:35:44,015 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 11.8% improvement
-2025-07-07 11:43:03,495 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 11:43:03,496 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:43:03,496 - analytics_client - INFO - Using real analytics client
-2025-07-07 11:43:03,546 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 11:43:03,589 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 11:43:03,598 - financial_agent - INFO - Financial Document Specialist Agent initialized
-2025-07-07 11:43:03,598 - feedback_loop_system - INFO - LLM-powered processing enabled
-2025-07-07 11:43:03,598 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
-2025-07-07 11:43:03,599 - __main__ - INFO - System components initialized successfully
-2025-07-07 11:43:03,599 - __main__ - INFO - Testing connectivity to Grant's analytics service...
-2025-07-07 11:43:03,707 - __main__ - WARNING - ⚠️ Failed to connect to Grant's analytics service
-2025-07-07 11:43:03,709 - __main__ - INFO - Starting batch processing of 3 documents
-2025-07-07 11:43:03,710 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:43:03,710 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:43:03,790 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:43:03,791 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:43:03,835 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:43:03,835 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:43:04,195 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:43:04,195 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 11:43:04,197 - __main__ - INFO - Found 21 discrepancies and 55 focus points
-2025-07-07 11:43:04,197 - __main__ - INFO - Processing with LLM-powered corrections...
-2025-07-07 11:43:04,197 - __main__ - WARNING - LLM processing failed: 'CombinedIssueProcessor' object has no attribute 'process_all_issues', falling back to rule-based
-2025-07-07 11:43:04,197 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 27.6% improvement
-2025-07-07 11:43:04,197 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:43:04,197 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:43:04,280 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:43:04,280 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:43:04,324 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:43:04,325 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:43:04,880 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:43:04,880 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 11:43:04,881 - __main__ - INFO - Found 35 discrepancies and 60 focus points
-2025-07-07 11:43:04,881 - __main__ - INFO - Processing with LLM-powered corrections...
-2025-07-07 11:43:04,881 - __main__ - WARNING - LLM processing failed: 'CombinedIssueProcessor' object has no attribute 'process_all_issues', falling back to rule-based
-2025-07-07 11:43:04,881 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 36.8% improvement
-2025-07-07 11:43:04,882 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:43:04,882 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 11:43:04,965 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 11:43:04,966 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 11:43:05,013 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 11:43:05,013 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 11:43:08,104 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 11:43:08,104 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 11:43:08,119 - __main__ - INFO - Found 15 discrepancies and 112 focus points
-2025-07-07 11:43:08,119 - __main__ - INFO - Processing with LLM-powered corrections...
-2025-07-07 11:43:08,119 - __main__ - WARNING - LLM processing failed: 'CombinedIssueProcessor' object has no attribute 'process_all_issues', falling back to rule-based
-2025-07-07 11:43:08,120 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 11.8% improvement
-2025-07-07 12:08:42,644 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
-2025-07-07 12:08:42,646 - analytics_client - INFO - Using real analytics client
-2025-07-07 12:08:42,646 - analytics_client - INFO - Using real analytics client
-2025-07-07 12:08:42,697 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 12:08:42,736 - financial_agent - INFO - OpenAI client initialized
-2025-07-07 12:08:42,746 - financial_agent - INFO - Financial Document Specialist Agent initialized
-2025-07-07 12:08:42,747 - feedback_loop_system - INFO - LLM-powered processing enabled
-2025-07-07 12:08:42,747 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
-2025-07-07 12:08:42,747 - __main__ - INFO - System components initialized successfully
-2025-07-07 12:08:42,747 - __main__ - INFO - Testing connectivity to Grant's analytics service...
-2025-07-07 12:08:42,855 - __main__ - WARNING - ⚠️ Failed to connect to Grant's analytics service
-2025-07-07 12:08:42,857 - __main__ - INFO - Starting batch processing of 3 documents
-2025-07-07 12:08:42,857 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 12:08:42,858 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 12:08:42,939 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 12:08:42,940 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 12:08:42,987 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 12:08:42,987 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 12:08:43,291 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 12:08:43,291 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
-2025-07-07 12:08:43,293 - __main__ - INFO - Found 21 discrepancies and 55 focus points
-2025-07-07 12:08:43,293 - __main__ - INFO - Processing with LLM-powered corrections...
-2025-07-07 12:08:43,293 - __main__ - WARNING - LLM processing failed: 'CombinedIssueProcessor' object has no attribute 'process_all_issues', falling back to rule-based
-2025-07-07 12:08:43,293 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 27.6% improvement
-2025-07-07 12:08:43,293 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 12:08:43,293 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 12:08:43,378 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 12:08:43,378 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 12:08:43,425 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 12:08:43,426 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 12:08:43,926 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 12:08:43,926 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
-2025-07-07 12:08:43,928 - __main__ - INFO - Found 35 discrepancies and 60 focus points
-2025-07-07 12:08:43,928 - __main__ - INFO - Processing with LLM-powered corrections...
-2025-07-07 12:08:43,928 - __main__ - WARNING - LLM processing failed: 'CombinedIssueProcessor' object has no attribute 'process_all_issues', falling back to rule-based
-2025-07-07 12:08:43,928 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 36.8% improvement
-2025-07-07 12:08:43,929 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 12:08:43,929 - analytics_client - INFO - Trying strategy: tasks_todo_get
-2025-07-07 12:08:44,006 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
-2025-07-07 12:08:44,007 - analytics_client - INFO - Trying strategy: tasks_todo_post
-2025-07-07 12:08:44,052 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
-2025-07-07 12:08:44,052 - analytics_client - INFO - Trying strategy: extraction_flags
-2025-07-07 12:08:48,738 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
-2025-07-07 12:08:48,738 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
-2025-07-07 12:08:48,754 - __main__ - INFO - Found 15 discrepancies and 112 focus points
-2025-07-07 12:08:48,755 - __main__ - INFO - Processing with LLM-powered corrections...
-2025-07-07 12:08:48,755 - __main__ - WARNING - LLM processing failed: 'CombinedIssueProcessor' object has no attribute 'process_all_issues', falling back to rule-based
-2025-07-07 12:08:48,755 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 11.8% improvement
+2025-07-07 13:23:55,216 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
+2025-07-07 13:23:55,216 - analytics_client - INFO - Using real analytics client
+2025-07-07 13:23:55,216 - analytics_client - INFO - Using real analytics client
+2025-07-07 13:23:55,216 - feedback_loop_system - INFO - Rule-based processing mode (no LLM API keys found)
+2025-07-07 13:23:55,216 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
+2025-07-07 13:23:55,216 - __main__ - INFO - System components initialized successfully
+2025-07-07 13:23:55,217 - __main__ - INFO - Testing connectivity to Grant's analytics service...
+2025-07-07 13:23:55,680 - __main__ - INFO - ✅ Successfully connected to Grant's analytics service
+2025-07-07 13:23:55,681 - __main__ - INFO - Starting batch processing of 3 documents
+2025-07-07 13:23:55,682 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:23:55,682 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:23:55,761 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:23:55,762 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:23:55,805 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:23:55,806 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:23:56,154 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:23:56,154 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:23:56,156 - __main__ - INFO - Found 21 discrepancies and 55 focus points
+2025-07-07 13:23:56,156 - __main__ - INFO - Skipping re-validation - no corrections applied
+2025-07-07 13:23:56,156 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 27.6% improvement
+2025-07-07 13:23:56,156 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:23:56,156 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:23:56,233 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:23:56,233 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:23:56,286 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:23:56,287 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:23:56,878 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:23:56,879 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:23:56,880 - __main__ - INFO - Found 35 discrepancies and 60 focus points
+2025-07-07 13:23:56,881 - __main__ - INFO - Skipping re-validation - no corrections applied
+2025-07-07 13:23:56,881 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 36.8% improvement
+2025-07-07 13:23:56,881 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:23:56,881 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:23:56,964 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:23:56,965 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:23:57,008 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:23:57,009 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:24:01,092 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:24:01,092 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:24:01,106 - __main__ - INFO - Found 15 discrepancies and 112 focus points
+2025-07-07 13:24:01,106 - __main__ - INFO - Skipping re-validation - no corrections applied
+2025-07-07 13:24:01,106 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 11.8% improvement
+2025-07-07 13:24:32,450 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
+2025-07-07 13:24:32,450 - analytics_client - INFO - Using real analytics client
+2025-07-07 13:24:32,450 - analytics_client - INFO - Using real analytics client
+2025-07-07 13:24:32,450 - feedback_loop_system - INFO - Rule-based processing mode (no LLM API keys found)
+2025-07-07 13:24:32,451 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
+2025-07-07 13:24:32,451 - __main__ - INFO - System components initialized successfully
+2025-07-07 13:24:32,451 - __main__ - INFO - Testing connectivity to Grant's analytics service...
+2025-07-07 13:24:32,866 - __main__ - INFO - ✅ Successfully connected to Grant's analytics service
+2025-07-07 13:24:32,867 - __main__ - INFO - Starting batch processing of 3 documents
+2025-07-07 13:24:32,867 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:24:32,868 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:24:32,956 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:24:32,956 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:24:33,011 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:24:33,011 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:24:33,376 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:24:33,376 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:24:33,377 - __main__ - INFO - Found 21 discrepancies and 55 focus points
+2025-07-07 13:24:33,378 - __main__ - INFO - Step 3: Re-validating improved document to measure actual improvement...
+2025-07-07 13:24:33,378 - analytics_client - INFO - Re-validating improved document for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:24:33,378 - analytics_client - INFO - Note: Currently using same endpoint - future enhancement needed to submit improved docs
+2025-07-07 13:24:33,378 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:24:33,461 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:24:33,462 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:24:33,507 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:24:33,508 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:24:33,842 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:24:33,842 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:24:33,844 - __main__ - INFO - Re-validation results: 76 → 76 issues (0 resolved, 0.0% improvement)
+2025-07-07 13:24:33,844 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 0.0% improvement
+2025-07-07 13:24:33,844 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:24:33,844 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:24:33,921 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:24:33,922 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:24:33,970 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:24:33,971 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:24:34,569 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:24:34,569 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:24:34,571 - __main__ - INFO - Found 35 discrepancies and 60 focus points
+2025-07-07 13:24:34,571 - __main__ - INFO - Step 3: Re-validating improved document to measure actual improvement...
+2025-07-07 13:24:34,571 - analytics_client - INFO - Re-validating improved document for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:24:34,571 - analytics_client - INFO - Note: Currently using same endpoint - future enhancement needed to submit improved docs
+2025-07-07 13:24:34,571 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:24:34,648 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:24:34,649 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:24:34,694 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:24:34,694 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:24:35,319 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:24:35,319 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:24:35,321 - __main__ - INFO - Re-validation results: 95 → 95 issues (0 resolved, 0.0% improvement)
+2025-07-07 13:24:35,321 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 0.0% improvement
+2025-07-07 13:24:35,321 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:24:35,321 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:24:35,398 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:24:35,398 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:24:35,441 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:24:35,441 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:24:40,372 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:24:40,373 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:24:40,388 - __main__ - INFO - Found 15 discrepancies and 112 focus points
+2025-07-07 13:24:40,388 - __main__ - INFO - Step 3: Re-validating improved document to measure actual improvement...
+2025-07-07 13:24:40,388 - analytics_client - INFO - Re-validating improved document for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:24:40,388 - analytics_client - INFO - Note: Currently using same endpoint - future enhancement needed to submit improved docs
+2025-07-07 13:24:40,388 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:24:40,464 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:24:40,464 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:24:40,510 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:24:40,510 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:24:44,962 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:24:44,962 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:24:44,975 - __main__ - INFO - Re-validation results: 127 → 127 issues (0 resolved, 0.0% improvement)
+2025-07-07 13:24:44,975 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 0.0% improvement
+2025-07-07 13:25:01,450 - main - INFO - Initializing Tetrix AI Feedback Loop System...
+2025-07-07 13:25:01,451 - analytics_client - INFO - Using mock analytics client
+2025-07-07 13:25:01,451 - analytics_client - INFO - Using mock analytics client
+2025-07-07 13:25:01,451 - feedback_loop_system - INFO - Rule-based processing mode (no LLM API keys found)
+2025-07-07 13:25:01,451 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
+2025-07-07 13:25:01,451 - main - INFO - System components initialized successfully
+2025-07-07 13:25:01,451 - main - INFO - Processing document: test_doc_path
+2025-07-07 13:25:01,553 - main - INFO - Found 2 discrepancies and 1 focus points
+2025-07-07 13:25:01,554 - main - INFO - Step 3: Re-validating improved document to measure actual improvement...
+2025-07-07 13:25:01,655 - analytics_client - INFO - Mock re-validation shows improvement: reduced issues from previous analysis
+2025-07-07 13:25:01,655 - main - INFO - Re-validation results: 3 → 1 issues (2 resolved, 66.7% improvement)
+2025-07-07 13:25:23,180 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
+2025-07-07 13:25:23,180 - analytics_client - INFO - Using real analytics client
+2025-07-07 13:25:23,180 - analytics_client - INFO - Using real analytics client
+2025-07-07 13:25:23,181 - feedback_loop_system - INFO - Rule-based processing mode (no LLM API keys found)
+2025-07-07 13:25:23,181 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
+2025-07-07 13:25:23,181 - __main__ - INFO - System components initialized successfully
+2025-07-07 13:25:23,181 - __main__ - INFO - Testing connectivity to Grant's analytics service...
+2025-07-07 13:25:23,595 - __main__ - INFO - ✅ Successfully connected to Grant's analytics service
+2025-07-07 13:25:23,596 - __main__ - INFO - Starting batch processing of 3 documents
+2025-07-07 13:25:23,597 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:25:23,597 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:25:23,674 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:25:23,675 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:25:23,717 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:25:23,718 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:25:24,090 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:25:24,091 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:25:24,092 - __main__ - INFO - Found 21 discrepancies and 55 focus points
+2025-07-07 13:25:24,092 - __main__ - INFO - Step 3: Re-validating improved document to measure actual improvement...
+2025-07-07 13:25:24,092 - analytics_client - INFO - Re-validating improved document for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:25:24,092 - analytics_client - INFO - Note: Currently using same endpoint - future enhancement needed to submit improved docs
+2025-07-07 13:25:24,092 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:25:24,171 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:25:24,171 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:25:24,216 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:25:24,216 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:25:24,782 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:25:24,782 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:25:24,784 - __main__ - INFO - Re-validation results: 76 → 76 issues (0 resolved, 0.0% improvement)
+2025-07-07 13:25:24,784 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 0.0% improvement
+2025-07-07 13:25:24,784 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:25:24,784 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:25:24,869 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:25:24,870 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:25:24,913 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:25:24,913 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:25:25,798 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:25:25,798 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:25:25,800 - __main__ - INFO - Found 35 discrepancies and 60 focus points
+2025-07-07 13:25:25,800 - __main__ - INFO - Step 3: Re-validating improved document to measure actual improvement...
+2025-07-07 13:25:25,800 - analytics_client - INFO - Re-validating improved document for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:25:25,800 - analytics_client - INFO - Note: Currently using same endpoint - future enhancement needed to submit improved docs
+2025-07-07 13:25:25,800 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:25:25,879 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:25:25,880 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:25:25,924 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:25:25,925 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:25:26,946 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:25:26,946 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:25:26,948 - __main__ - INFO - Re-validation results: 95 → 95 issues (0 resolved, 0.0% improvement)
+2025-07-07 13:25:26,948 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 0.0% improvement
+2025-07-07 13:25:26,948 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:25:26,949 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:25:27,022 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:25:27,023 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:25:27,065 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:25:27,065 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:25:32,223 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:25:32,224 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:25:32,237 - __main__ - INFO - Found 15 discrepancies and 112 focus points
+2025-07-07 13:25:32,237 - __main__ - INFO - Step 3: Re-validating improved document to measure actual improvement...
+2025-07-07 13:25:32,237 - analytics_client - INFO - Re-validating improved document for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:25:32,238 - analytics_client - INFO - Note: Currently using same endpoint - future enhancement needed to submit improved docs
+2025-07-07 13:25:32,238 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:25:32,312 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:25:32,313 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:25:32,359 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:25:32,359 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:25:38,095 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:25:38,095 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:25:38,109 - __main__ - INFO - Re-validation results: 127 → 127 issues (0 resolved, 0.0% improvement)
+2025-07-07 13:25:38,109 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 0.0% improvement
+2025-07-07 13:29:17,119 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
+2025-07-07 13:29:17,119 - analytics_client - INFO - Using real analytics client
+2025-07-07 13:29:17,120 - analytics_client - INFO - Using real analytics client
+2025-07-07 13:29:17,164 - financial_agent - INFO - OpenAI client initialized
+2025-07-07 13:29:17,199 - financial_agent - INFO - OpenAI client initialized
+2025-07-07 13:29:17,211 - financial_agent - INFO - Financial Document Specialist Agent initialized
+2025-07-07 13:29:17,211 - feedback_loop_system - INFO - LLM-powered processing enabled
+2025-07-07 13:29:17,211 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
+2025-07-07 13:29:17,211 - __main__ - INFO - System components initialized successfully
+2025-07-07 13:29:17,211 - __main__ - INFO - Testing connectivity to Grant's analytics service...
+2025-07-07 13:29:17,625 - __main__ - INFO - ✅ Successfully connected to Grant's analytics service
+2025-07-07 13:29:17,626 - __main__ - INFO - Starting batch processing of 3 documents
+2025-07-07 13:29:17,627 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:29:17,627 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:29:17,709 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:29:17,710 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:29:17,755 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:29:17,756 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:29:18,165 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:29:18,165 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:29:18,166 - __main__ - INFO - Found 21 discrepancies and 55 focus points
+2025-07-07 13:29:18,167 - __main__ - INFO - Processing with LLM-powered corrections...
+2025-07-07 13:29:18,167 - discrepancy_processor - INFO - Processing 21 discrepancies...
+2025-07-07 13:29:24,069 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:29:24,089 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67b9: corrected (95.0% confidence)
+2025-07-07 13:29:37,146 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:29:37,149 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67ba: corrected (95.0% confidence)
+2025-07-07 13:29:48,773 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:29:48,777 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67bb: corrected (95.0% confidence)
+2025-07-07 13:29:59,483 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:29:59,499 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67bc: corrected (95.0% confidence)
+2025-07-07 13:30:06,234 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:30:06,240 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67bd: corrected (95.0% confidence)
+2025-07-07 13:30:14,055 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:30:14,057 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67be: corrected (95.0% confidence)
+2025-07-07 13:30:19,815 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:30:19,820 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67bf: corrected (95.0% confidence)
+2025-07-07 13:30:26,611 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:30:26,623 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67c0: corrected (95.0% confidence)
+2025-07-07 13:30:36,744 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:30:36,752 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67c2: corrected (95.0% confidence)
+2025-07-07 13:30:41,864 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:30:41,867 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67c3: corrected (95.0% confidence)
+2025-07-07 13:30:47,844 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:30:47,845 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67c5: corrected (95.0% confidence)
+2025-07-07 13:30:52,636 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:30:52,639 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67c6: corrected (95.0% confidence)
+2025-07-07 13:31:00,315 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:31:00,324 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67c7: corrected (95.0% confidence)
+2025-07-07 13:31:13,096 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:31:13,101 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67c8: corrected (95.0% confidence)
+2025-07-07 13:31:18,118 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:31:18,123 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67c9: corrected (95.0% confidence)
+2025-07-07 13:31:22,666 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:31:22,675 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67ca: corrected (95.0% confidence)
+2025-07-07 13:31:28,151 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:31:28,155 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67cc: corrected (95.0% confidence)
+2025-07-07 13:31:36,149 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:31:36,152 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67cd: corrected (95.0% confidence)
+2025-07-07 13:31:41,583 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:31:41,590 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67ce: corrected (95.0% confidence)
+2025-07-07 13:31:46,562 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:31:46,566 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67cf: corrected (95.0% confidence)
+2025-07-07 13:31:56,843 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:31:56,847 - discrepancy_processor - INFO - Processed discrepancy 686c03ed4f91596b8a6f67d0: corrected (95.0% confidence)
+2025-07-07 13:31:56,848 - discrepancy_processor - INFO - Processing 55 focus points...
+2025-07-07 13:32:02,296 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:32:02,298 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67d1: flagged (70.0% confidence)
+2025-07-07 13:32:07,231 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:32:07,234 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67d2: flagged (70.0% confidence)
+2025-07-07 13:32:13,214 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:32:13,216 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67d3: flagged (70.0% confidence)
+2025-07-07 13:32:23,610 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:32:23,621 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67d4: flagged (70.0% confidence)
+2025-07-07 13:32:29,288 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:32:29,293 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67d5: flagged (70.0% confidence)
+2025-07-07 13:32:39,832 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:32:39,835 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67d8: flagged (70.0% confidence)
+2025-07-07 13:32:45,133 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:32:45,137 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67da: flagged (70.0% confidence)
+2025-07-07 13:32:50,093 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:32:50,098 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67dc: flagged (70.0% confidence)
+2025-07-07 13:32:58,387 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:32:58,390 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67de: flagged (70.0% confidence)
+2025-07-07 13:33:03,619 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:33:03,623 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67df: flagged (70.0% confidence)
+2025-07-07 13:33:08,297 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:33:08,301 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67e0: flagged (70.0% confidence)
+2025-07-07 13:33:14,820 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:33:14,825 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67e1: flagged (70.0% confidence)
+2025-07-07 13:33:24,271 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:33:24,276 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67e2: flagged (70.0% confidence)
+2025-07-07 13:33:30,137 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:33:30,141 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67e3: flagged (70.0% confidence)
+2025-07-07 13:33:40,025 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:33:40,028 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67e4: flagged (70.0% confidence)
+2025-07-07 13:33:52,839 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:33:52,844 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67e5: flagged (70.0% confidence)
+2025-07-07 13:33:57,925 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:33:57,930 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67e6: flagged (70.0% confidence)
+2025-07-07 13:34:04,798 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:34:04,803 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67e7: flagged (70.0% confidence)
+2025-07-07 13:34:15,146 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:34:15,173 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67e8: flagged (70.0% confidence)
+2025-07-07 13:34:20,406 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:34:20,413 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67e9: flagged (70.0% confidence)
+2025-07-07 13:34:26,033 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:34:26,038 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67ea: flagged (70.0% confidence)
