@@ -491,48 +491,6 @@ async def run_sample_integration_test():
     print(f"   Total Corrections Applied: {metrics['corrections_applied']}")
     print(f"   Average Improvement Score: {metrics['average_improvement_score']:.1%}")
     
-    # Assessment
-    print(f"\nINTEGRATION ASSESSMENT:")
-    
-    if summary['successful_documents'] == len(test_documents) and summary['total_issues_found'] > 0:
-        print("   EXCELLENT: Real integration working perfectly!")
-        print("   - Successfully connected to Grant's analytics service")
-        print("   - Processing real financial discrepancies and focus points")
-        print("   - Automated correction pipeline operational")
-        print("   - Ready for production deployment in Grant's pipeline")
-        
-        if has_openai_key:
-            print("   - Full LLM-powered corrections enabled")
-        else:
-            print("   - Rule-based processing active (set OPENAI_API_KEY for LLM corrections)")
-            
-    elif summary['successful_documents'] > 0:
-        print("   GOOD: Partial integration success")
-        print("   - Some documents processed successfully")
-        print("   - System demonstrates core functionality")
-        print("   - Ready for additional testing and refinement")
-        
-    else:
-        print("   NEEDS ATTENTION: Integration issues detected")
-        print("   - Check network connectivity to Grant's service")
-        print("   - Verify document paths and permissions")
-        print("   - Review system logs for detailed error information")
-    
-    print(f"\nNEXT STEPS:")
-    print("   1. Core feedback loop integration validated")
-    print("   2. Real discrepancy processing confirmed")
-    print("   3. Document correction pipeline operational")
-    
-    if has_openai_key:
-        print("   4. LLM-powered corrections active")
-    else:
-        print("   4. Set OPENAI_API_KEY for full LLM integration")
-    
-    print("   5. Ready for Grant's production pipeline integration")
-    print("   6. Monitor system performance in production environment")
-    
-    print(f"\nTETRIX AI FEEDBACK LOOP SYSTEM VALIDATION COMPLETE!")
-    print("Successfully integrating Grant's analytics endpoints for real-world testing!")
 
 if __name__ == "__main__":
     print("Starting Tetrix AI Feedback Loop System Integration Test...")
