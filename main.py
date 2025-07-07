@@ -367,8 +367,13 @@ async def run_sample_integration_test():
     has_openai_key = bool(os.getenv("OPENAI_API_KEY"))
     use_mock = False  # Always try real analytics service
     
+    print(f"   DEBUG: OPENAI_API_KEY = {os.getenv('OPENAI_API_KEY')[:10] + '...' if os.getenv('OPENAI_API_KEY') else 'None'}")
+    print(f"   DEBUG: has_openai_key = {has_openai_key}")
+    
     system = TetrixProductionSystem(use_mock_analytics=use_mock)
     await system.initialize()
+    
+    print(f"   DEBUG: feedback_loop.issue_processor = {system.feedback_loop.issue_processor is not None}")
     
     analytics_mode = "Mock" if use_mock else "Real Grant's Service"
     print(f"   Analytics Mode: {analytics_mode}")
