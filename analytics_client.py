@@ -132,7 +132,7 @@ class TetrixAnalyticsClient:
         # by trying a known working endpoint with a real document path
         try:
             start_time = time.time()
-            test_doc_path = "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533"  # Use a real document path
+            test_doc_path = "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533"
             
             async with self.session.get(
                 f"{self.base_url}/tetrix-analytics-microservice/discrepancies/extraction_flags/{test_doc_path}"
@@ -151,7 +151,6 @@ class TetrixAnalyticsClient:
                         "endpoint_used": "extraction_flags",
                         "note": "Heartbeat endpoint not available, but service is working perfectly"
                     }
-                # 404/422 means we can reach the service but endpoint doesn't work as expected
                 elif response.status in [404, 422]:
                     self.metrics["last_connection_test"] = datetime.now().isoformat()
                     return {
@@ -181,7 +180,7 @@ class TetrixAnalyticsClient:
             "vpn_check": "Ensure VPN is connected" if self.vpn_required else "Check network connectivity"
         }
     
-    async def get_discrepancies_for_document(self, doc_path: str, client_entity_or_org: str = "client_entity", 
+    async def get_discrepancies_for_document(self, doc_path: str, client_entity_or_org: str = "client_entity",
                                            ce_or_org_id: str = "default") -> AnalyticsResponse:
         """
         Get discrepancies and focus points for a specific document
@@ -189,22 +188,7 @@ class TetrixAnalyticsClient:
         """
         start_time = time.time()
         
-        # Different endpoint strategies to try
         strategies = [
-            # {
-            #     "name": "tasks_todo_get",
-            #     "method": "GET",
-            #     "endpoint": f"/tetrix-analytics-microservice/discrepancies/tasks_todo/{client_entity_or_org}/{ce_or_org_id}",
-            #     "params": {"doc_path": doc_path},
-            #     "body": None
-            # },
-            # {
-            #     "name": "tasks_todo_post",
-            #     "method": "POST", 
-            #     "endpoint": f"/tetrix-analytics-microservice/discrepancies/tasks_todo/{client_entity_or_org}/{ce_or_org_id}",
-            #     "params": {},
-            #     "body": {"doc_path": doc_path}
-            # },
             {
                 "name": "extraction_flags",
                 "method": "GET",
@@ -212,14 +196,6 @@ class TetrixAnalyticsClient:
                 "params": {},
                 "body": None
             }
-            # ,
-            # {
-            #     "name": "flag_discrepancies_post",
-            #     "method": "POST",
-            #     "endpoint": f"/tetrix-analytics-microservice/discrepancies/flag_discrepancies_investor/{client_entity_or_org}",
-            #     "params": {},
-            #     "body": {"doc_path": doc_path}
-            # }
         ]
         
         for strategy in strategies:
@@ -429,6 +405,82 @@ class TetrixAnalyticsClient:
             "avg_response_time": self.metrics["avg_response_time"],
             "last_connection_test": self.metrics["last_connection_test"]
         }
+    
+    async def get_raw_document_data(self, document_path: str) -> Dict[str, Any]:
+        """Get the raw document data for calculations and analysis using real Tetrix API endpoints"""
+        
+        logger.info(f"Fetching raw document data for {document_path} from real Tetrix API")
+        
+        # The extraction_flags endpoint returns the full parsed_document with all financial data!
+        try:
+            logger.info("Using extraction_flags endpoint to get full parsed document")
+            response = await self.session.get(
+                f"{self.base_url}/tetrix-analytics-microservice/discrepancies/extraction_flags/{document_path}",
+                timeout=aiohttp.ClientTimeout(total=30)
+            )
+            
+            if response.status == 200:
+                data = await response.json()
+                
+                # Extract the parsed_document which contains all the real financial data
+                parsed_document = data.get("parsed_document", {})
+                
+                if parsed_document:
+                    logger.info(f"SUCCESS! Got full parsed document with {len(parsed_document)} fields")
+                    logger.info(f"Fund: {parsed_document.get('fund_name')}")
+                    logger.info(f"Assets: {len(parsed_document.get('assets', []))} assets")
+                    
+                    # Return the parsed document which has all the financial data
+                    return parsed_document
+                else:
+                    logger.warning("No parsed_document found in response")
+                    return data
+            else:
+                logger.warning(f"extraction_flags failed with status {response.status}")
+                response_text = await response.text()
+                logger.warning(f"Response: {response_text[:200]}...")
+                
+        except Exception as e:
+            logger.warning(f"extraction_flags strategy failed: {e}")
+        
+        # Fallback to other strategies if extraction_flags fails
+        strategies = [
+            ("consolidate_document", f"/tetrix-analytics-microservice/cons/consolidate_document/{document_path}"),
+            ("normalize_api", f"/tetrix-analytics-microservice/normalizer/normalize_documents_api/client_entity/default")
+        ]
+        
+        for strategy_name, endpoint in strategies:
+            try:
+                logger.info(f"Trying fallback strategy: {strategy_name}")
+                
+                if strategy_name == "normalize_api":
+                    response = await self.session.post(
+                        f"{self.base_url}{endpoint}",
+                        json={"doc_path": document_path},
+                        timeout=aiohttp.ClientTimeout(total=60)
+                    )
+                else:
+                    response = await self.session.post(
+                        f"{self.base_url}{endpoint}",
+                        timeout=aiohttp.ClientTimeout(total=60)
+                    )
+                
+                if response.status == 200:
+                    data = await response.json()
+                    logger.info(f"SUCCESS with fallback strategy {strategy_name}")
+                    return data
+                    
+            except Exception as e:
+                logger.warning(f"Fallback strategy {strategy_name} failed: {e}")
+                continue
+        
+        # Complete fallback
+        logger.warning("All strategies failed, returning minimal document context")
+        return {
+            "document_path": document_path,
+            "error": "Raw document data not accessible",
+            "fallback": True
+        }
 
 class MockAnalyticsClient(TetrixAnalyticsClient):
     """Mock client for testing when VPN/analytics service is not available"""
@@ -542,6 +594,62 @@ class MockAnalyticsClient(TetrixAnalyticsClient):
             response_timestamp=datetime.now(),
             processing_time_ms=100.0
         )
+    
+    async def get_raw_document_data(self, document_path: str) -> Dict[str, Any]:
+        """Get the raw document data for calculations and analysis"""
+        
+        logger.info(f"Fetching raw document data for {document_path}")
+        
+        # For mock client, return simulated document data with real financial structure
+        await asyncio.sleep(0.1)  # Simulate API delay
+        
+        return {
+            "document_path": document_path,
+            "fund_name": "ABRY Partners VIII",
+            "reporting_date": "2024-03-31",
+            "total_fund_size": 6838722000.0,
+            "total_investments_fair_value": 3419361000.0,
+            "net_asset_value": 3419361000.0,
+            "assets": {
+                "Craneware": {
+                    "total_invested": 45000000.0,
+                    "current_value": 53425000.0,
+                    "realized_value": 53425000.0,
+                    "location": "Europe",
+                    "investment_status": "partially_realized",
+                    "industry": "Healthcare Technology"
+                },
+                "Link Mobility": {
+                    "total_invested": None,  # This should be calculated
+                    "current_value": 12000000.0,
+                    "realized_value": 0.0,
+                    "location": "Europe", 
+                    "investment_status": "unrealized",
+                    "industry": "Technology"
+                },
+                "Inspira": {
+                    "total_invested": None,  # This should be calculated
+                    "current_value": 8500000.0,
+                    "realized_value": 0.0,
+                    "location": "USA",
+                    "investment_status": "unrealized",
+                    "industry": "Healthcare"
+                },
+                "Direct Travel": {
+                    "total_invested": 1956000.0,
+                    "current_value": 180000.0,
+                    "realized_value": 180000.0,
+                    "location": "USA",
+                    "investment_status": "realized"
+                }
+            },
+            "calculations": {
+                "total_invested_should_equal": "sum of all asset.total_invested values",
+                "net_asset_value_formula": "total_investments_fair_value - liabilities",
+                "missing_total_invested_can_be_inferred": "from current_value and typical investment patterns"
+            },
+            "raw_data_available": True
+        }
 
 # Factory function to create appropriate client
 def create_analytics_client(use_mock: bool = None) -> TetrixAnalyticsClient:

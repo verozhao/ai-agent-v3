@@ -120,13 +120,227 @@ Focus on mathematical accuracy and financial consistency.
             
             processing_time = time.time() - start_time
             
-            # Parse LLM response for correction
-            suggested_value = discrepancy.expected_value  # Default to expected value
-            action_taken = "corrected"
-            confidence = 0.95  # High confidence for mathematical discrepancies
+            # Fetch actual document data and perform real calculations
+            try:
+                # First, get the source document data using REAL Tetrix API endpoints
+                from analytics_client import create_analytics_client
+                # Use real analytics client to call actual Tetrix API endpoints
+                analytics_client = create_analytics_client(use_mock=False)
+                
+                logger.info(f"Fetching source document data for {discrepancy.field} correction...")
+                
+                # Get the document data 
+                document_path = getattr(discrepancy, 'document_path', 'PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533')
+                
+                async with analytics_client:
+                    # Get the full document data AND the raw document
+                    source_response = await analytics_client.get_discrepancies_for_document(document_path)
+                    
+                    # Try to get the original document data for calculations
+                    try:
+                        # Attempt to fetch the raw document data
+                        raw_document_data = await analytics_client.get_raw_document_data(document_path)
+                    except:
+                        raw_document_data = "Raw document data not available"
+                        
+                # Create detailed analysis context with ALL available data
+                other_discrepancies = [d for d in source_response.discrepancies if d.discrepancy_id != discrepancy.discrepancy_id]
+                
+                # Create intelligent correction prompt with REAL Tetrix document data
+                import json
+                
+                # Extract relevant data from real Tetrix API response
+                logger.info(f"Raw document data type: {type(raw_document_data)}")
+                if isinstance(raw_document_data, dict):
+                    logger.info(f"Raw document data keys: {list(raw_document_data.keys())}")
+                    logger.info(f"Raw document data content (first 500 chars): {str(raw_document_data)[:500]}")
+                
+                # Extract real financial data from the parsed document
+                has_financial_data = False
+                assets_data = {}
+                financial_totals = {}
+                target_asset = None
+                
+                if isinstance(raw_document_data, dict):
+                    # Look for assets list (this is the real data structure)
+                    assets_list = raw_document_data.get('assets', [])
+                    
+                    # Convert assets list to dict for easier lookup
+                    if assets_list:
+                        assets_data = {asset.get('name', f'asset_{i}'): asset for i, asset in enumerate(assets_list)}
+                    
+                    # Extract financial totals from real document
+                    financial_totals = {
+                        'fund_name': raw_document_data.get('fund_name'),
+                        'total_fund_net_asset_value': raw_document_data.get('total_fund_net_asset_value'),
+                        'total_investments_unrealized_and_realized': raw_document_data.get('total_investments_unrealized_and_realized'),
+                        'total_invested_capital': raw_document_data.get('total_invested_capital'),
+                        'total_distribution_to_partners': raw_document_data.get('total_distribution_to_partners'),
+                        'number_of_unrealized_investments': raw_document_data.get('number_of_unrealized_investments'),
+                        'number_of_realized_investments': raw_document_data.get('number_of_realized_investments')
+                    }
+                    
+                    # Find the specific asset if this is an asset-level discrepancy
+                    if 'assets.' in discrepancy.field:
+                        asset_name_parts = discrepancy.field.split('.')
+                        if len(asset_name_parts) >= 2:
+                            asset_name = asset_name_parts[1]
+                            target_asset = assets_data.get(asset_name)
+                            if target_asset:
+                                logger.info(f"Found target asset '{asset_name}' for field '{discrepancy.field}'")
+                    
+                    # Check if we have meaningful financial data
+                    has_financial_data = (
+                        len(assets_data) > 0 or
+                        any(v is not None for v in financial_totals.values()) or
+                        'fund_name' in raw_document_data
+                    )
+                
+                # If real API doesn't have financial data, fall back to using discrepancy context
+                if not has_financial_data:
+                    logger.warning(f"Real API response lacks financial data structure. Using discrepancy context for {discrepancy.field}")
+                    
+                    # Use the discrepancy's expected value and context
+                    correction_prompt = f"""FINANCIAL CORRECTION TASK - Using discrepancy analysis:
+
+DISCREPANCY DETAILS:
+Field: {discrepancy.field}
+Current Value: {discrepancy.current_value}
+Expected Value: {discrepancy.expected_value}
+Issue: {discrepancy.message}
+Financial Rule Violated: {discrepancy.financial_rule}
+Evidence: {discrepancy.evidence}
+Confidence: {discrepancy.confidence}
+
+CORRECTION LOGIC:
+- Field: {discrepancy.field}
+- Problem: {discrepancy.issue_type}
+- Context: This is a {discrepancy.severity} severity discrepancy
+
+TASK: 
+Based on the financial rule violation and evidence, provide the corrected value for {discrepancy.field}.
+
+For missing values (None/null): Provide "MISSING_DATA"
+For calculation errors: Use the expected value if available
+For consistency issues: Use the most logical/recent value
+
+RESPOND WITH JUST THE CORRECTED VALUE:"""
+                else:
+                    # Create intelligent correction using real financial data
+                    if target_asset and 'total_invested' in discrepancy.field:
+                        # For missing total_invested, calculate from available asset data
+                        asset_name = discrepancy.field.split('.')[1]
+                        unrealized = target_asset.get('unrealized_value', 0)
+                        realized = target_asset.get('realized_value', 0)
+                        total_value = target_asset.get('total_value', 0)
+                        moic = target_asset.get('gross_moic')
+                        
+                        correction_prompt = f"""FINANCIAL CALCULATION - Missing Total Invested for {asset_name}:
+
+AVAILABLE REAL DATA FROM PDF:
+- Unrealized Value: ${unrealized:,.0f}
+- Realized Value: ${(realized or 0):,.0f}  
+- Total Value: ${total_value:,.0f}
+- Gross MOIC: {moic if moic is not None else 'N/A'}
+
+CALCULATION METHODS:
+1. If MOIC available: Total Invested = Total Value / MOIC
+2. If no MOIC: Total Invested ≈ Total Value (for unrealized assets)
+3. For realized assets: Total Invested = Original Cost Basis
+
+Calculate the missing total_invested amount. Provide only the number."""
+
+                    elif 'total_fund_net_asset_value' in discrepancy.field:
+                        # For NAV discrepancy, compare with total investments
+                        nav = financial_totals.get('total_fund_net_asset_value', 0)
+                        investments = financial_totals.get('total_investments_unrealized_and_realized', 0)
+                        
+                        correction_prompt = f"""NAV VALIDATION - Fund Level Discrepancy:
+
+REAL FUND DATA FROM PDF:
+- Current NAV: ${nav:,.0f}
+- Total Investments Value: ${investments:,.0f}
+- Difference: ${abs(nav - investments):,.0f}
+
+FINANCIAL RULE: NAV should approximately equal Total Investments Value
+Issue: {discrepancy.message}
+
+The current NAV (${nav:,.0f}) vs Investments (${investments:,.0f}) - validate if this is correct.
+Provide the corrected NAV value or confirm current value."""
+
+                    else:
+                        # Generic correction using full document context
+                        correction_prompt = f"""FINANCIAL CORRECTION - Using REAL document data:
+
+ISSUE: {discrepancy.field} = {discrepancy.current_value}
+PROBLEM: {discrepancy.message}
+
+REAL FUND DATA:
+{json.dumps(financial_totals, indent=2, default=str)}
+
+TARGET ASSET DATA:
+{json.dumps(target_asset, indent=2, default=str) if target_asset else 'Not an asset-level field'}
+
+TASK: Based on the real financial data above, provide the corrected value for {discrepancy.field}.
+Respond with just the corrected value."""
+                
+                # Direct OpenAI call with context
+                import openai
+                import os
+                client = openai.AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+                
+                response = await client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[{"role": "user", "content": correction_prompt}],
+                    max_tokens=50,
+                    temperature=0.1
+                )
+                
+                corrected_value_text = response.choices[0].message.content.strip()
+                
+                # Clean up the response - extract just the value
+                if "=" in corrected_value_text:
+                    corrected_value_text = corrected_value_text.split("=")[-1].strip()
+                if corrected_value_text.startswith('"') and corrected_value_text.endswith('"'):
+                    corrected_value_text = corrected_value_text[1:-1]
+                
+                # Parse the response
+                if corrected_value_text.upper() in ["NULL", "NONE"]:
+                    suggested_value = None
+                    action_taken = "corrected"
+                    confidence = 0.85
+                elif corrected_value_text.upper() in ["CANNOT_CORRECT", "UNKNOWN"]:
+                    suggested_value = discrepancy.current_value
+                    action_taken = "flagged"
+                    confidence = 0.60
+                elif corrected_value_text.upper() == "MISSING_DATA":
+                    # Handle missing data by using expected value if available
+                    suggested_value = discrepancy.expected_value if discrepancy.expected_value is not None else "MISSING_DATA"
+                    action_taken = "corrected"
+                    confidence = 0.75
+                else:
+                    # Try to parse as number first (remove $ and commas)
+                    clean_text = corrected_value_text.replace("$", "").replace(",", "")
+                    try:
+                        suggested_value = float(clean_text)
+                        action_taken = "corrected"
+                        confidence = 0.90
+                    except ValueError:
+                        # It's a text value - if it's still "Corrected Value: X" format, extract the X
+                        if ":" in corrected_value_text:
+                            suggested_value = corrected_value_text.split(":")[-1].strip()
+                        else:
+                            suggested_value = corrected_value_text
+                        action_taken = "corrected"
+                        confidence = 0.85
+                    
+            except Exception as parse_error:
+                logger.warning(f"Financial agent correction failed for {discrepancy.field}: {parse_error}")
+                suggested_value = discrepancy.expected_value or discrepancy.current_value
+                action_taken = "flagged"
+                confidence = 0.50
             
-            # Enhanced parsing would extract from LLM response
-            reasoning = f"Mathematical discrepancy in {discrepancy.field}: {discrepancy.message}"
+            reasoning = f"LLM analysis: {llm_response['reasoning'][:200]}..."
             
             result = ProcessingResult(
                 issue_id=discrepancy.discrepancy_id,
@@ -227,19 +441,67 @@ Be conservative - only suggest corrections if confident there's an error.
             
             processing_time = time.time() - start_time
             
-            # Default to flagging for human review (conservative approach)
-            suggested_value = focus_point.current_value
-            action_taken = "flagged"
-            confidence = 0.70  # Medium confidence for focus points
+            # Use direct OpenAI call for focus point analysis
+            try:
+                # Create analysis prompt for this focus point
+                analysis_prompt = f"""Analyze this financial data:
+
+Field: {focus_point.field}
+Current: {focus_point.current_value}
+Issue: {focus_point.flag_reason}
+Historical: {focus_point.historical_values}
+
+Options:
+- CORRECT: [value] - if you know right value
+- FLAG - needs human review
+- ACCEPT - current value OK
+
+Answer:"""
+                
+                # Direct OpenAI call
+                import openai
+                import os
+                client = openai.AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+                
+                response = await client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[{"role": "user", "content": analysis_prompt}],
+                    max_tokens=30,
+                    temperature=0.1
+                )
+                
+                response_text = response.choices[0].message.content.strip().upper()
+                
+                # Parse the agent's decision
+                if response_text.startswith("CORRECT:"):
+                    correction_value = response_text.replace("CORRECT:", "").strip()
+                    try:
+                        suggested_value = float(correction_value)
+                    except ValueError:
+                        suggested_value = correction_value
+                    action_taken = "corrected"
+                    confidence = 0.80
+                elif response_text == "FLAG":
+                    suggested_value = focus_point.current_value
+                    action_taken = "flagged"
+                    confidence = 0.70
+                elif response_text == "ACCEPT":
+                    suggested_value = focus_point.current_value
+                    action_taken = "flagged"  # Still flag for review even if accepted
+                    confidence = 0.60
+                else:
+                    # Default conservative
+                    suggested_value = focus_point.current_value
+                    action_taken = "flagged"
+                    confidence = 0.50
+                    
+            except Exception as parse_error:
+                logger.warning(f"Financial agent analysis failed for {focus_point.field}: {parse_error}")
+                suggested_value = focus_point.current_value
+                action_taken = "flagged"
+                confidence = 0.50
             
-            # Enhanced parsing would analyze LLM response
-            reasoning = f"Focus point in {focus_point.field}: {focus_point.flag_reason}"
-            
-            # Check for obvious corrections based on historical data
-            if self._should_auto_correct(focus_point):
-                suggested_value = self._calculate_suggested_value(focus_point)
-                action_taken = "corrected"
-                confidence = 0.85
+            reasoning = f"LLM analysis: {llm_response['reasoning'][:200]}..."
             
             result = ProcessingResult(
                 issue_id=focus_point.focus_point_id,
