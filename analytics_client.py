@@ -191,34 +191,35 @@ class TetrixAnalyticsClient:
         
         # Different endpoint strategies to try
         strategies = [
-            {
-                "name": "tasks_todo_get",
-                "method": "GET",
-                "endpoint": f"/tetrix-analytics-microservice/discrepancies/tasks_todo/{client_entity_or_org}/{ce_or_org_id}",
-                "params": {"doc_path": doc_path},
-                "body": None
-            },
-            {
-                "name": "tasks_todo_post",
-                "method": "POST", 
-                "endpoint": f"/tetrix-analytics-microservice/discrepancies/tasks_todo/{client_entity_or_org}/{ce_or_org_id}",
-                "params": {},
-                "body": {"doc_path": doc_path}
-            },
+            # {
+            #     "name": "tasks_todo_get",
+            #     "method": "GET",
+            #     "endpoint": f"/tetrix-analytics-microservice/discrepancies/tasks_todo/{client_entity_or_org}/{ce_or_org_id}",
+            #     "params": {"doc_path": doc_path},
+            #     "body": None
+            # },
+            # {
+            #     "name": "tasks_todo_post",
+            #     "method": "POST", 
+            #     "endpoint": f"/tetrix-analytics-microservice/discrepancies/tasks_todo/{client_entity_or_org}/{ce_or_org_id}",
+            #     "params": {},
+            #     "body": {"doc_path": doc_path}
+            # },
             {
                 "name": "extraction_flags",
                 "method": "GET",
                 "endpoint": f"/tetrix-analytics-microservice/discrepancies/extraction_flags/{doc_path}",
                 "params": {},
                 "body": None
-            },
-            {
-                "name": "flag_discrepancies_post",
-                "method": "POST",
-                "endpoint": f"/tetrix-analytics-microservice/discrepancies/flag_discrepancies_investor/{client_entity_or_org}",
-                "params": {},
-                "body": {"doc_path": doc_path}
             }
+            # ,
+            # {
+            #     "name": "flag_discrepancies_post",
+            #     "method": "POST",
+            #     "endpoint": f"/tetrix-analytics-microservice/discrepancies/flag_discrepancies_investor/{client_entity_or_org}",
+            #     "params": {},
+            #     "body": {"doc_path": doc_path}
+            # }
         ]
         
         for strategy in strategies:
