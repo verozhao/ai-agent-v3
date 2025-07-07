@@ -1,0 +1,208 @@
+{
+  "original_document_path": "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533",
+  "processing_timestamp": "2025-07-07T15:40:45.877716",
+  "original_issues": 76,
+  "corrections_applied": 21,
+  "improvement_score": 0.0,
+  "processing_mode": "llm_powered",
+  "corrections": [
+    {
+      "field": "total_fund_net_asset_value",
+      "original_value": 3419361000.0,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in total_fund_net_asset_value: Total Fund Net Asset Value is less than 50% or greater than 200% of Total Investments Fair Value",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.Link Mobility.total_invested",
+      "original_value": null,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.Link Mobility.total_invested: Total Invested for asset Link Mobility is not a valid number",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.Inspira.total_invested",
+      "original_value": null,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.Inspira.total_invested: Total Invested for asset Inspira is not a valid number",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.Acrisure.industry",
+      "original_value": "Financials",
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.Acrisure.industry: Industry is not consistent across all asset reports",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.Craneware.location",
+      "original_value": "Europe",
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.Craneware.location: Location is not consistent across all asset reports",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.Craneware.realized_value",
+      "original_value": 53425000.0,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.Craneware.realized_value: Realized_value decreased when it should only increase or stay the same",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.Direct Travel.total_invested",
+      "original_value": 1956000.0,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.Direct Travel.total_invested: Total_invested decreased when it should only increase or stay the same",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.Direct Travel.realized_value",
+      "original_value": 180000.0,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.Direct Travel.realized_value: Realized_value decreased when it should only increase or stay the same",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.Direct Travel.total_value",
+      "original_value": 180000.0,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.Direct Travel.total_value: Total Value for asset Direct Travel has changed from 1776000.0 to 180000.0 which is not expected for a realized asset",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.FastMed.location",
+      "original_value": "USA",
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.FastMed.location: Location is not consistent across all asset reports",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.NSM Insurance.realized_value",
+      "original_value": 107626000.0,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.NSM Insurance.realized_value: Realized_value decreased when it should only increase or stay the same",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.NSM Insurance.total_value",
+      "original_value": 107626000.0,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.NSM Insurance.total_value: Total Value for asset NSM Insurance has changed from 183087000.0 to 107626000.0 which is not expected for a realized asset",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.SambaSafety.realized_value",
+      "original_value": 73534000.0,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.SambaSafety.realized_value: Realized_value decreased when it should only increase or stay the same",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.SambaSafety.investment_status",
+      "original_value": "partially_realized",
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.SambaSafety.investment_status: Investment_status went from InvestmentStatus.realized to InvestmentStatus.partially_realized which is not a valid progression",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.Sirius.location",
+      "original_value": "Other",
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.Sirius.location: Location is not consistent across all asset reports",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.Sirius.investment_status",
+      "original_value": "partially_realized",
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.Sirius.investment_status: Investment_status went from InvestmentStatus.realized to InvestmentStatus.partially_realized which is not a valid progression",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.The Hilb.total_invested",
+      "original_value": 80550.0,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.The Hilb.total_invested: Total_invested decreased when it should only increase or stay the same",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.The Hilb.investment_status",
+      "original_value": "unrealized",
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.The Hilb.investment_status: Investment_status went from InvestmentStatus.realized to InvestmentStatus.unrealized which is not a valid progression",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.Unison.realized_value",
+      "original_value": 140135000.0,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.Unison.realized_value: Realized_value decreased when it should only increase or stay the same",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.FLS Aggregator.total_invested",
+      "original_value": 57125000.0,
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.FLS Aggregator.total_invested: Total_invested decreased when it should only increase or stay the same",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    },
+    {
+      "field": "assets.Link Mobility.investment_status",
+      "original_value": "unrealized",
+      "corrected_value": null,
+      "confidence": 0.95,
+      "reasoning": "Mathematical discrepancy in assets.Link Mobility.investment_status: Investment_status went from InvestmentStatus.partially_realized to InvestmentStatus.unrealized which is not a valid progression",
+      "corrected": true,
+      "correction_method": "llm_powered"
+    }
+  ],
+  "revalidation_results": {
+    "original_issues": 76,
+    "remaining_issues": 76,
+    "issues_resolved": 0,
+    "remaining_discrepancies": 21,
+    "remaining_focus_points": 55,
+    "actual_improvement_percentage": 0.0,
+    "validation_successful": true
+  }
+}

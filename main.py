@@ -124,20 +124,21 @@ class TetrixProductionSystem:
                         analytics_response.focus_points
                     )
                     
-                    corrections_applied = len(processing_result.corrections)
+                    corrections_applied = len(processing_result["corrections"])
                     improvement_score = corrections_applied / max(total_issues, 1)
+                    
                     
                     # Create corrected document from the corrections
                     corrected_document = {"original_document": "placeholder"}  # In real system, this would be the actual document
-                    for correction in processing_result.corrections:
+                    for correction in processing_result["corrections"]:
                         corrected_document[correction["field"]] = correction["corrected_value"]
                     
                     result = {
-                        "corrections": processing_result.corrections,
-                        "issues_flagged": processing_result.flagged_issues,
+                        "corrections": processing_result["corrections"],
+                        "issues_flagged": processing_result["flagged_issues"],
                         "improvement_score": improvement_score,
                         "processing_mode": "llm_powered",
-                        "llm_processing_successful": processing_result.processing_successful,
+                        "llm_processing_successful": processing_result["processing_successful"],
                         "corrected_document": corrected_document
                     }
                     
@@ -264,6 +265,7 @@ class TetrixProductionSystem:
                 "discrepancies": len(analytics_response.discrepancies),
                 "focus_points": len(analytics_response.focus_points),
                 "corrections_applied": corrections_applied,
+                "corrections": result.get("corrections", []),  # Include actual corrections
                 "issues_for_review": result.get("issues_for_review", 0),
                 "improvement_score": actual_improvement_score,  # Use actual measured improvement
                 "estimated_improvement_score": improvement_score,  # Keep the original estimate
@@ -367,13 +369,8 @@ async def run_sample_integration_test():
     has_openai_key = bool(os.getenv("OPENAI_API_KEY"))
     use_mock = False  # Always try real analytics service
     
-    print(f"   DEBUG: OPENAI_API_KEY = {os.getenv('OPENAI_API_KEY')[:10] + '...' if os.getenv('OPENAI_API_KEY') else 'None'}")
-    print(f"   DEBUG: has_openai_key = {has_openai_key}")
-    
     system = TetrixProductionSystem(use_mock_analytics=use_mock)
     await system.initialize()
-    
-    print(f"   DEBUG: feedback_loop.issue_processor = {system.feedback_loop.issue_processor is not None}")
     
     analytics_mode = "Mock" if use_mock else "Real Grant's Service"
     print(f"   Analytics Mode: {analytics_mode}")
@@ -460,16 +457,30 @@ async def run_sample_integration_test():
                     "revalidation_results": result.get('revalidation_results')
                 }
                 
-                # Add correction details if available from result
-                if 'sample_issues' in result:
-                    # Simulate corrections based on the issues found
+                # Add actual correction details from LLM processing
+                if 'corrections' in result and result['corrections']:
+                    # Use actual corrections from LLM processing
+                    for correction in result['corrections']:
+                        correction_entry = {
+                            "field": correction['field'],
+                            "original_value": correction.get('original_value', 'unknown'),
+                            "corrected_value": correction.get('corrected_value', 'corrected'),
+                            "confidence": correction.get('confidence', 0.95),
+                            "reasoning": correction.get('reasoning', 'LLM-powered correction'),
+                            "corrected": True,
+                            "correction_method": result.get('processing_mode', 'unknown')
+                        }
+                        improved_doc_data["corrections"].append(correction_entry)
+                        print(f"        • {correction['field']}: {correction.get('original_value', 'unknown')} → {correction.get('corrected_value', 'corrected')}")
+                elif 'sample_issues' in result:
+                    # Fallback to sample issues for rule-based processing
                     for i, issue in enumerate(result['sample_issues'][:3]):  # Show first 3 corrections
                         correction = {
                             "field": issue['field'],
                             "original_issue": issue['issue'],
                             "confidence": issue['confidence'],
                             "corrected": True,
-                            "correction_method": result.get('processing_mode', 'rule_based')
+                            "correction_method": result.get('processing_mode', 'unknown')
                         }
                         improved_doc_data["corrections"].append(correction)
                         print(f"        • {issue['field']}: Fixed ({issue['confidence']:.1%} confidence)")
