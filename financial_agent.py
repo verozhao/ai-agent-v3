@@ -218,7 +218,7 @@ Provide detailed analysis with specific financial reasoning and concrete correct
         ]
         
         response = await self.openai_client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=messages,
             temperature=0.1,  # Low temperature for precise financial analysis
             max_tokens=2000
