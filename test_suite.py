@@ -204,7 +204,7 @@ class TetrixTestSuite:
         """Run the complete test suite"""
         
         self.start_time = time.time()
-        print("🚀 TETRIX AI FEEDBACK LOOP SYSTEM - COMPREHENSIVE TEST SUITE")
+        print("TETRIX AI FEEDBACK LOOP SYSTEM - COMPREHENSIVE TEST SUITE")
         print("=" * 80)
         print("Testing real-world integration with Grant's analytics microservice")
         print("=" * 80)
@@ -234,7 +234,7 @@ class TetrixTestSuite:
         
         async with TetrixFeedbackLoopSystem(use_mock_analytics) as feedback_system:
             for category_name, test_function in test_categories:
-                print(f"\n📋 TESTING: {category_name.upper().replace('_', ' ')}")
+                print(f"\nTESTING: {category_name.upper().replace('_', ' ')}")
                 print("-" * 60)
                 
                 try:
@@ -243,9 +243,9 @@ class TetrixTestSuite:
                     
                     if category_result.get("success", False):
                         successful_categories += 1
-                        print(f"✅ {category_name}: PASSED")
+                        print(f"PASSED {category_name}")
                     else:
-                        print(f"❌ {category_name}: FAILED - {category_result.get('error', 'Unknown error')}")
+                        print(f"FAILED {category_name}: {category_result.get('error', 'Unknown error')}")
                         
                 except Exception as e:
                     logger.error(f"Test category {category_name} failed: {e}")
@@ -254,7 +254,7 @@ class TetrixTestSuite:
                         "error": str(e),
                         "category": category_name
                     }
-                    print(f"❌ {category_name}: EXCEPTION - {str(e)}")
+                    print(f"EXCEPTION {category_name}: {str(e)}")
         
         # Calculate summary
         overall_results["summary"] = {
@@ -282,8 +282,8 @@ class TetrixTestSuite:
             llm_available = connectivity_result["llm_engine"].get("available", False)
             overall_status = connectivity_result["overall_status"]
             
-            print(f"   Analytics Service: {'✅ Connected' if analytics_connected else '❌ Disconnected'}")
-            print(f"   LLM Engine: {'✅ Available' if llm_available else '❌ Unavailable'}")
+            print(f"   Analytics Service: {'Connected' if analytics_connected else 'Disconnected'}")
+            print(f"   LLM Engine: {'Available' if llm_available else 'Unavailable'}")
             print(f"   Overall Status: {overall_status.upper()}")
             
             return {
@@ -335,7 +335,7 @@ class TetrixTestSuite:
                 
                 results.append(test_result)
                 
-                print(f"      ✅ Accuracy: {accuracy:.1%}, Corrections: {test_result['corrections_applied']}, Time: {processing_time:.2f}s")
+                print(f"      Accuracy: {accuracy:.1%}, Corrections: {test_result['corrections_applied']}, Time: {processing_time:.2f}s")
             
             # Calculate overall performance
             avg_accuracy = sum(r["accuracy"] for r in results) / len(results)
@@ -393,7 +393,7 @@ class TetrixTestSuite:
                 
                 results.append(test_result)
                 
-                print(f"      ✅ Error Resolution: {error_resolution_rate:.1%}, Corrections: {corrections_applied}")
+                print(f"      Error Resolution: {error_resolution_rate:.1%}, Corrections: {corrections_applied}")
             
             avg_resolution_rate = sum(r["error_resolution_rate"] for r in results) / len(results)
             
@@ -435,7 +435,7 @@ class TetrixTestSuite:
             successful_processing = sum(1 for r in batch_results if r.feedback_loop_successful)
             total_corrections = sum(r.processing_results.get("summary", {}).get("corrections_applied", 0) for r in batch_results)
             
-            print(f"      ✅ Batch Success: {successful_processing}/{len(documents)}, Total Corrections: {total_corrections}, Time: {batch_time:.2f}s")
+            print(f"      Batch Success: {successful_processing}/{len(documents)}, Total Corrections: {total_corrections}, Time: {batch_time:.2f}s")
             
             return {
                 "success": successful_processing >= len(documents) * 0.8,  # 80% success rate
@@ -469,7 +469,7 @@ class TetrixTestSuite:
             # Get system status
             system_status = feedback_system.get_system_status()
             
-            print(f"   ✅ System Metrics Retrieved")
+            print(f"   System Metrics Retrieved")
             print(f"      Documents Processed: {system_status['system_metrics']['documents_processed']}")
             print(f"      Total Issues Found: {system_status['system_metrics']['total_issues_found']}")
             print(f"      Total Corrections: {system_status['system_metrics']['total_corrections_applied']}")
@@ -526,7 +526,7 @@ class TetrixTestSuite:
                 feedback_result.processing_results.get("summary", {}).get("corrections_applied", 0) > 0
             )
             
-            print(f"   ✅ End-to-End Workflow: {'SUCCESS' if workflow_success else 'NEEDS IMPROVEMENT'}")
+            print(f"   End-to-End Workflow: {'SUCCESS' if workflow_success else 'NEEDS IMPROVEMENT'}")
             print(f"      Final Accuracy: {accuracy:.1%}")
             print(f"      Corrections Applied: {feedback_result.processing_results.get('summary', {}).get('corrections_applied', 0)}")
             
@@ -578,40 +578,40 @@ class TetrixTestSuite:
     def _print_final_summary(self, results: Dict[str, Any]):
         """Print comprehensive test summary"""
         print(f"\n{'=' * 80}")
-        print("🏁 TETRIX AI FEEDBACK LOOP SYSTEM - TEST RESULTS SUMMARY")
+        print(" TETRIX AI FEEDBACK LOOP SYSTEM - TEST RESULTS SUMMARY")
         print(f"{'=' * 80}")
         
         summary = results["summary"]
         
-        print(f"\n📊 OVERALL RESULTS:")
+        print(f"\n OVERALL RESULTS:")
         print(f"   Status: {summary['overall_status']}")
         print(f"   Success Rate: {summary['success_rate']:.1%}")
         print(f"   Test Categories: {summary['successful_categories']}/{summary['total_test_categories']}")
         print(f"   Total Test Time: {summary['total_test_time']:.2f}s")
         
-        print(f"\n🔍 DETAILED RESULTS:")
+        print(f"\n DETAILED RESULTS:")
         for category_name, category_result in results["test_categories"].items():
-            status = "✅ PASSED" if category_result.get("success", False) else "❌ FAILED"
+            status = " PASSED" if category_result.get("success", False) else " FAILED"
             print(f"   {category_name.replace('_', ' ').title()}: {status}")
             
             if not category_result.get("success", False) and "error" in category_result:
                 print(f"      Error: {category_result['error']}")
         
-        print(f"\n🎯 SYSTEM ASSESSMENT:")
+        print(f"\n SYSTEM ASSESSMENT:")
         if summary["success_rate"] >= 1.0:
-            print("   🌟 EXCELLENT: All tests passed! System ready for production deployment.")
+            print("    EXCELLENT: All tests passed! System ready for production deployment.")
             print("   The AI feedback loop demonstrates strong real-world performance.")
         elif summary["success_rate"] >= 0.8:
-            print("   ✅ GOOD: Most tests passed. System shows strong potential.")
+            print("    GOOD: Most tests passed. System shows strong potential.")
             print("   Minor issues should be addressed before full deployment.")
         elif summary["success_rate"] >= 0.6:
-            print("   ⚠️  PARTIAL: Some tests passed. System needs refinement.")
+            print("     PARTIAL: Some tests passed. System needs refinement.")
             print("   Additional development and testing recommended.")
         else:
-            print("   ❌ NEEDS WORK: Major issues detected. System requires significant development.")
+            print("    NEEDS WORK: Major issues detected. System requires significant development.")
             print("   Address fundamental issues before proceeding.")
         
-        print(f"\n📈 NEXT STEPS:")
+        print(f"\n NEXT STEPS:")
         print("   1. Review detailed test results for specific issues")
         print("   2. Address any failed test categories")
         print("   3. Validate with additional real-world documents")
@@ -642,7 +642,7 @@ async def main():
     with open(results_file, 'w') as f:
         json.dump(results, f, indent=2, default=str)
     
-    print(f"\n📁 Test results saved to: {results_file}")
+    print(f"\n Test results saved to: {results_file}")
     
     # Exit with appropriate code
     success_rate = results["summary"]["success_rate"]

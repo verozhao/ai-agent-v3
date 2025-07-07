@@ -303,3 +303,168 @@
 2025-07-07 13:34:20,413 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67e9: flagged (70.0% confidence)
 2025-07-07 13:34:26,033 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
 2025-07-07 13:34:26,038 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67ea: flagged (70.0% confidence)
+2025-07-07 13:34:38,046 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:34:38,052 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67eb: flagged (70.0% confidence)
+2025-07-07 13:34:42,717 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:34:42,720 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67ec: flagged (70.0% confidence)
+2025-07-07 13:34:48,973 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:34:48,975 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67ed: flagged (70.0% confidence)
+2025-07-07 13:34:54,726 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:34:54,730 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67ee: flagged (70.0% confidence)
+2025-07-07 13:35:02,770 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:35:02,774 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67ef: flagged (70.0% confidence)
+2025-07-07 13:35:07,410 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:35:07,413 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67f0: flagged (70.0% confidence)
+2025-07-07 13:35:21,177 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:35:21,237 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67f1: flagged (70.0% confidence)
+2025-07-07 13:35:25,174 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:35:25,176 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67f2: flagged (70.0% confidence)
+2025-07-07 13:35:30,611 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:35:30,614 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67f4: flagged (70.0% confidence)
+2025-07-07 13:35:39,353 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:35:39,356 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67f5: flagged (70.0% confidence)
+2025-07-07 13:35:47,326 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:35:47,328 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67f6: flagged (70.0% confidence)
+2025-07-07 13:35:56,628 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:35:56,634 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67f7: flagged (70.0% confidence)
+2025-07-07 13:36:01,948 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:36:01,953 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67f8: flagged (70.0% confidence)
+2025-07-07 13:36:07,202 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:36:07,208 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67f9: flagged (70.0% confidence)
+2025-07-07 13:36:16,671 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:36:16,676 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67fa: flagged (70.0% confidence)
+2025-07-07 13:36:21,573 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:36:21,576 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67fb: flagged (70.0% confidence)
+2025-07-07 13:36:26,609 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:36:26,613 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67fc: flagged (70.0% confidence)
+2025-07-07 13:36:31,997 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:36:32,001 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67fd: flagged (70.0% confidence)
+2025-07-07 13:36:36,600 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:36:36,604 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67fe: flagged (70.0% confidence)
+2025-07-07 13:36:46,390 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:36:46,405 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f67ff: flagged (70.0% confidence)
+2025-07-07 13:36:54,596 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:36:54,599 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f6800: flagged (70.0% confidence)
+2025-07-07 13:36:59,215 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:36:59,252 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f6801: flagged (70.0% confidence)
+2025-07-07 13:37:04,538 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:37:04,541 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f6802: flagged (70.0% confidence)
+2025-07-07 13:37:12,648 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:37:12,654 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f6803: flagged (70.0% confidence)
+2025-07-07 13:37:21,670 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:37:21,677 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f6804: flagged (70.0% confidence)
+2025-07-07 13:37:34,852 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:37:34,856 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f6805: flagged (70.0% confidence)
+2025-07-07 13:37:44,187 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:37:44,191 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f6806: flagged (70.0% confidence)
+2025-07-07 13:37:49,397 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:37:49,401 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f6807: flagged (70.0% confidence)
+2025-07-07 13:37:54,381 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:37:54,385 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f6808: flagged (70.0% confidence)
+2025-07-07 13:38:02,486 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:38:02,491 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f6809: flagged (70.0% confidence)
+2025-07-07 13:38:16,372 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:38:16,374 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f680a: flagged (70.0% confidence)
+2025-07-07 13:38:21,202 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:38:21,206 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f680b: flagged (70.0% confidence)
+2025-07-07 13:38:33,879 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:38:33,882 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f680c: flagged (70.0% confidence)
+2025-07-07 13:38:44,004 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-07 13:38:44,007 - discrepancy_processor - INFO - Processed focus point 686c03ed4f91596b8a6f680d: flagged (70.0% confidence)
+2025-07-07 13:38:44,008 - discrepancy_processor - INFO - Direct issue processing complete: 21 corrections, 55 flagged, 565.84s
+2025-07-07 13:38:44,009 - __main__ - WARNING - LLM processing failed: 'dict' object has no attribute 'corrections', falling back to rule-based
+2025-07-07 13:38:44,009 - __main__ - INFO - Step 3: Re-validating improved document to measure actual improvement...
+2025-07-07 13:38:44,012 - analytics_client - INFO - Re-validating improved document for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:38:44,012 - analytics_client - INFO - Note: Currently using same endpoint - future enhancement needed to submit improved docs
+2025-07-07 13:38:44,012 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:38:44,140 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:38:44,141 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:38:44,185 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:38:44,186 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:38:44,615 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:38:44,615 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:38:44,616 - __main__ - INFO - Re-validation results: 76 → 76 issues (0 resolved, 0.0% improvement)
+2025-07-07 13:38:44,617 - __main__ - INFO - ✅ PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 0.0% improvement
+2025-07-07 13:38:44,617 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:38:44,617 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:38:44,693 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:38:44,694 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:38:44,740 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:38:44,741 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:38:45,475 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:38:45,475 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:38:45,477 - __main__ - INFO - Found 35 discrepancies and 60 focus points
+2025-07-07 13:38:45,477 - __main__ - INFO - Processing with LLM-powered corrections...
+2025-07-07 13:38:45,477 - discrepancy_processor - INFO - Processing 35 discrepancies...
+2025-07-07 13:42:35,070 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
+2025-07-07 13:42:35,071 - analytics_client - INFO - Using real analytics client
+2025-07-07 13:42:35,072 - analytics_client - INFO - Using real analytics client
+2025-07-07 13:42:35,072 - feedback_loop_system - INFO - Rule-based processing mode (no LLM API keys found)
+2025-07-07 13:42:35,072 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
+2025-07-07 13:42:35,072 - __main__ - INFO - System components initialized successfully
+2025-07-07 13:42:35,072 - __main__ - INFO - Testing connectivity to Grant's analytics service...
+2025-07-07 13:42:35,501 - __main__ - INFO - Successfully connected to Grant's analytics service
+2025-07-07 13:42:35,502 - __main__ - INFO - Starting batch processing of 3 documents
+2025-07-07 13:42:35,502 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:42:35,502 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:42:35,593 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:42:35,594 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:42:35,644 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:42:35,644 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:42:35,938 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:42:35,939 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:42:35,940 - __main__ - INFO - Found 21 discrepancies and 55 focus points
+2025-07-07 13:42:35,940 - __main__ - INFO - Step 3: Re-validating improved document to measure actual improvement...
+2025-07-07 13:42:35,940 - analytics_client - INFO - Re-validating improved document for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:42:35,940 - analytics_client - INFO - Note: Currently using same endpoint - future enhancement needed to submit improved docs
+2025-07-07 13:42:35,940 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:42:36,023 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:42:36,024 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:42:36,067 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:42:36,068 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:42:36,389 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:42:36,390 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-07 13:42:36,391 - __main__ - INFO - Re-validation results: 76 → 76 issues (0 resolved, 0.0% improvement)
+2025-07-07 13:42:36,392 - __main__ - INFO - SUCCESS PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533: 76 issues, 0.0% improvement
+2025-07-07 13:42:36,392 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:42:36,392 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:42:36,470 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:42:36,470 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:42:36,515 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:42:36,516 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:42:36,952 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:42:36,953 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:42:36,954 - __main__ - INFO - Found 35 discrepancies and 60 focus points
+2025-07-07 13:42:36,954 - __main__ - INFO - Step 3: Re-validating improved document to measure actual improvement...
+2025-07-07 13:42:36,954 - analytics_client - INFO - Re-validating improved document for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:42:36,954 - analytics_client - INFO - Note: Currently using same endpoint - future enhancement needed to submit improved docs
+2025-07-07 13:42:36,954 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:42:37,032 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:42:37,033 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:42:37,077 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:42:37,078 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:42:37,560 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:42:37,560 - analytics_client - INFO - Retrieved 35 discrepancies and 60 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-07 13:42:37,561 - __main__ - INFO - Re-validation results: 95 → 95 issues (0 resolved, 0.0% improvement)
+2025-07-07 13:42:37,562 - __main__ - INFO - SUCCESS PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 95 issues, 0.0% improvement
+2025-07-07 13:42:37,562 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:42:37,562 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:42:37,637 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:42:37,638 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:42:37,681 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:42:37,682 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:42:40,825 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:42:40,825 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:42:40,840 - __main__ - INFO - Found 15 discrepancies and 112 focus points
+2025-07-07 13:42:40,841 - __main__ - INFO - Step 3: Re-validating improved document to measure actual improvement...
+2025-07-07 13:42:40,841 - analytics_client - INFO - Re-validating improved document for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:42:40,841 - analytics_client - INFO - Note: Currently using same endpoint - future enhancement needed to submit improved docs
+2025-07-07 13:42:40,841 - analytics_client - INFO - Trying strategy: tasks_todo_get
+2025-07-07 13:42:40,916 - analytics_client - INFO - Strategy tasks_todo_get not supported: 422 - {"detail":[{"type":"missing","loc":["body"],"msg":"Field required","input":null}]}
+2025-07-07 13:42:40,916 - analytics_client - INFO - Trying strategy: tasks_todo_post
+2025-07-07 13:42:40,959 - analytics_client - INFO - Strategy tasks_todo_post not supported: 405 - {"detail":"Method Not Allowed"}
+2025-07-07 13:42:40,959 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-07 13:42:43,982 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-07 13:42:43,982 - analytics_client - INFO - Retrieved 15 discrepancies and 112 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-07 13:42:43,994 - __main__ - INFO - Re-validation results: 127 → 127 issues (0 resolved, 0.0% improvement)
+2025-07-07 13:42:43,995 - __main__ - INFO - SUCCESS PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 127 issues, 0.0% improvement

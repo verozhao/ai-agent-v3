@@ -68,7 +68,7 @@ class TetrixProductionSystem:
             connectivity_result = await self.analytics_client.test_connection()
             
             if connectivity_result.get("connected", False):
-                logger.info("✅ Successfully connected to Grant's analytics service")
+                logger.info("Successfully connected to Grant's analytics service")
                 return {
                     "success": True,
                     "connection_status": "connected",
@@ -76,7 +76,7 @@ class TetrixProductionSystem:
                     "vpn_status": connectivity_result.get("vpn_status", "unknown")
                 }
             else:
-                logger.warning("⚠️ Failed to connect to Grant's analytics service")
+                logger.warning("Failed to connect to Grant's analytics service")
                 return {
                     "success": False,
                     "connection_status": "failed",
@@ -302,9 +302,9 @@ class TetrixProductionSystem:
             
             # Log progress
             if result["success"]:
-                logger.info(f"✅ {doc_path}: {result['total_issues']} issues, {result['improvement_score']:.1%} improvement")
+                logger.info(f"SUCCESS {doc_path}: {result['total_issues']} issues, {result['improvement_score']:.1%} improvement")
             else:
-                logger.error(f"❌ {doc_path}: {result.get('error', 'Unknown error')}")
+                logger.error(f"FAILED {doc_path}: {result.get('error', 'Unknown error')}")
         
         batch_processing_time = time.time() - batch_start_time
         
@@ -354,14 +354,14 @@ class TetrixProductionSystem:
 async def run_sample_integration_test():
     """Run a sample integration test with real documents"""
     
-    print("🚀 TETRIX AI FEEDBACK LOOP SYSTEM")
+    print("TETRIX AI FEEDBACK LOOP SYSTEM")
     print("=" * 80)
     print("Integrated Real-World Testing with Grant's Analytics Microservice")
     print("Priority: Implementing feedback loop to fix discrepancies before consolidation")
     print("=" * 80)
     
     # Initialize system
-    print("\n📋 INITIALIZING SYSTEM...")
+    print("\nINITIALIZING SYSTEM...")
     
     # Auto-detect if we should use mock analytics (always use real analytics regardless of LLM key)
     has_openai_key = bool(os.getenv("OPENAI_API_KEY"))
@@ -375,19 +375,19 @@ async def run_sample_integration_test():
     print(f"   LLM Integration: {'Enabled' if has_openai_key else 'Disabled (Mock Mode)'}")
     
     # Test connectivity
-    print("\n🔗 TESTING CONNECTIVITY...")
+    print("\nTESTING CONNECTIVITY...")
     connectivity = await system.test_connectivity()
     
     if connectivity["success"]:
-        print(f"   ✅ Connected to analytics service")
+        print(f"   Connected to analytics service")
         print(f"   Response Time: {connectivity.get('response_time', 0):.2f}s")
     else:
-        print(f"   ⚠️ Connection issue: {connectivity.get('error', 'Unknown')}")
+        print(f"   Connection issue: {connectivity.get('error', 'Unknown')}")
         if not use_mock:
-            print("   💡 Suggestion: Check VPN connection to Grant's internal network")
+            print("   Suggestion: Check VPN connection to Grant's internal network")
     
     # Test with real document paths
-    print("\n📄 PROCESSING REAL FINANCIAL DOCUMENTS...")
+    print("\nPROCESSING REAL FINANCIAL DOCUMENTS...")
     
     test_documents = [
         "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533",  # ABRY Partners VIII
@@ -403,7 +403,7 @@ async def run_sample_integration_test():
     
     # Display results
     summary = batch_result["batch_summary"]
-    print(f"\n📊 BATCH PROCESSING RESULTS:")
+    print(f"\nBATCH PROCESSING RESULTS:")
     print(f"   Documents Processed: {summary['successful_documents']}/{summary['total_documents']}")
     print(f"   Total Issues Found: {summary['total_issues_found']}")
     print(f"   Corrections Applied: {summary['total_corrections_applied']}")
@@ -412,10 +412,10 @@ async def run_sample_integration_test():
     print(f"   Batch Total Time: {summary['batch_processing_time']:.2f}s")
     
     # Show individual document results
-    print(f"\n📋 INDIVIDUAL DOCUMENT RESULTS:")
+    print(f"\nINDIVIDUAL DOCUMENT RESULTS:")
     for result in batch_result["individual_results"]:
         if result["success"]:
-            print(f"   ✅ {result['document_path']}:")
+            print(f"   SUCCESS {result['document_path']}:")
             print(f"      Issues: {result['total_issues']} ({result['discrepancies']} discrepancies, {result['focus_points']} focus points)")
             print(f"      Corrections: {result['corrections_applied']}")
             print(f"      Improvement: {result['improvement_score']:.1%}")
@@ -436,10 +436,10 @@ async def run_sample_integration_test():
                 for issue in result["sample_issues"]:
                     print(f"        • {issue['field']}: {issue['issue']} (confidence: {issue['confidence']:.1%})")
         else:
-            print(f"   ❌ {result['document_path']}: {result.get('error', 'Unknown error')}")
+            print(f"   FAILED {result['document_path']}: {result.get('error', 'Unknown error')}")
     
     # System status
-    print(f"\n🎯 SYSTEM STATUS:")
+    print(f"\nSYSTEM STATUS:")
     status = system.get_system_status()
     metrics = status["processing_metrics"]
     
@@ -449,46 +449,46 @@ async def run_sample_integration_test():
     print(f"   Average Improvement Score: {metrics['average_improvement_score']:.1%}")
     
     # Assessment
-    print(f"\n🏆 INTEGRATION ASSESSMENT:")
+    print(f"\nINTEGRATION ASSESSMENT:")
     
     if summary['successful_documents'] == len(test_documents) and summary['total_issues_found'] > 0:
-        print("   ✅ EXCELLENT: Real integration working perfectly!")
-        print("   • Successfully connected to Grant's analytics service")
-        print("   • Processing real financial discrepancies and focus points")
-        print("   • Automated correction pipeline operational")
-        print("   • Ready for production deployment in Grant's pipeline")
+        print("   EXCELLENT: Real integration working perfectly!")
+        print("   - Successfully connected to Grant's analytics service")
+        print("   - Processing real financial discrepancies and focus points")
+        print("   - Automated correction pipeline operational")
+        print("   - Ready for production deployment in Grant's pipeline")
         
         if has_openai_key:
-            print("   • Full LLM-powered corrections enabled")
+            print("   - Full LLM-powered corrections enabled")
         else:
-            print("   • Rule-based processing active (set OPENAI_API_KEY for LLM corrections)")
+            print("   - Rule-based processing active (set OPENAI_API_KEY for LLM corrections)")
             
     elif summary['successful_documents'] > 0:
-        print("   ✅ GOOD: Partial integration success")
-        print("   • Some documents processed successfully")
-        print("   • System demonstrates core functionality")
-        print("   • Ready for additional testing and refinement")
+        print("   GOOD: Partial integration success")
+        print("   - Some documents processed successfully")
+        print("   - System demonstrates core functionality")
+        print("   - Ready for additional testing and refinement")
         
     else:
-        print("   ⚠️ NEEDS ATTENTION: Integration issues detected")
-        print("   • Check network connectivity to Grant's service")
-        print("   • Verify document paths and permissions")
-        print("   • Review system logs for detailed error information")
+        print("   NEEDS ATTENTION: Integration issues detected")
+        print("   - Check network connectivity to Grant's service")
+        print("   - Verify document paths and permissions")
+        print("   - Review system logs for detailed error information")
     
-    print(f"\n📋 NEXT STEPS:")
-    print("   1. ✅ Core feedback loop integration validated")
-    print("   2. ✅ Real discrepancy processing confirmed")
-    print("   3. ✅ Document correction pipeline operational")
+    print(f"\nNEXT STEPS:")
+    print("   1. Core feedback loop integration validated")
+    print("   2. Real discrepancy processing confirmed")
+    print("   3. Document correction pipeline operational")
     
     if has_openai_key:
-        print("   4. ✅ LLM-powered corrections active")
+        print("   4. LLM-powered corrections active")
     else:
-        print("   4. 🔧 Set OPENAI_API_KEY for full LLM integration")
+        print("   4. Set OPENAI_API_KEY for full LLM integration")
     
-    print("   5. 🚀 Ready for Grant's production pipeline integration")
-    print("   6. 📈 Monitor system performance in production environment")
+    print("   5. Ready for Grant's production pipeline integration")
+    print("   6. Monitor system performance in production environment")
     
-    print(f"\n🎉 TETRIX AI FEEDBACK LOOP SYSTEM VALIDATION COMPLETE!")
+    print(f"\nTETRIX AI FEEDBACK LOOP SYSTEM VALIDATION COMPLETE!")
     print("Successfully integrating Grant's analytics endpoints for real-world testing!")
 
 if __name__ == "__main__":
