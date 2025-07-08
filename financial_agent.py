@@ -29,7 +29,7 @@ class FinancialCorrection:
     field: str
     original_value: Any
     corrected_value: Any
-    correction_type: str  # 'field_swap', 'calculation', 'format', 'semantic'
+    correction_type: str 
     confidence: float
     reasoning: str
     evidence: List[str]
