@@ -1,0 +1,359 @@
+2025-07-08 09:49:59,254 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
+2025-07-08 09:49:59,254 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:49:59,254 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:49:59,300 - financial_agent - INFO - OpenAI client initialized
+2025-07-08 09:49:59,334 - financial_agent - INFO - OpenAI client initialized
+2025-07-08 09:49:59,336 - financial_agent - INFO - Fund database initialized - use DynamicFundRegistry for real fund data from API
+2025-07-08 09:49:59,336 - financial_agent - INFO - Financial Document Specialist Agent initialized
+2025-07-08 09:49:59,336 - feedback_loop_system - INFO - LLM-powered processing enabled
+2025-07-08 09:49:59,337 - feedback_loop_system - INFO - Tetrix Feedback Loop System initialized
+2025-07-08 09:49:59,337 - __main__ - INFO - System components initialized successfully
+2025-07-08 09:49:59,337 - __main__ - INFO - Testing connectivity to Grant's analytics service...
+2025-07-08 09:49:59,868 - __main__ - INFO - Successfully connected to Grant's analytics service
+2025-07-08 09:49:59,870 - __main__ - INFO - Starting batch processing of 1 documents
+2025-07-08 09:49:59,871 - __main__ - INFO - Processing document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:49:59,871 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:50:00,279 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:50:00,280 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:50:00,282 - __main__ - INFO - Found 21 discrepancies and 55 focus points
+2025-07-08 09:50:00,282 - __main__ - INFO - Processing with LLM-powered corrections...
+2025-07-08 09:50:00,282 - discrepancy_processor - INFO - Processing 21 discrepancies...
+2025-07-08 09:50:06,937 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:06,963 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:50:06,964 - discrepancy_processor - INFO - Fetching source document data for total_fund_net_asset_value correction...
+2025-07-08 09:50:06,964 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:50:07,370 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:50:07,371 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:50:07,371 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:50:07,371 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:50:07,642 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:50:07,642 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:50:07,642 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:50:07,645 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:50:07,645 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:50:07,645 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:50:10,110 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:10,114 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d89368641378: corrected (85.0% confidence)
+2025-07-08 09:50:20,464 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:20,469 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:50:20,469 - discrepancy_processor - INFO - Fetching source document data for assets.Link Mobility.total_invested correction...
+2025-07-08 09:50:20,470 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:50:20,871 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:50:20,871 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:50:20,871 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:50:20,872 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:50:21,202 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:50:21,202 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:50:21,203 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:50:21,205 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:50:21,205 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:50:21,205 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:50:21,206 - discrepancy_processor - INFO - Found target asset 'Link Mobility' for field 'assets.Link Mobility.total_invested'
+2025-07-08 09:50:21,809 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:21,815 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d89368641379: corrected (85.0% confidence)
+2025-07-08 09:50:27,548 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:27,568 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:50:27,568 - discrepancy_processor - INFO - Fetching source document data for assets.Inspira.total_invested correction...
+2025-07-08 09:50:27,569 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:50:27,957 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:50:27,957 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:50:27,958 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:50:27,958 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:50:28,390 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:50:28,390 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:50:28,390 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:50:28,392 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:50:28,392 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:50:28,392 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:50:28,392 - discrepancy_processor - INFO - Found target asset 'Inspira' for field 'assets.Inspira.total_invested'
+2025-07-08 09:50:28,965 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:28,968 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d8936864137a: corrected (90.0% confidence)
+2025-07-08 09:50:35,149 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:35,158 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:50:35,159 - discrepancy_processor - INFO - Fetching source document data for assets.Acrisure.industry correction...
+2025-07-08 09:50:35,159 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:50:35,578 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:50:35,578 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:50:35,578 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:50:35,579 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:50:35,830 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:50:35,830 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:50:35,830 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:50:35,832 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:50:35,832 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:50:35,833 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:50:35,833 - discrepancy_processor - INFO - Found target asset 'Acrisure' for field 'assets.Acrisure.industry'
+2025-07-08 09:50:36,297 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:36,300 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d8936864137b: corrected (85.0% confidence)
+2025-07-08 09:50:41,989 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:41,994 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:50:41,994 - discrepancy_processor - INFO - Fetching source document data for assets.Craneware.location correction...
+2025-07-08 09:50:41,994 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:50:42,397 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:50:42,397 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:50:42,397 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:50:42,398 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:50:42,647 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:50:42,647 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:50:42,647 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:50:42,648 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:50:42,649 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:50:42,649 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:50:42,649 - discrepancy_processor - INFO - Found target asset 'Craneware' for field 'assets.Craneware.location'
+2025-07-08 09:50:43,141 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:43,144 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d8936864137c: corrected (85.0% confidence)
+2025-07-08 09:50:49,837 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:49,839 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:50:49,839 - discrepancy_processor - INFO - Fetching source document data for assets.Craneware.realized_value correction...
+2025-07-08 09:50:49,840 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:50:50,230 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:50:50,230 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:50:50,231 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:50:50,231 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:50:50,570 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:50:50,570 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:50:50,570 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:50:50,572 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:50:50,573 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:50:50,573 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:50:50,573 - discrepancy_processor - INFO - Found target asset 'Craneware' for field 'assets.Craneware.realized_value'
+2025-07-08 09:50:51,204 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:51,207 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d8936864137d: corrected (90.0% confidence)
+2025-07-08 09:50:56,869 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:50:56,871 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:50:56,871 - discrepancy_processor - INFO - Fetching source document data for assets.Direct Travel.total_invested correction...
+2025-07-08 09:50:56,871 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:50:57,293 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:50:57,293 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:50:57,294 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:50:57,294 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:50:57,577 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:50:57,577 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:50:57,578 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:50:57,580 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:50:57,581 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:50:57,581 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:50:57,582 - discrepancy_processor - INFO - Found target asset 'Direct Travel' for field 'assets.Direct Travel.total_invested'
+2025-07-08 09:50:57,582 - discrepancy_processor - WARNING - Financial agent correction failed for assets.Direct Travel.total_invested: unsupported format string passed to NoneType.__format__
+2025-07-08 09:50:57,582 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d8936864137e: flagged (50.0% confidence)
+2025-07-08 09:51:03,320 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:51:03,323 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:51:03,323 - discrepancy_processor - INFO - Fetching source document data for assets.Direct Travel.realized_value correction...
+2025-07-08 09:51:03,323 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:51:03,751 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:51:03,751 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:51:03,752 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:51:03,752 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:51:04,023 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:51:04,023 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:51:04,023 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:51:04,025 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:51:04,025 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:51:04,025 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:51:04,025 - discrepancy_processor - INFO - Found target asset 'Direct Travel' for field 'assets.Direct Travel.realized_value'
+2025-07-08 09:51:04,685 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:51:04,695 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d8936864137f: corrected (85.0% confidence)
+2025-07-08 09:51:11,505 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:51:11,507 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:51:11,507 - discrepancy_processor - INFO - Fetching source document data for assets.Direct Travel.total_value correction...
+2025-07-08 09:51:11,508 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:51:11,935 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:51:11,935 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:51:11,936 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:51:11,936 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:51:12,244 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:51:12,244 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:51:12,245 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:51:12,246 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:51:12,247 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:51:12,247 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:51:12,247 - discrepancy_processor - INFO - Found target asset 'Direct Travel' for field 'assets.Direct Travel.total_value'
+2025-07-08 09:51:13,043 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:51:13,046 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d89368641381: corrected (90.0% confidence)
+2025-07-08 09:51:27,945 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:51:27,951 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:51:27,952 - discrepancy_processor - INFO - Fetching source document data for assets.FastMed.location correction...
+2025-07-08 09:51:27,952 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:51:28,504 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:51:28,504 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:51:28,505 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:51:28,505 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:51:28,776 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:51:28,776 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:51:28,776 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:51:28,778 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:51:28,778 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:51:28,778 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:51:28,778 - discrepancy_processor - INFO - Found target asset 'FastMed' for field 'assets.FastMed.location'
+2025-07-08 09:51:29,465 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:51:29,470 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d89368641382: corrected (85.0% confidence)
+2025-07-08 09:51:37,770 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:51:37,777 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:51:37,777 - discrepancy_processor - INFO - Fetching source document data for assets.NSM Insurance.realized_value correction...
+2025-07-08 09:51:37,778 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:51:38,194 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:51:38,195 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:51:38,195 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:51:38,196 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:51:38,491 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:51:38,491 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:51:38,491 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:51:38,493 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:51:38,493 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:51:38,494 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:51:38,494 - discrepancy_processor - INFO - Found target asset 'NSM Insurance' for field 'assets.NSM Insurance.realized_value'
+2025-07-08 09:51:39,698 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:51:39,702 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d89368641384: corrected (90.0% confidence)
+2025-07-08 09:51:45,468 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:51:45,472 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:51:45,472 - discrepancy_processor - INFO - Fetching source document data for assets.NSM Insurance.total_value correction...
+2025-07-08 09:51:45,473 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:51:45,909 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:51:45,909 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:51:45,910 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:51:45,910 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:51:46,377 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:51:46,377 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:51:46,377 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:51:46,379 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:51:46,379 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:51:46,380 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:51:46,380 - discrepancy_processor - INFO - Found target asset 'NSM Insurance' for field 'assets.NSM Insurance.total_value'
+2025-07-08 09:51:47,048 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:51:47,051 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d89368641385: corrected (85.0% confidence)
+2025-07-08 09:51:54,834 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:51:54,836 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:51:54,837 - discrepancy_processor - INFO - Fetching source document data for assets.SambaSafety.realized_value correction...
+2025-07-08 09:51:54,837 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:51:55,266 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:51:55,266 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:51:55,267 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:51:55,267 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:51:55,555 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:51:55,555 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:51:55,555 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:51:55,557 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:51:55,557 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:51:55,557 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:51:55,557 - discrepancy_processor - INFO - Found target asset 'SambaSafety' for field 'assets.SambaSafety.realized_value'
+2025-07-08 09:51:56,442 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:51:56,451 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d89368641386: corrected (90.0% confidence)
+2025-07-08 09:52:02,568 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:02,570 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:52:02,570 - discrepancy_processor - INFO - Fetching source document data for assets.SambaSafety.investment_status correction...
+2025-07-08 09:52:02,571 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:52:03,010 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:52:03,011 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:52:03,011 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:52:03,012 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:52:03,304 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:52:03,304 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:52:03,304 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:52:03,306 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:52:03,306 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:52:03,307 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:52:03,307 - discrepancy_processor - INFO - Found target asset 'SambaSafety' for field 'assets.SambaSafety.investment_status'
+2025-07-08 09:52:03,823 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:03,825 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d89368641387: corrected (85.0% confidence)
+2025-07-08 09:52:08,832 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:08,835 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:52:08,835 - discrepancy_processor - INFO - Fetching source document data for assets.Sirius.location correction...
+2025-07-08 09:52:08,835 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:52:09,243 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:52:09,243 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:52:09,244 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:52:09,244 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:52:09,516 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:52:09,516 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:52:09,516 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:52:09,518 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:52:09,518 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:52:09,518 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:52:09,518 - discrepancy_processor - INFO - Found target asset 'Sirius' for field 'assets.Sirius.location'
+2025-07-08 09:52:09,965 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:09,968 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d89368641388: corrected (85.0% confidence)
+2025-07-08 09:52:14,931 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:14,934 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:52:14,935 - discrepancy_processor - INFO - Fetching source document data for assets.Sirius.investment_status correction...
+2025-07-08 09:52:14,935 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:52:15,450 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:52:15,451 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:52:15,451 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:52:15,452 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:52:15,745 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:52:15,746 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:52:15,746 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:52:15,748 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:52:15,749 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:52:15,749 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:52:15,749 - discrepancy_processor - INFO - Found target asset 'Sirius' for field 'assets.Sirius.investment_status'
+2025-07-08 09:52:16,345 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:16,348 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d89368641389: corrected (85.0% confidence)
+2025-07-08 09:52:29,050 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:29,052 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:52:29,052 - discrepancy_processor - INFO - Fetching source document data for assets.The Hilb.total_invested correction...
+2025-07-08 09:52:29,052 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:52:29,467 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:52:29,467 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:52:29,468 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:52:29,468 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:52:29,764 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:52:29,764 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:52:29,764 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:52:29,766 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:52:29,766 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:52:29,767 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:52:29,767 - discrepancy_processor - INFO - Found target asset 'The Hilb' for field 'assets.The Hilb.total_invested'
+2025-07-08 09:52:30,423 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:30,426 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d8936864138b: corrected (90.0% confidence)
+2025-07-08 09:52:37,641 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:37,643 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:52:37,643 - discrepancy_processor - INFO - Fetching source document data for assets.The Hilb.investment_status correction...
+2025-07-08 09:52:37,643 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:52:38,057 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:52:38,057 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:52:38,058 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:52:38,058 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:52:38,346 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:52:38,346 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:52:38,347 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:52:38,349 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:52:38,349 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:52:38,349 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:52:38,350 - discrepancy_processor - INFO - Found target asset 'The Hilb' for field 'assets.The Hilb.investment_status'
+2025-07-08 09:52:38,746 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:38,749 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d8936864138c: corrected (85.0% confidence)
+2025-07-08 09:52:46,434 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:46,438 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:52:46,439 - discrepancy_processor - INFO - Fetching source document data for assets.Unison.realized_value correction...
+2025-07-08 09:52:46,439 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:52:46,870 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:52:46,870 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:52:46,871 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:52:46,871 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:52:47,158 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:52:47,159 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:52:47,159 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:52:47,161 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:52:47,162 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:52:47,163 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:52:47,163 - discrepancy_processor - INFO - Found target asset 'Unison' for field 'assets.Unison.realized_value'
+2025-07-08 09:52:47,684 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:47,688 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d8936864138d: corrected (85.0% confidence)
+2025-07-08 09:52:56,866 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:56,871 - analytics_client - INFO - Using real analytics client
+2025-07-08 09:52:56,871 - discrepancy_processor - INFO - Fetching source document data for assets.FLS Aggregator.total_invested correction...
+2025-07-08 09:52:56,871 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-08 09:52:57,370 - analytics_client - INFO - SUCCESS with strategy extraction_flags!
+2025-07-08 09:52:57,371 - analytics_client - INFO - Retrieved 21 discrepancies and 55 focus points for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-08 09:52:57,371 - analytics_client - INFO - Fetching raw document data for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533 from real Tetrix API
+2025-07-08 09:52:57,372 - analytics_client - INFO - Using extraction_flags endpoint to get full parsed document
+2025-07-08 09:52:57,839 - analytics_client - INFO - SUCCESS! Got full parsed document with 30 fields
+2025-07-08 09:52:57,839 - analytics_client - INFO - Fund: ABRY Partners VIII, L.P.
+2025-07-08 09:52:57,840 - analytics_client - INFO - Assets: 20 assets
+2025-07-08 09:52:57,842 - discrepancy_processor - INFO - Raw document data type: <class 'dict'>
+2025-07-08 09:52:57,842 - discrepancy_processor - INFO - Raw document data keys: ['fund_name', 'strategy', 'reporting_date', 'currency', 'vintage', 'total_committed_capital', 'total_contributed_capital', 'total_invested_capital', 'total_active_investments_cost_basis', 'total_investments_unrealized_value', 'total_investments_realized_value', 'total_investments_unrealized_and_realized', 'total_fund_net_asset_value', 'total_distribution_to_partners', 'number_of_unrealized_investments', 'number_of_realized_investments', 'total_credit_facility', 'gross_IRR', 'net_IRR', 'gross_moic', 'tvpi', 'net_moic', 'dpi', 'assets', '_id', 'created_at', 'metadata_id', 'client_entity', 'organisation_id', 'original_fund_name']
+2025-07-08 09:52:57,843 - discrepancy_processor - INFO - Raw document data content (first 500 chars): {'fund_name': 'ABRY Partners VIII, L.P.', 'strategy': 'private_equity', 'reporting_date': '2024-12-31', 'currency': 'USD', 'vintage': 2014, 'total_committed_capital': 1900000000.0, 'total_contributed_capital': 1848136000.0, 'total_invested_capital': 1848136000.0, 'total_active_investments_cost_basis': 596173000.0, 'total_investments_unrealized_value': 963878000.0, 'total_investments_realized_value': 2454686000.0, 'total_investments_unrealized_and_realized': 3418564000.0, 'total_fund_net_asset_va
+2025-07-08 09:52:57,843 - discrepancy_processor - INFO - Found target asset 'FLS Aggregator' for field 'assets.FLS Aggregator.total_invested'
+2025-07-08 09:52:58,854 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-07-08 09:52:58,859 - discrepancy_processor - INFO - Processed discrepancy 686d22078df0d8936864138e: corrected (85.0% confidence)

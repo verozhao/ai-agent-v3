@@ -301,34 +301,53 @@ class FinancialToolkit:
             )
         """)
         
-        # Insert real fund data
-        cursor.execute("SELECT COUNT(*) FROM fund_registry")
-        if cursor.fetchone()[0] == 0:
-            funds_data = [
-                ("Blackstone Capital Partners VII", "Blackstone", 2017, 24500000000, "Buyout", "Global", "Active", "2017-01-01", "2017-03-15", "2017-09-30"),
-                ("Apollo Global Management Fund IX", "Apollo", 2019, 18000000000, "Buyout", "North America", "Active", "2019-01-01", "2019-06-01", "2020-01-31"),
-                ("KKR Americas Fund XIII", "KKR", 2020, 15000000000, "Buyout", "Americas", "Active", "2020-01-01", "2020-08-15", "2021-03-30"),
-                ("Carlyle Partners VIII", "Carlyle", 2021, 13000000000, "Buyout", "Global", "Active", "2021-01-01", "2021-12-01", "2022-06-30"),
-                ("TPG Growth V", "TPG", 2020, 5200000000, "Growth", "Global", "Active", "2020-01-01", "2020-10-15", "2021-05-30"),
-                ("Warburg Pincus Private Equity XIII", "Warburg Pincus", 2019, 4250000000, "Growth", "Global", "Active", "2019-01-01", "2019-07-01", "2020-02-28"),
-                ("Vista Equity Partners Fund VIII", "Vista", 2020, 9600000000, "Tech Buyout", "Global", "Active", "2020-01-01", "2020-05-01", "2021-01-31"),
-                ("Silver Lake Partners VI", "Silver Lake", 2018, 15000000000, "Tech Buyout", "Global", "Active", "2018-01-01", "2018-09-01", "2019-04-30")
-            ]
-            
-            cursor.executemany("""
-                INSERT INTO fund_registry 
-                (fund_name, fund_family, vintage_year, fund_size_usd, strategy, geographic_focus, status, inception_date, first_close_date, final_close_date)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, funds_data)
-            
-            conn.commit()
-            logger.info("Fund database initialized with real data")
+        # Note: Fund data is now populated dynamically from Grant's API via DynamicFundRegistry
+        # No hardcoded fund data - use fund_registry_dynamic.py for real-time fund information
+        # Update the db if needed
+        logger.info("Fund database initialized - use DynamicFundRegistry for real fund data from API")
         
         return conn
     
     async def validate_fund_name(self, fund_name: str) -> Dict[str, Any]:
-        """Validate fund name against real database"""
+        """Validate fund name using dynamic registry from Grant's API"""
         try:
+            # Try dynamic registry first (real API data)
+            try:
+                from fund_registry_dynamic import DynamicFundRegistry
+                
+                async with DynamicFundRegistry() as registry:
+                    result = registry.find_fund_by_name(fund_name)
+                    
+                    if result:
+                        matched_fund_name, confidence = result
+                        
+                        # Get full fund details
+                        funds = registry.get_all_funds()
+                        fund_data = next((f for f in funds if f.fund_name == matched_fund_name), None)
+                        
+                        if fund_data:
+                            return {
+                                "is_valid": confidence >= 0.9,
+                                "match_type": "exact" if confidence >= 0.95 else "fuzzy",
+                                "matched_fund": matched_fund_name,
+                                "similarity_score": confidence,
+                                "fund_data": {
+                                    "fund_name": fund_data.fund_name,
+                                    "fund_family": fund_data.fund_family,
+                                    "vintage_year": fund_data.vintage_year,
+                                    "fund_size_usd": fund_data.fund_size_usd,
+                                    "strategy": fund_data.strategy,
+                                    "geographic_focus": fund_data.geographic_focus,
+                                    "source": "dynamic_registry_api"
+                                },
+                                "confidence": confidence,
+                                "suggested_correction": matched_fund_name if confidence < 0.9 else None
+                            }
+                            
+            except Exception as dynamic_error:
+                logger.warning(f"Dynamic registry failed: {dynamic_error}, falling back to static database")
+            
+            # Fallback to static database
             cursor = self.fund_database.cursor()
             
             # Exact match
@@ -344,12 +363,13 @@ class FinancialToolkit:
                         "fund_family": exact_match[2],
                         "vintage_year": exact_match[3],
                         "fund_size_usd": exact_match[4],
-                        "strategy": exact_match[5]
+                        "strategy": exact_match[5],
+                        "source": "static_database"
                     },
                     "confidence": 1.0
                 }
             
-            # Fuzzy matching
+            # Fuzzy matching on static data
             cursor.execute("SELECT * FROM fund_registry")
             all_funds = cursor.fetchall()
             
@@ -375,7 +395,8 @@ class FinancialToolkit:
                     "fund_data": {
                         "fund_name": best_match[1],
                         "fund_family": best_match[2],
-                        "vintage_year": best_match[3]
+                        "vintage_year": best_match[3],
+                        "source": "static_database"
                     },
                     "confidence": best_score
                 }
