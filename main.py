@@ -25,7 +25,6 @@ logger = logging.getLogger(__name__)
 # Import our core components
 from analytics_client import TetrixAnalyticsClient, create_analytics_client
 from intelligent_feedback_loop import IntelligentFeedbackLoopSystem
-from evaluation_system import EvaluationSystem
 
 class TetrixProductionSystem:
     """Production system integrating Grant's analytics with AI feedback loop"""
@@ -51,10 +50,7 @@ class TetrixProductionSystem:
         self.analytics_client = create_analytics_client(use_mock=self.use_mock_analytics)
         
         # Initialize intelligent feedback loop system with AI agent
-        self.feedback_loop = IntelligentFeedbackLoopSystem(fast_mode=False)
-        
-        # Initialize evaluation system
-        self.evaluation_system = EvaluationSystem()
+        self.feedback_loop = IntelligentFeedbackLoopSystem(fast_mode=True)
         
         logger.info("System components initialized successfully")
     
@@ -87,7 +83,7 @@ class TetrixProductionSystem:
         
         start_time = time.time()
         
-        logger.info(f"🚀 Processing document with AI Agent: {document_path}")
+        logger.info(f"Processing document with AI Agent: {document_path}")
         
         try:
             if enable_ai_agent:
@@ -110,8 +106,8 @@ class TetrixProductionSystem:
                 )
                 
                 # # Debug: log type and value of corrections_applied
-                # logger.info(f"corrections_applied type: {type(feedback_result.corrections_applied)}, value: {feedback_result.corrections_applied}")
-                # print(f"corrections_applied type: {type(feedback_result.corrections_applied)}, value: {feedback_result.corrections_applied}")
+                logger.info(f"corrections_applied type: {type(feedback_result.corrections_applied)}, value: {feedback_result.corrections_applied}")
+                print(f"corrections_applied type: {type(feedback_result.corrections_applied)}, value: {feedback_result.corrections_applied}")
                 # # Log before and after for each correction
                 # for correction in feedback_result.corrections_applied:
                 #     field = correction.get('field', 'unknown')
@@ -258,8 +254,7 @@ class TetrixProductionSystem:
             "processing_metrics": self.processing_metrics,
             "components": {
                 "analytics_client": "initialized" if self.analytics_client else "not_initialized",
-                "feedback_loop": "initialized" if self.feedback_loop else "not_initialized",
-                "evaluation_system": "initialized" if self.evaluation_system else "not_initialized"
+                "feedback_loop": "initialized" if self.feedback_loop else "not_initialized"
             }
         }
 
@@ -318,10 +313,10 @@ async def run_sample_integration_test():
     print(f"   Documents Processed: {summary['successful_documents']}/{summary['total_documents']}")
     print(f"   Total Issues Found: {summary['total_issues_found']}")
     print(f"   Corrections Applied: {summary['total_corrections_applied']}")
-    print(f"   ESTIMATED Improvement: {summary['average_improvement_score']:.1%} (conservative estimate)")
+    print(f"   Improvement: {summary['average_improvement_score']:.1%} (cannot measure without re-validation)")
     print(f"   Average Processing Time: {summary['average_processing_time']:.2f}s")
     print(f"   Batch Total Time: {summary['batch_processing_time']:.2f}s")
-    print(f"   NOTE: Cannot measure actual improvement without re-analyzing corrected documents")
+    print(f"   NOTE: Corrections applied but cannot measure improvement without re-analyzing corrected documents")
     
     # Show individual document results
     print(f"\nINDIVIDUAL DOCUMENT RESULTS:")
@@ -330,17 +325,14 @@ async def run_sample_integration_test():
             print(f"   SUCCESS {result['document_path']}:")
             print(f"      Issues: {result['total_issues']} ({result['discrepancies']} discrepancies, {result['focus_points']} focus points)")
             print(f"      Corrections: {result['corrections_applied']}")
-            print(f"      ESTIMATED Improvement: {result['improvement_score']:.1%} (conservative estimate)")
+            print(f"      Improvement: {result['improvement_score']:.1%} (cannot measure without re-validation)")
             print(f"      Time: {result['processing_time']:.2f}s")
             
             # Show re-validation results if available
             if result.get("revalidation_results"):
                 revalidation = result["revalidation_results"]
-                print(f"      Re-validation: {revalidation['original_issues']} → {revalidation['remaining_issues']} issues "
-                      f"({revalidation['issues_resolved']} estimated resolved)")
-                print(f"      NOTE: {revalidation['actual_improvement_percentage']:.1f}% is an ESTIMATE, not actual measurement")
-            elif result.get("estimated_improvement_score"):
-                print(f"      Estimated Improvement: {result['estimated_improvement_score']:.1%} (not validated)")
+                print(f"      Status: {revalidation['original_issues']} issues found, {result['corrections_applied']} corrections applied")
+                print(f"      NOTE: Cannot measure if corrections resolved issues without re-analysis")
             
             # Show sample issues
             if result.get("sample_issues"):

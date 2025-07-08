@@ -1,5 +1,5 @@
 # Core LLM Integrations (REQUIRED)
-openai>=1.3.0                    # OpenAI GPT-4 API
+openai>=1.3.0                    # OpenAI GPT-3.5 API
 anthropic>=0.7.0                 # Anthropic Claude API
 
 # Financial Data Processing

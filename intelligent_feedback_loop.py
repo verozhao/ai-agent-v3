@@ -178,26 +178,20 @@ class IntelligentFeedbackLoopSystem:
             remaining_discrepancies = []
             remaining_focus_points = []
             
-            # HONEST ASSESSMENT: We cannot measure actual improvement without re-analyzing corrected documents
-            # The current system applies corrections but cannot validate them against the analytics service
+            # We cannot measure actual improvement without re-analyzing corrected documents
+            # Report that corrections were applied but improvement cannot be measured
             
             if len(corrections_applied) == 0:
-                # No corrections were applied
                 resolved_issues = 0
-                remaining_discrepancies = original_discrepancies
-                remaining_focus_points = original_focus_points
-                logger.info(f"📊 No corrections applied - no improvement measured")
+                remaining_total = original_total
+                logger.info(f"📊 No corrections applied - no improvement")
             else:
-                # Conservative estimate: assume some corrections worked
-                # This is an ESTIMATE, not actual measurement
-                estimated_resolved = min(len(corrections_applied), original_total // 4)  # Conservative: 25% success rate
-                resolved_issues = estimated_resolved
-                remaining_discrepancies = original_discrepancies
-                remaining_focus_points = original_focus_points
-                logger.info(f"📊 ESTIMATE: {estimated_resolved} corrections may have resolved issues (cannot validate without re-analysis)")
+                # We applied corrections but cannot measure improvement without re-validation
+                resolved_issues = 0  # Cannot claim any issues were resolved
+                remaining_total = original_total
+                logger.info(f"📊 {len(corrections_applied)} corrections applied but improvement cannot be measured without re-analysis")
             
-            remaining_total = original_total - resolved_issues
-            improvement_percentage = (resolved_issues / original_total * 100) if original_total > 0 else 0
+            improvement_percentage = 0.0  # Cannot claim any improvement without validation
             
             return {
                 "validation_successful": True,
@@ -207,7 +201,7 @@ class IntelligentFeedbackLoopSystem:
                 "improvement_percentage": improvement_percentage,
                 "remaining_discrepancies": len(remaining_discrepancies),
                 "remaining_focus_points": len(remaining_focus_points),
-                "measurement_method": "conservative_estimate"
+                "measurement_method": "no_measurement_possible"
             }
         
         except Exception as e:

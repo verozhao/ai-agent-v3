@@ -210,7 +210,7 @@ Please perform a comprehensive financial document analysis:
 Provide detailed analysis with specific financial reasoning and concrete correction recommendations."""
     
     async def _call_openai(self, prompt: str) -> Dict[str, Any]:
-        """Call OpenAI GPT-4 for financial reasoning"""
+        """Call OpenAI GPT-3.5 for financial reasoning"""
         
         messages = [
             {"role": "system", "content": self.financial_system_prompt},
