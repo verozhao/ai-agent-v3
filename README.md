@@ -4,7 +4,7 @@ An AI agent that connects to real financial documents and automatically fixes er
 
 ## What This Actually Does
 
-You feed it a document path and it goes to work:
+- Feeds with a document path and it goes to work
 - Connects to Grant's analytics service to get the actual PDF data
 - Finds mathematical discrepancies and suspicious patterns
 - Uses AI to understand what the numbers should be based on the real document content  

@@ -250,9 +250,6 @@ class TetrixFeedbackLoopSystem:
         In a real system, this would push the document and get fresh analytics
         """
         
-        # For now, we simulate this by calling analytics again
-        # In production, you'd push the improved document to the system first
-        
         try:
             return await self.analytics_client.get_discrepancies_for_document(
                 doc_path=document_path,
