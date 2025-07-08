@@ -12,6 +12,8 @@ requests>=2.31.0                 # Synchronous HTTP requests
 
 # Data Validation and Processing
 python-dateutil>=2.8.0          # Advanced date parsing
+fuzzywuzzy>=0.18.0               # Fuzzy string matching for fund names
+python-levenshtein>=0.27.0       # Fast string distance calculations
 
 # Production Infrastructure
 # asyncio, logging, pathlib, uuid, dataclasses are built-in

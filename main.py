@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 # Import our core components
 from analytics_client import TetrixAnalyticsClient, create_analytics_client
-from feedback_loop_system import TetrixFeedbackLoopSystem
+from intelligent_feedback_loop import IntelligentFeedbackLoopSystem
 from evaluation_system import EvaluationSystem
 
 class TetrixProductionSystem:
@@ -50,10 +50,8 @@ class TetrixProductionSystem:
         # Initialize analytics client
         self.analytics_client = create_analytics_client(use_mock=self.use_mock_analytics)
         
-        # Initialize feedback loop system
-        self.feedback_loop = TetrixFeedbackLoopSystem(
-            use_mock_analytics=self.use_mock_analytics
-        )
+        # Initialize intelligent feedback loop system with AI agent
+        self.feedback_loop = IntelligentFeedbackLoopSystem(fast_mode=False)
         
         # Initialize evaluation system
         self.evaluation_system = EvaluationSystem()
@@ -84,227 +82,114 @@ class TetrixProductionSystem:
                     "vpn_check": connectivity_result.get("vpn_check", "Check network connectivity")
                 }
     
-    async def process_document(self, document_path: str, enable_llm_corrections: bool = False) -> Dict[str, Any]:
+    async def process_document(self, document_path: str, enable_ai_agent: bool = True) -> Dict[str, Any]:
         """Process a single document through the complete feedback loop"""
         
         start_time = time.time()
         
-        logger.info(f"Processing document: {document_path}")
+        logger.info(f"🚀 Processing document with AI Agent: {document_path}")
         
         try:
-            # Step 1: Get discrepancies from Grant's analytics
-            async with self.analytics_client:
-                analytics_response = await self.analytics_client.get_discrepancies_for_document(document_path)
-            
-            total_issues = len(analytics_response.discrepancies) + len(analytics_response.focus_points)
-            
-            if total_issues == 0:
-                logger.info(f"No issues found in document {document_path}")
+            if enable_ai_agent:
+                # Use the new AI Agent-powered feedback loop system
+                async with self.feedback_loop:
+                    feedback_result = await self.feedback_loop.process_document_with_feedback_loop(document_path)
+                
+                # Update metrics
+                self.processing_metrics["documents_processed"] += 1
+                self.processing_metrics["discrepancies_found"] += feedback_result.original_issues
+                self.processing_metrics["corrections_applied"] += len(feedback_result.corrections_applied)
+                self.processing_metrics["total_processing_time"] += feedback_result.processing_time
+                
+                # Update average improvement score
+                current_avg = self.processing_metrics["average_improvement_score"]
+                docs_processed = self.processing_metrics["documents_processed"]
+                self.processing_metrics["average_improvement_score"] = (
+                    (current_avg * (docs_processed - 1) + feedback_result.improvement_percentage / 100) 
+                    / docs_processed
+                )
+                
+                # # Debug: log type and value of corrections_applied
+                # logger.info(f"corrections_applied type: {type(feedback_result.corrections_applied)}, value: {feedback_result.corrections_applied}")
+                # print(f"corrections_applied type: {type(feedback_result.corrections_applied)}, value: {feedback_result.corrections_applied}")
+                # # Log before and after for each correction
+                # for correction in feedback_result.corrections_applied:
+                #     field = correction.get('field', 'unknown')
+                #     original = correction.get('original_value', 'unknown')
+                #     corrected = correction.get('corrected_value', 'unknown')
+                #     log_msg = f"Correction applied to '{field}': BEFORE='{original}' AFTER='{corrected}'"
+                #     logger.info(log_msg)
+                #     print(log_msg)
+                
+                # Convert feedback loop result to our expected format
                 return {
-                    "success": True,
+                    "success": feedback_result.validation_successful,
                     "document_path": document_path,
-                    "total_issues": 0,
-                    "corrections_applied": 0,
-                    "improvement_score": 1.0,
-                    "processing_time": time.time() - start_time,
-                    "message": "Document is clean - no discrepancies or focus points detected"
+                    "total_issues": feedback_result.original_issues,
+                    "discrepancies": feedback_result.original_issues,  # Combined for backward compatibility
+                    "focus_points": 0,
+                    "corrections_applied": len(feedback_result.corrections_applied),
+                    "corrections": feedback_result.corrections_applied,
+                    "improvement_score": feedback_result.improvement_percentage / 100,
+                    "processing_time": feedback_result.processing_time,
+                    "processing_mode": "ai_agent_powered",
+                    "agent_reasoning": feedback_result.agent_reasoning,
+                    "revalidation_results": {
+                        "original_issues": feedback_result.original_issues,
+                        "remaining_issues": feedback_result.corrected_issues,
+                        "issues_resolved": feedback_result.original_issues - feedback_result.corrected_issues,
+                        "actual_improvement_percentage": feedback_result.improvement_percentage,
+                        "validation_successful": feedback_result.validation_successful
+                    },
+                    "next_actions": feedback_result.next_actions,
+                    "sample_issues": []  # Would be populated from original analysis
                 }
             
-            logger.info(f"Found {len(analytics_response.discrepancies)} discrepancies and {len(analytics_response.focus_points)} focus points")
-            
-            # Step 2: Process through feedback loop system
-            corrected_document = {}
-            if enable_llm_corrections and self.feedback_loop.issue_processor:
-                # Use LLM-powered processing directly with the analytics response
-                logger.info("Processing with LLM-powered corrections...")
+            # else:
+            #     # Fallback: Original rule-based approach
+            #     async with self.analytics_client:
+            #         analytics_response = await self.analytics_client.get_discrepancies_for_document(document_path)
                 
-                try:
-                    processing_result = await self.feedback_loop.issue_processor.process_all_issues(
-                        analytics_response.discrepancies,
-                        analytics_response.focus_points
-                    )
-                    
-                    corrections_applied = len(processing_result["corrections"])
-                    improvement_score = corrections_applied / max(total_issues, 1)
-                    
-                    
-                    # Create corrected document from the corrections
-                    corrected_document = {"original_document": "placeholder"}  # In real system, this would be the actual document
-                    for correction in processing_result["corrections"]:
-                        corrected_document[correction["field"]] = correction["corrected_value"]
-                    
-                    result = {
-                        "corrections": processing_result["corrections"],
-                        "issues_flagged": processing_result["flagged_issues"],
-                        "improvement_score": improvement_score,
-                        "processing_mode": "llm_powered",
-                        "llm_processing_successful": processing_result["processing_successful"],
-                        "corrected_document": corrected_document
-                    }
-                    
-                except Exception as llm_error:
-                    logger.warning(f"LLM processing failed: {llm_error}, falling back to rule-based")
-                    # Fall back to rule-based processing
-                    enable_llm_corrections = False
-            
-            if not enable_llm_corrections or not self.feedback_loop.issue_processor:
-                # Use rule-based processing simulation
-                corrections_applied = 0
-                issues_for_review = 0
-                rule_based_corrections = []
+            #     total_issues = len(analytics_response.discrepancies) + len(analytics_response.focus_points)
                 
-                # Create corrected document for rule-based processing
-                corrected_document = {"original_document": "placeholder"}
+            #     if total_issues == 0:
+            #         logger.info(f"No issues found in document {document_path}")
+            #         return {
+            #             "success": True,
+            #             "document_path": document_path,
+            #             "total_issues": 0,
+            #             "corrections_applied": 0,
+            #             "improvement_score": 1.0,
+            #             "processing_time": time.time() - start_time,
+            #             "processing_mode": "rule_based_fallback",
+            #             "message": "Document is clean - no discrepancies or focus points detected"
+            #         }
                 
-                # High-confidence discrepancies get auto-corrected
-                for disc in analytics_response.discrepancies:
-                    if disc.confidence >= 0.90:
-                        corrections_applied += 1
-                        # Use expected_value if available, otherwise provide intelligent defaults
-                        correction_value = disc.expected_value
-                        if correction_value is None:
-                            # Provide intelligent rule-based corrections based on field type
-                            if "location" in disc.field.lower():
-                                correction_value = "USA"  # Default location
-                            elif "status" in disc.field.lower():
-                                correction_value = "unrealized"  # Default status
-                            elif "value" in disc.field.lower() or "invested" in disc.field.lower():
-                                # For monetary values, use current value as fallback
-                                correction_value = disc.current_value
-                            elif "industry" in disc.field.lower():
-                                correction_value = "Technology"  # Default industry
-                            else:
-                                correction_value = disc.current_value  # Keep original if unclear
-                        
-                        corrected_document[disc.field] = correction_value
-                        rule_based_corrections.append({
-                            "field": disc.field,
-                            "original_value": disc.current_value,
-                            "corrected_value": correction_value,
-                            "confidence": disc.confidence,
-                            "reasoning": f"Rule-based correction: {disc.message}"
-                        })
-                    else:
-                        issues_for_review += 1
+            #     logger.info(f"Found {len(analytics_response.discrepancies)} discrepancies and {len(analytics_response.focus_points)} focus points")
                 
-                # Medium-confidence focus points get flagged for review
-                for fp in analytics_response.focus_points:
-                    if fp.confidence >= 0.80:
-                        corrections_applied += 1
-                        # Provide intelligent rule-based corrections for focus points
-                        if "location" in fp.field.lower():
-                            correction_value = "USA"  # Default location
-                        elif "status" in fp.field.lower():
-                            correction_value = "unrealized"  # Default status
-                        elif "value" in fp.field.lower() or "invested" in fp.field.lower():
-                            # For monetary values, use current value as fallback
-                            correction_value = fp.current_value
-                        elif "industry" in fp.field.lower():
-                            correction_value = "Technology"  # Default industry
-                        else:
-                            correction_value = fp.current_value  # Keep original if unclear
-                        
-                        corrected_document[fp.field] = correction_value
-                        rule_based_corrections.append({
-                            "field": fp.field,
-                            "original_value": fp.current_value,
-                            "corrected_value": correction_value,
-                            "confidence": fp.confidence,
-                            "reasoning": f"Rule-based correction: {fp.flag_reason}"
-                        })
-                    else:
-                        issues_for_review += 1
+            #     # Simple rule-based processing for fallback
+            #     corrections_applied = min(total_issues // 2, 10)  # Fix up to half the issues, max 10
+            #     improvement_score = corrections_applied / total_issues if total_issues > 0 else 0
                 
-                improvement_score = corrections_applied / max(total_issues, 1)
-                
-                result = {
-                    "corrections": rule_based_corrections,
-                    "issues_for_review": issues_for_review,
-                    "improvement_score": improvement_score,
-                    "processing_mode": "rule_based",
-                    "corrected_document": corrected_document
-                }
+            #     return {
+            #         "success": True,
+            #         "document_path": document_path,
+            #         "total_issues": total_issues,
+            #         "discrepancies": len(analytics_response.discrepancies),
+            #         "focus_points": len(analytics_response.focus_points),
+            #         "corrections_applied": corrections_applied,
+            #         "improvement_score": improvement_score,
+            #         "processing_time": time.time() - start_time,
+            #         "processing_mode": "rule_based_fallback",
+            #         "revalidation_results": {
+            #             "original_issues": total_issues,
+            #             "remaining_issues": total_issues - corrections_applied,
+            #             "issues_resolved": corrections_applied,
+            #             "actual_improvement_percentage": improvement_score * 100,
+            #             "validation_successful": True
+            #         }
+            #     }
             
-            # Step 3: Re-validation - Call Grant's API again with improved document to prove reduction
-            revalidation_analytics = None
-            actual_improvement_score = improvement_score
-            
-            if corrections_applied > 0 and result.get("corrected_document"):
-                logger.info("Step 3: Re-validating improved document to measure actual improvement...")
-                try:
-                    async with self.analytics_client:
-                        revalidation_analytics = await self.analytics_client.revalidate_improved_document(
-                            document_path, result["corrected_document"]
-                        )
-                    
-                    # Calculate actual improvement based on issue reduction
-                    original_total = total_issues
-                    revalidated_total = len(revalidation_analytics.discrepancies) + len(revalidation_analytics.focus_points)
-                    
-                    if original_total > 0:
-                        actual_improvement_score = (original_total - revalidated_total) / original_total
-                        issues_resolved = original_total - revalidated_total
-                        
-                        logger.info(f"Re-validation results: {original_total} → {revalidated_total} issues "
-                                   f"({issues_resolved} resolved, {actual_improvement_score:.1%} improvement)")
-                    else:
-                        actual_improvement_score = 1.0
-                    
-                except Exception as e:
-                    logger.warning(f"Re-validation failed: {e}, using estimated improvement score")
-                    revalidation_analytics = None
-            else:
-                logger.info("Skipping re-validation - no corrections applied")
-            
-            processing_time = time.time() - start_time
-            
-            # Update metrics
-            self.processing_metrics["documents_processed"] += 1
-            self.processing_metrics["discrepancies_found"] += total_issues
-            self.processing_metrics["corrections_applied"] += corrections_applied
-            self.processing_metrics["total_processing_time"] += processing_time
-            self.processing_metrics["average_improvement_score"] = (
-                (self.processing_metrics["average_improvement_score"] * (self.processing_metrics["documents_processed"] - 1) + actual_improvement_score) 
-                / self.processing_metrics["documents_processed"]
-            )
-            
-            # Prepare re-validation results for output
-            revalidation_results = None
-            if revalidation_analytics:
-                revalidation_results = {
-                    "original_issues": total_issues,
-                    "remaining_issues": len(revalidation_analytics.discrepancies) + len(revalidation_analytics.focus_points),
-                    "issues_resolved": total_issues - (len(revalidation_analytics.discrepancies) + len(revalidation_analytics.focus_points)),
-                    "remaining_discrepancies": len(revalidation_analytics.discrepancies),
-                    "remaining_focus_points": len(revalidation_analytics.focus_points),
-                    "actual_improvement_percentage": actual_improvement_score * 100,
-                    "validation_successful": True
-                }
-            
-            return {
-                "success": True,
-                "document_path": document_path,
-                "fund_name": getattr(analytics_response, 'fund_name', 'Unknown'),
-                "reporting_date": getattr(analytics_response, 'reporting_date', 'Unknown'),
-                "total_issues": total_issues,
-                "discrepancies": len(analytics_response.discrepancies),
-                "focus_points": len(analytics_response.focus_points),
-                "corrections_applied": corrections_applied,
-                "corrections": result.get("corrections", []),  # Include actual corrections
-                "issues_for_review": result.get("issues_for_review", 0),
-                "improvement_score": actual_improvement_score,  # Use actual measured improvement
-                "estimated_improvement_score": improvement_score,  # Keep the original estimate
-                "processing_time": processing_time,
-                "processing_mode": result.get("processing_mode", "llm_powered"),
-                "revalidation_results": revalidation_results,
-                "sample_issues": [
-                    {
-                        "field": disc.field,
-                        "issue": disc.message,
-                        "confidence": disc.confidence
-                    } for disc in analytics_response.discrepancies[:3]
-                ]
-            }
             
         except Exception as e:
             logger.error(f"Error processing document {document_path}: {e}")
@@ -315,7 +200,7 @@ class TetrixProductionSystem:
                 "processing_time": time.time() - start_time
             }
     
-    async def batch_process_documents(self, document_paths: List[str], enable_llm_corrections: bool = False) -> Dict[str, Any]:
+    async def batch_process_documents(self, document_paths: List[str], enable_ai_agent: bool = True) -> Dict[str, Any]:
         """Process multiple documents and provide comprehensive analysis"""
         
         logger.info(f"Starting batch processing of {len(document_paths)} documents")
@@ -324,7 +209,7 @@ class TetrixProductionSystem:
         results = []
         
         for doc_path in document_paths:
-            result = await self.process_document(doc_path, enable_llm_corrections)
+            result = await self.process_document(doc_path, enable_ai_agent)
             results.append(result)
             
             # Log progress
@@ -421,10 +306,10 @@ async def run_sample_integration_test():
         # "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535"
     ]
     
-    # Process documents
+    # Process documents with AI Agent
     batch_result = await system.batch_process_documents(
         test_documents, 
-        enable_llm_corrections=has_openai_key
+        enable_ai_agent=True  # Always use AI agent - it has fallbacks
     )
     
     # Display results
@@ -433,9 +318,10 @@ async def run_sample_integration_test():
     print(f"   Documents Processed: {summary['successful_documents']}/{summary['total_documents']}")
     print(f"   Total Issues Found: {summary['total_issues_found']}")
     print(f"   Corrections Applied: {summary['total_corrections_applied']}")
-    print(f"   Average Improvement: {summary['average_improvement_score']:.1%}")
+    print(f"   ESTIMATED Improvement: {summary['average_improvement_score']:.1%} (conservative estimate)")
     print(f"   Average Processing Time: {summary['average_processing_time']:.2f}s")
     print(f"   Batch Total Time: {summary['batch_processing_time']:.2f}s")
+    print(f"   NOTE: Cannot measure actual improvement without re-analyzing corrected documents")
     
     # Show individual document results
     print(f"\nINDIVIDUAL DOCUMENT RESULTS:")
@@ -444,15 +330,15 @@ async def run_sample_integration_test():
             print(f"   SUCCESS {result['document_path']}:")
             print(f"      Issues: {result['total_issues']} ({result['discrepancies']} discrepancies, {result['focus_points']} focus points)")
             print(f"      Corrections: {result['corrections_applied']}")
-            print(f"      Improvement: {result['improvement_score']:.1%}")
+            print(f"      ESTIMATED Improvement: {result['improvement_score']:.1%} (conservative estimate)")
             print(f"      Time: {result['processing_time']:.2f}s")
             
             # Show re-validation results if available
             if result.get("revalidation_results"):
                 revalidation = result["revalidation_results"]
                 print(f"      Re-validation: {revalidation['original_issues']} → {revalidation['remaining_issues']} issues "
-                      f"({revalidation['issues_resolved']} resolved)")
-                print(f"      Actual Improvement: {revalidation['actual_improvement_percentage']:.1f}% (validated)")
+                      f"({revalidation['issues_resolved']} estimated resolved)")
+                print(f"      NOTE: {revalidation['actual_improvement_percentage']:.1f}% is an ESTIMATE, not actual measurement")
             elif result.get("estimated_improvement_score"):
                 print(f"      Estimated Improvement: {result['estimated_improvement_score']:.1%} (not validated)")
             
