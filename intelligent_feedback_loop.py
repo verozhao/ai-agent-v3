@@ -42,8 +42,8 @@ class IntelligentFeedbackLoopSystem:
     4. Provides realistic feedback on correction effectiveness
     """
     
-    def __init__(self, fast_mode: bool = False):
-        self.ai_agent = DocumentIntelligenceAgent(fast_mode=fast_mode)
+    def __init__(self):
+        self.ai_agent = DocumentIntelligenceAgent()
         self.analytics_client = create_analytics_client(use_mock=False)
         self.processing_history = []
         

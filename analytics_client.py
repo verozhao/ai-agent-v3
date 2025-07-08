@@ -481,6 +481,141 @@ class TetrixAnalyticsClient:
             "error": "Raw document data not accessible",
             "fallback": True
         }
+    
+    async def get_consolidated_documents(self, fund_org_id: str = None) -> Optional[Dict[str, Any]]:
+        """Get consolidated documents from MongoDB for ground truth validation"""
+        
+        try:
+            # Import here to avoid dependency issues if MongoDB isn't available
+            from pymongo import MongoClient
+            import os
+            
+            # Load environment variables from .env file
+            try:
+                from dotenv import load_dotenv
+                load_dotenv()
+            except ImportError:
+                logger.warning("python-dotenv not available, using system environment variables only")
+            
+            # Get MongoDB connection details from environment variables (.env file)
+            mongo_host = os.getenv("MONGODB_HOST")
+            mongo_username = os.getenv("MONGODB_USERNAME")
+            mongo_password = os.getenv("MONGODB_PASSWORD")
+            mongo_uri = os.getenv("MONGODB_URI")
+            mongo_db = os.getenv("MONGODB_DATABASE")
+            mongo_collection = os.getenv("MONGODB_COLLECTION")
+            
+            # Validate required environment variables
+            if not all([mongo_host, mongo_username, mongo_password, mongo_db, mongo_collection]):
+                missing = [var for var, val in [
+                    ("MONGODB_HOST", mongo_host),
+                    ("MONGODB_USERNAME", mongo_username), 
+                    ("MONGODB_PASSWORD", mongo_password),
+                    ("MONGODB_DATABASE", mongo_db),
+                    ("MONGODB_COLLECTION", mongo_collection)
+                ] if not val]
+                raise ValueError(f"Missing required environment variables: {missing}")
+            
+            logger.info(f"Connecting to MongoDB: {mongo_db}.{mongo_collection}")
+            
+            # Connect to MongoDB (AWS DocumentDB requires specific settings)
+            if mongo_uri and "docdb.amazonaws.com" in mongo_uri:
+                # Use provided URI
+                tls_ca_file = "/Users/test/Downloads/global-bundle.pem"
+                if os.path.exists(tls_ca_file):
+                    client = MongoClient(mongo_uri, tls=True, tlsCAFile=tls_ca_file, retryWrites=False)
+                else:
+                    client = MongoClient(mongo_uri, tls=True, tlsAllowInvalidCertificates=True, retryWrites=False)
+            elif "docdb.amazonaws.com" in mongo_host:
+                # Build connection for AWS DocumentDB with proper credential handling
+                tls_ca_file = "/Users/test/Downloads/global-bundle.pem"
+                
+                if os.path.exists(tls_ca_file):
+                    client = MongoClient(
+                        host=mongo_host,
+                        port=27017,
+                        username=mongo_username,
+                        password=mongo_password,
+                        authSource='admin',
+                        tls=True,
+                        tlsCAFile=tls_ca_file,
+                        retryWrites=False,
+                        serverSelectionTimeoutMS=10000
+                    )
+                else:
+                    logger.warning(f"TLS certificate not found at {tls_ca_file}")
+                    client = MongoClient(
+                        host=mongo_host,
+                        port=27017,
+                        username=mongo_username,
+                        password=mongo_password,
+                        authSource='admin',
+                        tls=True,
+                        tlsAllowInvalidCertificates=True,
+                        retryWrites=False,
+                        serverSelectionTimeoutMS=10000
+                    )
+            else:
+                # Regular MongoDB connection
+                client = MongoClient(host=mongo_host, port=27017)
+                
+            db = client[mongo_db]
+            collection = db[mongo_collection]
+            
+            # Query consolidated documents
+            if fund_org_id:
+                # Get documents for specific fund organization
+                query = {"fund_org_id": fund_org_id}
+                documents = list(collection.find(query))
+                logger.info(f"Found {len(documents)} consolidated documents for fund_org_id: {fund_org_id}")
+            else:
+                # Get all consolidated documents (limit to prevent memory issues)
+                documents = list(collection.find().limit(100))
+                logger.info(f"Found {len(documents)} consolidated documents (limited to 100)")
+            
+            # Close MongoDB connection
+            client.close()
+            
+            # Convert ObjectId to string for JSON serialization
+            for doc in documents:
+                if '_id' in doc:
+                    doc['_id'] = str(doc['_id'])
+            
+            return {
+                "success": True,
+                "documents": documents,
+                "count": len(documents),
+                "source": "mongodb_direct_access"
+            }
+            
+        except ImportError:
+            logger.error("pymongo not installed. Install with: pip install pymongo")
+            return None
+        except Exception as e:
+            logger.error(f"Error accessing MongoDB: {e}")
+            
+            if "Authentication failed" in str(e):
+                logger.error("MongoDB authentication failed. This could mean:")
+                logger.error("  1. Database credentials have changed")
+                logger.error("  2. VPN connection required")
+                logger.error("  3. Network access restrictions")
+                logger.error("  4. Password encoding issues")
+                return {
+                    "success": False,
+                    "error": "authentication_failed",
+                    "message": "MongoDB credentials invalid or network access required",
+                    "suggestion": "Check with Grant for current database credentials or VPN requirements"
+                }
+            else:
+                logger.error(f"Check MongoDB connection details:")
+                logger.error(f"  Host: {mongo_host}")
+                logger.error(f"  Database: {mongo_db}")
+                logger.error(f"  Collection: {mongo_collection}")
+                return {
+                    "success": False,
+                    "error": "connection_failed",
+                    "message": str(e)
+                }
 
 
 # Factory function to create appropriate client

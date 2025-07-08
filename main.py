@@ -50,7 +50,7 @@ class TetrixProductionSystem:
         self.analytics_client = create_analytics_client(use_mock=self.use_mock_analytics)
         
         # Initialize intelligent feedback loop system with AI agent
-        self.feedback_loop = IntelligentFeedbackLoopSystem(fast_mode=True)
+        self.feedback_loop = IntelligentFeedbackLoopSystem()
         
         logger.info("System components initialized successfully")
     
@@ -105,17 +105,9 @@ class TetrixProductionSystem:
                     / docs_processed
                 )
                 
-                # # Debug: log type and value of corrections_applied
+                # log type and value of corrections_applied
                 logger.info(f"corrections_applied type: {type(feedback_result.corrections_applied)}, value: {feedback_result.corrections_applied}")
                 print(f"corrections_applied type: {type(feedback_result.corrections_applied)}, value: {feedback_result.corrections_applied}")
-                # # Log before and after for each correction
-                # for correction in feedback_result.corrections_applied:
-                #     field = correction.get('field', 'unknown')
-                #     original = correction.get('original_value', 'unknown')
-                #     corrected = correction.get('corrected_value', 'unknown')
-                #     log_msg = f"Correction applied to '{field}': BEFORE='{original}' AFTER='{corrected}'"
-                #     logger.info(log_msg)
-                #     print(log_msg)
                 
                 # Convert feedback loop result to our expected format
                 return {
@@ -140,53 +132,7 @@ class TetrixProductionSystem:
                     "next_actions": feedback_result.next_actions,
                     "sample_issues": []  # Would be populated from original analysis
                 }
-            
-            # else:
-            #     # Fallback: Original rule-based approach
-            #     async with self.analytics_client:
-            #         analytics_response = await self.analytics_client.get_discrepancies_for_document(document_path)
-                
-            #     total_issues = len(analytics_response.discrepancies) + len(analytics_response.focus_points)
-                
-            #     if total_issues == 0:
-            #         logger.info(f"No issues found in document {document_path}")
-            #         return {
-            #             "success": True,
-            #             "document_path": document_path,
-            #             "total_issues": 0,
-            #             "corrections_applied": 0,
-            #             "improvement_score": 1.0,
-            #             "processing_time": time.time() - start_time,
-            #             "processing_mode": "rule_based_fallback",
-            #             "message": "Document is clean - no discrepancies or focus points detected"
-            #         }
-                
-            #     logger.info(f"Found {len(analytics_response.discrepancies)} discrepancies and {len(analytics_response.focus_points)} focus points")
-                
-            #     # Simple rule-based processing for fallback
-            #     corrections_applied = min(total_issues // 2, 10)  # Fix up to half the issues, max 10
-            #     improvement_score = corrections_applied / total_issues if total_issues > 0 else 0
-                
-            #     return {
-            #         "success": True,
-            #         "document_path": document_path,
-            #         "total_issues": total_issues,
-            #         "discrepancies": len(analytics_response.discrepancies),
-            #         "focus_points": len(analytics_response.focus_points),
-            #         "corrections_applied": corrections_applied,
-            #         "improvement_score": improvement_score,
-            #         "processing_time": time.time() - start_time,
-            #         "processing_mode": "rule_based_fallback",
-            #         "revalidation_results": {
-            #             "original_issues": total_issues,
-            #             "remaining_issues": total_issues - corrections_applied,
-            #             "issues_resolved": corrections_applied,
-            #             "actual_improvement_percentage": improvement_score * 100,
-            #             "validation_successful": True
-            #         }
-            #     }
-            
-            
+ 
         except Exception as e:
             logger.error(f"Error processing document {document_path}: {e}")
             return {

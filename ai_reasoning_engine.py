@@ -66,6 +66,13 @@ class FinancialIntelligenceEngine:
     def setup_llm_clients(self):
         """Initialize LLM clients with proper error handling"""
         
+        # Load environment variables from .env file
+        try:
+            from dotenv import load_dotenv
+            load_dotenv()
+        except ImportError:
+            logger.warning("python-dotenv not available, using system environment variables only")
+        
         # OpenAI setup
         openai_key = os.getenv("OPENAI_API_KEY")
         if openai_key:

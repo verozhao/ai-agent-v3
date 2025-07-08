@@ -15,6 +15,7 @@ from copy import deepcopy
 from ai_reasoning_engine import FinancialIntelligenceEngine, ReasoningTrace, AgentResponse
 from fund_registry_dynamic import DynamicFundRegistry
 from analytics_client import create_analytics_client, Discrepancy, FocusPoint
+from pydantic_models import ParsedDocumentModel, GenericAssetModel, create_document_model_from_parsed_document, validate_corrected_document
 
 logger = logging.getLogger(__name__)
 
@@ -22,8 +23,9 @@ logger = logging.getLogger(__name__)
 class DocumentState:
     """Represents the state of a document through the correction process"""
     document_path: str
-    original_data: Dict[str, Any]
-    current_data: Dict[str, Any]
+    original_parsed_document: Dict[str, Any]
+    corrected_parsed_document: Dict[str, Any]
+    pydantic_model: Optional[ParsedDocumentModel]
     corrections_applied: List[Dict[str, Any]]
     processing_history: List[Dict[str, Any]]
     last_modified: datetime
@@ -39,7 +41,7 @@ class DocumentIntelligenceAgent:
     - Learns from feedback and improves over time
     """
     
-    def __init__(self, fast_mode: bool = False):
+    def __init__(self):
         # Core AI capabilities
         self.reasoning_engine = FinancialIntelligenceEngine()
         self.analytics_client = create_analytics_client(use_mock=False)
@@ -53,6 +55,7 @@ class DocumentIntelligenceAgent:
         
         # Agent state and memory
         self.document_states = {}  # Track document states
+        self.corrected_documents = {}  # Store corrected documents
         self.correction_patterns = {}  # Learn correction patterns
         self.performance_metrics = {
             "documents_processed": 0,
@@ -61,18 +64,13 @@ class DocumentIntelligenceAgent:
             "average_confidence": 0.0
         }
         
-        # Agent configuration
-        self.fast_mode = fast_mode
-        if fast_mode:
-            self.confidence_threshold = 0.7  # Higher threshold for fast mode
-            self.max_corrections_per_document = 5  # Fewer corrections
-            self.learning_enabled = False
-        else:
-            self.confidence_threshold = 0.6  # Lower threshold to attempt more corrections
-            self.max_corrections_per_document = 100  # Limit corrections for faster processing
-            self.learning_enabled = True
+        # Agent configuration - focus on top issues only
+        self.confidence_threshold = 0.6  # Lower threshold to attempt more corrections
+        self.max_discrepancies = 2 
+        self.max_focus_points = 2 
+        self.learning_enabled = True
         
-        logger.info(f"Document Intelligence Agent initialized (fast_mode: {fast_mode})")
+        logger.info(f"Document Intelligence Agent initialized (top {self.max_discrepancies} discrepancies + {self.max_focus_points} focus points)")
     
     async def __aenter__(self):
         """Initialize async components"""
@@ -176,8 +174,8 @@ class DocumentIntelligenceAgent:
                 "processing_time": total_time
             },
             "document_state": {
-                "original_data": document_state.original_data,
-                "corrected_data": document_state.current_data,
+                "original_data": document_state.original_parsed_document,
+                "corrected_data": document_state.corrected_parsed_document,
                 "corrections_applied": document_state.corrections_applied
             },
             "validation_results": validation_results,
@@ -186,9 +184,9 @@ class DocumentIntelligenceAgent:
         }
     
     async def _initialize_document_state(self, document_path: str) -> DocumentState:
-        """Initialize document state for tracking changes"""
+        """Initialize document state for tracking changes with parsed document"""
         
-        # Get original document data
+        # Get original parsed document from analytics
         try:
             original_data = await self.analytics_client.get_raw_document_data(document_path)
             if not original_data or original_data.get("error"):
@@ -197,10 +195,19 @@ class DocumentIntelligenceAgent:
             logger.warning(f"Could not get original document data: {e}")
             original_data = {"document_path": document_path, "placeholder": True}
         
+        # Create Pydantic model from parsed document
+        pydantic_model = None
+        try:
+            pydantic_model = create_document_model_from_parsed_document(original_data)
+            logger.info(f"Created generic Pydantic model for {document_path}")
+        except Exception as e:
+            logger.warning(f"Could not create Pydantic model: {e}")
+        
         document_state = DocumentState(
             document_path=document_path,
-            original_data=deepcopy(original_data),
-            current_data=deepcopy(original_data),
+            original_parsed_document=deepcopy(original_data),
+            corrected_parsed_document=deepcopy(original_data),
+            pydantic_model=pydantic_model,
             corrections_applied=[],
             processing_history=[],
             last_modified=datetime.now()
@@ -242,11 +249,10 @@ class DocumentIntelligenceAgent:
         - Correction complexity
         """
         
-        all_issues = []
-        
-        # Convert discrepancies to common format
+        # Process discrepancies (limit to top 2)
+        discrepancy_issues = []
         for disc in discrepancies:
-            all_issues.append({
+            discrepancy_issues.append({
                 "type": "discrepancy",
                 "id": disc.discrepancy_id,
                 "field": disc.field,
@@ -258,9 +264,14 @@ class DocumentIntelligenceAgent:
                 "priority": self._calculate_issue_priority(disc.severity, disc.confidence, "discrepancy")
             })
         
-        # Convert focus points to common format
+        # Sort discrepancies by priority and take top 2
+        discrepancy_issues.sort(key=lambda x: x["priority"], reverse=True)
+        top_discrepancies = discrepancy_issues[:self.max_discrepancies]
+        
+        # Process focus points (limit to top 2)
+        focus_point_issues = []
         for fp in focus_points:
-            all_issues.append({
+            focus_point_issues.append({
                 "type": "focus_point",
                 "id": fp.focus_point_id,
                 "field": fp.field,
@@ -272,17 +283,22 @@ class DocumentIntelligenceAgent:
                 "priority": self._calculate_issue_priority("medium", fp.confidence, "focus_point")
             })
         
-        # Sort issues by priority (highest first)
+        # Sort focus points by priority and take top 2
+        focus_point_issues.sort(key=lambda x: x["priority"], reverse=True)
+        top_focus_points = focus_point_issues[:self.max_focus_points]
+        
+        # Combine top issues
+        all_issues = top_discrepancies + top_focus_points
+        
+        # Sort combined issues by priority (highest first)
         all_issues.sort(key=lambda x: x["priority"], reverse=True)
         
-        # Create correction plan - limit to max_corrections_per_document
+        logger.info(f"Selected top {len(top_discrepancies)} discrepancies and {len(top_focus_points)} focus points from {len(discrepancies)} total discrepancies and {len(focus_points)} total focus points")
+        
+        # Create correction plan for selected top issues
         corrections_to_apply = []
         
         for issue in all_issues:
-            # Stop if we've reached max corrections
-            if len(corrections_to_apply) >= self.max_corrections_per_document:
-                logger.info(f"Reached max corrections limit ({self.max_corrections_per_document})")
-                break
                 
             # Agent decides whether to correct this issue
             should_correct = await self._should_agent_correct_issue(issue, document_state)
@@ -326,43 +342,35 @@ class DocumentIntelligenceAgent:
             logger.info(f"Agent reasoning about correction {i+1}/{len(corrections)}: {issue['field']}")
             
             try:
-                if self.fast_mode:
-                    # Fast mode: use fallback corrections directly
-                    fallback_correction = self._create_fallback_correction(issue)
-                    self._apply_correction_to_document_state(document_state, fallback_correction)
-                    successful_corrections += 1
-                    confidence_scores.append(0.7)
-                    logger.info(f"Applied fast correction to {issue['field']}")
-                else:
-                    # Full AI reasoning mode
-                    reasoning_response = await self.reasoning_engine.reason_about_discrepancy(
-                        issue, 
-                        document_state.current_data
-                    )
-                    
-                    # Safely append reasoning chain
-                    if hasattr(reasoning_response, 'reasoning_chain') and reasoning_response.reasoning_chain:
-                        reasoning_traces.append(reasoning_response.reasoning_chain)
-                    
-                    if reasoning_response.success and reasoning_response.confidence >= 0.5:  # Much lower threshold
-                        # Apply the correction to document state
-                        try:
-                            self._apply_correction_to_document_state(
-                                document_state, 
-                                reasoning_response.final_decision
-                            )
-                            
-                            successful_corrections += 1
-                            confidence_scores.append(reasoning_response.confidence)
-                            
-                            logger.info(f"Applied correction to {issue['field']} with {reasoning_response.confidence:.1%} confidence")
-                        except Exception as apply_error:
-                            logger.error(f"Failed to apply correction to {issue['field']}: {apply_error}")
-                            failed_corrections += 1
-                    
-                    else:
+                # Use AI reasoning for corrections
+                reasoning_response = await self.reasoning_engine.reason_about_discrepancy(
+                    issue, 
+                    document_state.corrected_parsed_document
+                )
+                
+                # Safely append reasoning chain
+                if hasattr(reasoning_response, 'reasoning_chain') and reasoning_response.reasoning_chain:
+                    reasoning_traces.append(reasoning_response.reasoning_chain)
+                
+                if reasoning_response.success and reasoning_response.confidence >= 0.5:  # Lower threshold
+                    # Apply the correction to document state
+                    try:
+                        self._apply_correction_to_document_state(
+                            document_state, 
+                            reasoning_response.final_decision
+                        )
+                        
+                        successful_corrections += 1
+                        confidence_scores.append(reasoning_response.confidence)
+                        
+                        logger.info(f"Applied correction to {issue['field']} with {reasoning_response.confidence:.1%} confidence")
+                    except Exception as apply_error:
+                        logger.error(f"Failed to apply correction to {issue['field']}: {apply_error}")
                         failed_corrections += 1
-                        logger.info(f"Skipped correction for {issue['field']} - insufficient confidence ({reasoning_response.confidence:.1%})")
+                
+                else:
+                    failed_corrections += 1
+                    logger.info(f"Skipped correction for {issue['field']} - insufficient confidence ({reasoning_response.confidence:.1%})")
             
             except Exception as e:
                 logger.error(f"Error processing correction for {issue['field']}: {e}")
@@ -408,7 +416,7 @@ class DocumentIntelligenceAgent:
         
         try:
             # Create improved document with corrections applied
-            improved_document = document_state.current_data
+            improved_document = document_state.corrected_parsed_document
             
             # Re-analyze using the corrected document (this is the key fix!)
             revalidation_response = await self.analytics_client.revalidate_improved_document(
@@ -551,11 +559,11 @@ class DocumentIntelligenceAgent:
         field = decision["field"]
         corrected_value = decision["corrected_value"]
         
-        # Update the current document data
+        # Update the corrected parsed document data
         if "." in field:
             # Handle nested fields like "assets.CompanyName.field"
             parts = field.split(".")
-            current = document_state.current_data
+            current = document_state.corrected_parsed_document
             
             try:
                 # Handle assets as a list structure
@@ -608,7 +616,7 @@ class DocumentIntelligenceAgent:
                 logger.warning(f"Could not apply correction to {field}: {e}")
                 return
         else:
-            document_state.current_data[field] = corrected_value
+            document_state.corrected_parsed_document[field] = corrected_value
             logger.info(f"Successfully updated {field} = {corrected_value}")
         
         # Record the correction
@@ -623,8 +631,10 @@ class DocumentIntelligenceAgent:
         }
         
         document_state.corrections_applied.append(correction_record)
-        # logger.info(f"corrections_applied so far: {document_state.corrections_applied}")
         document_state.last_modified = datetime.now()
+        
+        # Store corrected document (in-memory + local file)
+        self._store_corrected_document(document_state)
     
     def _create_corrections_summary(self, document_state: DocumentState) -> Dict[str, Any]:
         """Create a summary of all corrections applied"""
@@ -733,6 +743,190 @@ class DocumentIntelligenceAgent:
         self.performance_metrics["average_confidence"] = (
             (current_conf_avg * (docs_processed - 1) + avg_confidence) / docs_processed
         )
+    
+    def _store_corrected_document(self, document_state: DocumentState):
+        """Store corrected document in memory and optionally save to local file"""
+        document_path = document_state.document_path
+        
+        # Store in memory for quick access
+        self.corrected_documents[document_path] = {
+            "original_parsed_document": document_state.original_parsed_document,
+            "corrected_parsed_document": document_state.corrected_parsed_document,
+            "corrections_applied": document_state.corrections_applied,
+            "last_modified": document_state.last_modified.isoformat(),
+            "pydantic_model": document_state.pydantic_model
+        }
+        
+        # Optionally save to local file for persistence
+        try:
+            import os
+            import json
+            
+            # Create corrected_documents directory if it doesn't exist
+            os.makedirs("corrected_documents", exist_ok=True)
+            
+            # Generate safe filename from document path
+            safe_filename = document_path.replace("/", "_").replace("\\", "_")
+            local_file_path = f"corrected_documents/{safe_filename}_corrected.json"
+            
+            # Prepare data for JSON serialization
+            corrected_doc_data = {
+                "document_path": document_path,
+                "original_parsed_document": document_state.original_parsed_document,
+                "corrected_parsed_document": document_state.corrected_parsed_document,
+                "corrections_applied": document_state.corrections_applied,
+                "last_modified": document_state.last_modified.isoformat(),
+                "processing_history": document_state.processing_history
+            }
+            
+            # Save to file
+            with open(local_file_path, 'w') as f:
+                json.dump(corrected_doc_data, f, indent=2, default=str)
+            
+            logger.info(f"Corrected document saved to {local_file_path}")
+            
+        except Exception as e:
+            logger.warning(f"Could not save corrected document to file: {e}")
+    
+    def get_corrected_document(self, document_path: str) -> Optional[Dict[str, Any]]:
+        """Retrieve corrected document from memory"""
+        return self.corrected_documents.get(document_path)
+    
+    def get_all_corrected_documents(self) -> Dict[str, Dict[str, Any]]:
+        """Get all corrected documents for consolidation"""
+        return self.corrected_documents.copy()
+    
+    async def access_consolidated_documents_for_validation(self, fund_org_id: str = None) -> Dict[str, Any]:
+        """Access consolidated documents for ground truth validation"""
+        try:
+            # Get consolidated documents from Grant's API
+            consolidated_response = await self.analytics_client.get_consolidated_documents(fund_org_id)
+            
+            if not consolidated_response:
+                logger.warning("No consolidated documents available for validation")
+                return {"success": False, "error": "No consolidated documents available"}
+            
+            # Compare with our corrected documents
+            validation_results = []
+            
+            for doc_path, corrected_doc in self.corrected_documents.items():
+                # Try to find matching consolidated document
+                matching_consolidated = None
+                for consolidated_doc in consolidated_response.get("documents", []):
+                    if self._documents_match(corrected_doc, consolidated_doc):
+                        matching_consolidated = consolidated_doc
+                        break
+                
+                if matching_consolidated:
+                    # Validate using Pydantic model
+                    try:
+                        corrected_model = validate_corrected_document(corrected_doc["corrected_parsed_document"])
+                        consolidated_model = validate_corrected_document(matching_consolidated)
+                        
+                        # Compare key metrics
+                        validation_result = self._compare_documents(corrected_model, consolidated_model, doc_path)
+                        validation_results.append(validation_result)
+                        
+                    except Exception as e:
+                        logger.error(f"Validation error for {doc_path}: {e}")
+                        validation_results.append({
+                            "document_path": doc_path,
+                            "validation_status": "error",
+                            "error": str(e)
+                        })
+                else:
+                    validation_results.append({
+                        "document_path": doc_path,
+                        "validation_status": "no_match",
+                        "message": "No matching consolidated document found"
+                    })
+            
+            return {
+                "success": True,
+                "validation_results": validation_results,
+                "consolidated_documents_count": len(consolidated_response.get("documents", [])),
+                "corrected_documents_count": len(self.corrected_documents)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error accessing consolidated documents: {e}")
+            return {"success": False, "error": str(e)}
+    
+    def _documents_match(self, corrected_doc: Dict[str, Any], consolidated_doc: Dict[str, Any]) -> bool:
+        """Check if corrected document matches consolidated document"""
+        # Simple matching logic - can be enhanced
+        corrected_data = corrected_doc.get("corrected_parsed_document", {})
+        
+        # Match by fund organization ID and reporting date
+        if (corrected_data.get("fund_org_id") == consolidated_doc.get("fund_org_id") and
+            corrected_data.get("reporting_date") == consolidated_doc.get("reporting_date")):
+            return True
+        
+        # Match by fund name if org_id not available
+        if corrected_data.get("fund_name") == consolidated_doc.get("fund_name"):
+            return True
+        
+        return False
+    
+    def _compare_documents(self, corrected_model: 'ParsedDocumentModel', 
+                          consolidated_model: 'ParsedDocumentModel', 
+                          document_path: str) -> Dict[str, Any]:
+        """Compare corrected document with consolidated ground truth"""
+        differences = []
+        
+        # Compare financial fields dynamically
+        corrected_financial_fields = corrected_model.get_financial_fields()
+        consolidated_financial_fields = consolidated_model.get_financial_fields()
+        
+        # Find common fields to compare
+        common_fields = set(corrected_financial_fields) & set(consolidated_financial_fields)
+        
+        for field in common_fields:
+            corrected_value = getattr(corrected_model, field, None)
+            consolidated_value = getattr(consolidated_model, field, None)
+            
+            if corrected_value != consolidated_value:
+                differences.append({
+                    "field": field,
+                    "corrected_value": corrected_value,
+                    "consolidated_value": consolidated_value,
+                    "difference": self._calculate_difference(corrected_value, consolidated_value)
+                })
+        
+        # Compare asset counts
+        corrected_assets = corrected_model.get_asset_count()
+        consolidated_assets = consolidated_model.get_asset_count()
+        
+        if corrected_assets != consolidated_assets:
+            differences.append({
+                "field": "asset_count",
+                "corrected_value": corrected_assets,
+                "consolidated_value": consolidated_assets,
+                "difference": abs(corrected_assets - consolidated_assets)
+            })
+        
+        # Calculate accuracy score
+        total_comparable_fields = len(common_fields) + 1  # +1 for asset_count
+        accuracy_score = 1.0 - (len(differences) / max(total_comparable_fields, 1))
+        
+        return {
+            "document_path": document_path,
+            "validation_status": "compared",
+            "accuracy_score": accuracy_score,
+            "differences_count": len(differences),
+            "differences": differences,
+            "is_accurate": len(differences) == 0
+        }
+    
+    def _calculate_difference(self, value1: Any, value2: Any) -> Any:
+        """Calculate difference between two values"""
+        if value1 is None or value2 is None:
+            return "null_difference"
+        
+        if isinstance(value1, (int, float)) and isinstance(value2, (int, float)):
+            return abs(value1 - value2)
+        
+        return "type_mismatch" if value1 != value2 else 0
     
     def _create_failure_response(self, document_path: str, error: str) -> Dict[str, Any]:
         """Create response for failed processing"""

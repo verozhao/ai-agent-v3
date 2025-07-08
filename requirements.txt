@@ -31,6 +31,9 @@ python-dotenv>=1.0.0            # Environment variable management
 # Optional: Performance Optimization
 orjson>=3.9.0                   # Fast JSON serialization
 
+# Database Access
+pymongo>=4.5.0                  # MongoDB client for direct database access
+
 # Version constraints for stability
 # Pin major versions for production reliability
 # Update regularly for security patches
