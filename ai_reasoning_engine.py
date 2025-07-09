@@ -1,6 +1,6 @@
 """
 AI Reasoning Engine - Core Intelligence for Financial Document Processing
-Google-level AI agent with conversational interface, multi-step reasoning, and tool use
+AI agent with conversational interface, multi-step reasoning, and tool use
 """
 
 import asyncio
