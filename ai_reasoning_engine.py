@@ -92,7 +92,7 @@ class FinancialIntelligenceEngine:
         self.available_tools[name] = tool_instance
         logger.info(f"Registered tool: {name}")
     
-    async def reason_about_discrepancy(self, discrepancy: Dict[str, Any], 
+    async def reason_about_discrepancy(self, discrepancy: Dict[str, Any],
                                      document_context: Dict[str, Any]) -> AgentResponse:
         """
         Use advanced reasoning to analyze and correct a financial discrepancy
