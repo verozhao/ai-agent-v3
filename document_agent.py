@@ -12,7 +12,7 @@ from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass, asdict
 from copy import deepcopy
 
-from ai_reasoning_engine import FinancialIntelligenceEngine, ReasoningTrace, AgentResponse
+from ai_reasoning_engine import FinancialEngine, ReasoningTrace, AgentResponse
 from fund_registry_dynamic import DynamicFundRegistry
 from analytics_client import create_analytics_client, Discrepancy, FocusPoint
 from pydantic_models import ParsedDocumentModel, GenericAssetModel, create_document_model_from_parsed_document, validate_corrected_document
@@ -30,7 +30,7 @@ class DocumentState:
     processing_history: List[Dict[str, Any]]
     last_modified: datetime
     
-class DocumentIntelligenceAgent:
+class DocumentAgent:
     """
     Autonomous AI Agent for Document Correction
     
@@ -43,7 +43,7 @@ class DocumentIntelligenceAgent:
     
     def __init__(self):
         # Core AI capabilities
-        self.reasoning_engine = FinancialIntelligenceEngine()
+        self.reasoning_engine = FinancialEngine()
         self.analytics_client = create_analytics_client(use_mock=False)
         
         # Tools available to the agent
@@ -818,14 +818,17 @@ class DocumentIntelligenceAgent:
                         break
                 
                 if matching_consolidated:
-                    # Validate using Pydantic model
+                    # Measure accuracy improvement: original → corrected vs consolidated
                     try:
+                        original_model = validate_corrected_document(corrected_doc["original_parsed_document"])
                         corrected_model = validate_corrected_document(corrected_doc["corrected_parsed_document"])
                         consolidated_model = validate_corrected_document(matching_consolidated)
                         
-                        # Compare key metrics
-                        validation_result = self._compare_documents(corrected_model, consolidated_model, doc_path)
-                        validation_results.append(validation_result)
+                        # Calculate accuracy improvement
+                        improvement_result = self._measure_accuracy_improvement(
+                            original_model, corrected_model, consolidated_model, doc_path
+                        )
+                        validation_results.append(improvement_result)
                         
                     except Exception as e:
                         logger.error(f"Validation error for {doc_path}: {e}")
@@ -841,11 +844,15 @@ class DocumentIntelligenceAgent:
                         "message": "No matching consolidated document found"
                     })
             
+            # Calculate overall improvement metrics
+            accuracy_summary = self._calculate_overall_improvement(validation_results)
+            
             return {
                 "success": True,
                 "validation_results": validation_results,
                 "consolidated_documents_count": len(consolidated_response.get("documents", [])),
-                "corrected_documents_count": len(self.corrected_documents)
+                "corrected_documents_count": len(self.corrected_documents),
+                "accuracy_summary": accuracy_summary
             }
             
         except Exception as e:
@@ -928,6 +935,90 @@ class DocumentIntelligenceAgent:
         
         return "type_mismatch" if value1 != value2 else 0
     
+    def _measure_accuracy_improvement(self, original_model: 'ParsedDocumentModel', 
+                                    corrected_model: 'ParsedDocumentModel',
+                                    consolidated_model: 'ParsedDocumentModel', 
+                                    document_path: str) -> Dict[str, Any]:
+        """Measure accuracy improvement: original → corrected vs consolidated ground truth"""
+        
+        # Calculate baseline accuracy (original vs consolidated)
+        baseline_result = self._compare_documents(original_model, consolidated_model, document_path)
+        baseline_accuracy = baseline_result["accuracy_score"]
+        
+        # Calculate improved accuracy (corrected vs consolidated) 
+        improved_result = self._compare_documents(corrected_model, consolidated_model, document_path)
+        improved_accuracy = improved_result["accuracy_score"]
+        
+        # Calculate improvement
+        improvement = improved_accuracy - baseline_accuracy
+        improvement_percentage = improvement * 100
+        
+        return {
+            "document_path": document_path,
+            "validation_status": "accuracy_measured",
+            "baseline_accuracy": baseline_accuracy,
+            "improved_accuracy": improved_accuracy, 
+            "improvement": improvement,
+            "improvement_percentage": improvement_percentage,
+            "baseline_differences": baseline_result["differences_count"],
+            "improved_differences": improved_result["differences_count"],
+            "differences_reduced": baseline_result["differences_count"] - improved_result["differences_count"],
+            "details": {
+                "baseline": baseline_result,
+                "improved": improved_result
+            }
+        }
+    
+    def _calculate_overall_improvement(self, validation_results: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Calculate overall accuracy improvement across all documents"""
+        
+        successful_measurements = [
+            result for result in validation_results 
+            if result.get("validation_status") == "accuracy_measured"
+        ]
+        
+        if not successful_measurements:
+            return {
+                "total_documents": len(validation_results),
+                "successful_measurements": 0,
+                "average_baseline_accuracy": 0.0,
+                "average_improved_accuracy": 0.0,
+                "average_improvement": 0.0,
+                "average_improvement_percentage": 0.0,
+                "documents_improved": 0,
+                "documents_unchanged": 0,
+                "documents_degraded": 0
+            }
+        
+        # Calculate averages
+        total_baseline = sum(r["baseline_accuracy"] for r in successful_measurements)
+        total_improved = sum(r["improved_accuracy"] for r in successful_measurements)
+        total_improvement = sum(r["improvement"] for r in successful_measurements)
+        
+        count = len(successful_measurements)
+        avg_baseline = total_baseline / count
+        avg_improved = total_improved / count
+        avg_improvement = total_improvement / count
+        avg_improvement_pct = avg_improvement * 100
+        
+        # Count improvement categories
+        improved_count = sum(1 for r in successful_measurements if r["improvement"] > 0.01)  # >1% improvement
+        unchanged_count = sum(1 for r in successful_measurements if abs(r["improvement"]) <= 0.01)  # ±1%
+        degraded_count = sum(1 for r in successful_measurements if r["improvement"] < -0.01)  # >1% worse
+        
+        return {
+            "total_documents": len(validation_results),
+            "successful_measurements": count,
+            "average_baseline_accuracy": round(avg_baseline, 3),
+            "average_improved_accuracy": round(avg_improved, 3), 
+            "average_improvement": round(avg_improvement, 3),
+            "average_improvement_percentage": round(avg_improvement_pct, 1),
+            "documents_improved": improved_count,
+            "documents_unchanged": unchanged_count,
+            "documents_degraded": degraded_count,
+            "improvement_rate": round(improved_count / count * 100, 1) if count > 0 else 0.0
+        }
+    
     def _create_failure_response(self, document_path: str, error: str) -> Dict[str, Any]:
         """Create response for failed processing"""
         return {
@@ -982,4 +1073,4 @@ class DocumentIntelligenceAgent:
         }
 
 # Export the AI agent
-__all__ = ["DocumentIntelligenceAgent", "DocumentState"]
+__all__ = ["DocumentAgent", "DocumentState"]

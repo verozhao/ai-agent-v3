@@ -49,7 +49,7 @@ class AgentResponse:
     next_actions: List[str]
     metadata: Dict[str, Any]
 
-class FinancialIntelligenceEngine:
+class FinancialEngine:
     """
     Advanced AI reasoning engine for financial document processing
     Implements chain-of-thought reasoning, tool use, and conversational interface
@@ -582,4 +582,4 @@ Respond with:
             return None
 
 # Export the intelligence engine
-__all__ = ["FinancialIntelligenceEngine", "ReasoningTrace", "AgentResponse", "ReasoningStep"]
+__all__ = ["FinancialEngine", "ReasoningTrace", "AgentResponse", "ReasoningStep"]

@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 # Import our core components
 from analytics_client import TetrixAnalyticsClient, create_analytics_client
-from intelligent_feedback_loop import IntelligentFeedbackLoopSystem
+from feedback_loop import FeedbackLoopSystem
 
 class TetrixProductionSystem:
     """Production system integrating Grant's analytics with AI feedback loop"""
@@ -50,7 +50,7 @@ class TetrixProductionSystem:
         self.analytics_client = create_analytics_client(use_mock=self.use_mock_analytics)
         
         # Initialize intelligent feedback loop system with AI agent
-        self.feedback_loop = IntelligentFeedbackLoopSystem()
+        self.feedback_loop = FeedbackLoopSystem()
         
         logger.info("System components initialized successfully")
     

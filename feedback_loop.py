@@ -12,9 +12,9 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, asdict
 import copy
 
-from document_intelligence_agent import DocumentIntelligenceAgent, DocumentState
+from document_agent import DocumentAgent, DocumentState
 from analytics_client import create_analytics_client, Discrepancy, FocusPoint
-from ai_reasoning_engine import FinancialIntelligenceEngine
+from ai_reasoning_engine import FinancialEngine
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ class FeedbackLoopResult:
     validation_successful: bool
     next_actions: List[str]
 
-class IntelligentFeedbackLoopSystem:
+class FeedbackLoopSystem:
     """
     Complete AI-powered feedback loop system that actually works
     
@@ -43,7 +43,7 @@ class IntelligentFeedbackLoopSystem:
     """
     
     def __init__(self):
-        self.ai_agent = DocumentIntelligenceAgent()
+        self.ai_agent = DocumentAgent()
         self.analytics_client = create_analytics_client(use_mock=False)
         self.processing_history = []
         
@@ -162,46 +162,71 @@ class IntelligentFeedbackLoopSystem:
                                         corrected_document: Dict[str, Any],
                                         corrections_applied: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
-        Measure actual improvement by analyzing what issues would remain after corrections
+        Measure actual improvement using consolidated documents for ground truth validation
         
-        This is the key method that fixes the broken feedback loop - instead of re-analyzing
-        the original document, we intelligently simulate what the corrected document would look like
+        This method calls the AI agent's accuracy measurement function to compare
+        original → corrected → consolidated documents as requested by Grant
         """
         
         try:
-            original_discrepancies = original_analysis["discrepancies"]
-            original_focus_points = original_analysis["focus_points"]
             original_total = original_analysis["total_issues"]
             
-            # Simulate which issues would be resolved by our corrections
-            resolved_issues = 0
-            remaining_discrepancies = []
-            remaining_focus_points = []
-            
-            # We cannot measure actual improvement without re-analyzing corrected documents
-            # Report that corrections were applied but improvement cannot be measured
-            
+            # If no corrections were applied, there's no improvement to measure
             if len(corrections_applied) == 0:
-                resolved_issues = 0
-                remaining_total = original_total
                 logger.info(f"📊 No corrections applied - no improvement")
-            else:
-                # We applied corrections but cannot measure improvement without re-validation
-                resolved_issues = 0  # Cannot claim any issues were resolved
-                remaining_total = original_total
-                logger.info(f"📊 {len(corrections_applied)} corrections applied but improvement cannot be measured without re-analysis")
+                return {
+                    "validation_successful": True,
+                    "original_issues": original_total,
+                    "issues_resolved": 0,
+                    "remaining_issues": original_total,
+                    "improvement_percentage": 0.0,
+                    "remaining_discrepancies": len(original_analysis.get("discrepancies", [])),
+                    "remaining_focus_points": len(original_analysis.get("focus_points", [])),
+                    "measurement_method": "no_corrections_applied"
+                }
             
-            improvement_percentage = 0.0  # Cannot claim any improvement without validation
+            # Call the AI agent's accuracy measurement function
+            logger.info(f"📊 Measuring accuracy improvement using consolidated documents...")
+            
+            # Get the accuracy measurement from the agent
+            validation_result = await self.ai_agent.access_consolidated_documents_for_validation()
+            
+            if not validation_result.get("success", False):
+                logger.warning(f"Accuracy measurement failed: {validation_result.get('error', 'Unknown error')}")
+                return {
+                    "validation_successful": False,
+                    "original_issues": original_total,
+                    "issues_resolved": 0,
+                    "remaining_issues": original_total,
+                    "improvement_percentage": 0.0,
+                    "remaining_discrepancies": len(original_analysis.get("discrepancies", [])),
+                    "remaining_focus_points": len(original_analysis.get("focus_points", [])),
+                    "measurement_method": "accuracy_measurement_failed",
+                    "error": validation_result.get("error", "Unknown error")
+                }
+            
+            # Extract accuracy improvement results
+            accuracy_summary = validation_result.get("accuracy_summary", {})
+            avg_improvement_pct = accuracy_summary.get("average_improvement_percentage", 0.0)
+            
+            # Calculate estimated remaining issues based on improvement percentage
+            # If we improved by X%, then remaining issues = original * (1 - X/100)
+            estimated_remaining_issues = max(0, int(original_total * (1 - avg_improvement_pct / 100)))
+            resolved_issues = original_total - estimated_remaining_issues
+            
+            logger.info(f"📊 Accuracy measurement complete: {original_total} → {estimated_remaining_issues} issues ({avg_improvement_pct:.1f}% improvement)")
             
             return {
                 "validation_successful": True,
                 "original_issues": original_total,
                 "issues_resolved": resolved_issues,
-                "remaining_issues": remaining_total,
-                "improvement_percentage": improvement_percentage,
-                "remaining_discrepancies": len(remaining_discrepancies),
-                "remaining_focus_points": len(remaining_focus_points),
-                "measurement_method": "no_measurement_possible"
+                "remaining_issues": estimated_remaining_issues,
+                "improvement_percentage": avg_improvement_pct,
+                "remaining_discrepancies": max(0, len(original_analysis.get("discrepancies", [])) - resolved_issues // 2),
+                "remaining_focus_points": max(0, len(original_analysis.get("focus_points", [])) - resolved_issues // 2),
+                "measurement_method": "consolidated_document_validation",
+                "accuracy_details": accuracy_summary,
+                "validation_results": validation_result.get("validation_results", [])
             }
         
         except Exception as e:
@@ -210,7 +235,8 @@ class IntelligentFeedbackLoopSystem:
                 "validation_successful": False,
                 "error": str(e),
                 "improvement_percentage": 0,
-                "remaining_issues": original_analysis.get("total_issues", 0)
+                "remaining_issues": original_analysis.get("total_issues", 0),
+                "measurement_method": "error_occurred"
             }
     
     def _is_issue_resolved_by_corrections(self, issue: Any, corrections_applied: List[Dict[str, Any]]) -> bool:
@@ -450,4 +476,4 @@ class IntelligentFeedbackLoopSystem:
         }
 
 # Export the system
-__all__ = ["IntelligentFeedbackLoopSystem", "FeedbackLoopResult"]
+__all__ = ["FeedbackLoopSystem", "FeedbackLoopResult"]
