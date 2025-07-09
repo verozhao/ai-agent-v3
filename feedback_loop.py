@@ -188,11 +188,20 @@ class FeedbackLoopSystem:
             # Call the AI agent's accuracy measurement function
             logger.info(f"📊 Measuring accuracy improvement using consolidated documents...")
             
+            # Debug: Check if agent has corrected documents
+            corrected_docs_count = len(getattr(self.ai_agent, 'corrected_documents', {}))
+            logger.info(f"📊 Agent has {corrected_docs_count} corrected documents in memory")
+            
             # Get the accuracy measurement from the agent
             validation_result = await self.ai_agent.access_consolidated_documents_for_validation()
             
+            # Debug: Log the full validation result
+            logger.info(f"📊 Validation result: {validation_result}")
+            
             if not validation_result.get("success", False):
-                logger.warning(f"Accuracy measurement failed: {validation_result.get('error', 'Unknown error')}")
+                error_msg = validation_result.get("error", "Unknown error")
+                logger.error(f"❌ Accuracy measurement failed: {error_msg}")
+                print(f"❌ ACCURACY MEASUREMENT FAILED: {error_msg}")
                 return {
                     "validation_successful": False,
                     "original_issues": original_total,
@@ -202,7 +211,7 @@ class FeedbackLoopSystem:
                     "remaining_discrepancies": len(original_analysis.get("discrepancies", [])),
                     "remaining_focus_points": len(original_analysis.get("focus_points", [])),
                     "measurement_method": "accuracy_measurement_failed",
-                    "error": validation_result.get("error", "Unknown error")
+                    "error": error_msg
                 }
             
             # Extract accuracy improvement results

@@ -224,7 +224,7 @@ async def run_sample_integration_test():
     
     analytics_mode = "Mock" if use_mock else "Real Grant's Service"
     print(f"   Analytics Mode: {analytics_mode}")
-    print(f"   LLM Integration: {'Enabled' if has_openai_key else 'Disabled (Mock Mode)'}")
+    print(f"   LLM Integration: {'Enabled' if has_openai_key else 'Disabled (MISSING OPENAI KEY)'}")
     
     # Test connectivity
     print("\nTESTING CONNECTIVITY...")
@@ -242,7 +242,7 @@ async def run_sample_integration_test():
     print("\nPROCESSING REAL FINANCIAL DOCUMENTS...")
     
     test_documents = [
-        "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533",  # ABRY Partners VIII
+        "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e532",  # Real document with 6 discrepancies
         # "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534",
         # "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535"
     ]
@@ -259,10 +259,9 @@ async def run_sample_integration_test():
     print(f"   Documents Processed: {summary['successful_documents']}/{summary['total_documents']}")
     print(f"   Total Issues Found: {summary['total_issues_found']}")
     print(f"   Corrections Applied: {summary['total_corrections_applied']}")
-    print(f"   Improvement: {summary['average_improvement_score']:.1%} (cannot measure without re-validation)")
+    print(f"   Improvement: {summary['average_improvement_score']:.1%}")
     print(f"   Average Processing Time: {summary['average_processing_time']:.2f}s")
     print(f"   Batch Total Time: {summary['batch_processing_time']:.2f}s")
-    print(f"   NOTE: Corrections applied but cannot measure improvement without re-analyzing corrected documents")
     
     # Show individual document results
     print(f"\nINDIVIDUAL DOCUMENT RESULTS:")
@@ -271,14 +270,13 @@ async def run_sample_integration_test():
             print(f"   SUCCESS {result['document_path']}:")
             print(f"      Issues: {result['total_issues']} ({result['discrepancies']} discrepancies, {result['focus_points']} focus points)")
             print(f"      Corrections: {result['corrections_applied']}")
-            print(f"      Improvement: {result['improvement_score']:.1%} (cannot measure without re-validation)")
+            print(f"      Improvement: {result['improvement_score']:.1%}")
             print(f"      Time: {result['processing_time']:.2f}s")
             
             # Show re-validation results if available
             if result.get("revalidation_results"):
                 revalidation = result["revalidation_results"]
                 print(f"      Status: {revalidation['original_issues']} issues found, {result['corrections_applied']} corrections applied")
-                print(f"      NOTE: Cannot measure if corrections resolved issues without re-analysis")
             
             # Show sample issues
             if result.get("sample_issues"):
@@ -351,7 +349,7 @@ async def run_sample_integration_test():
     print(f"   Total Documents Processed: {metrics['documents_processed']}")
     print(f"   Total Discrepancies Found: {metrics['discrepancies_found']}")
     print(f"   Total Corrections Applied: {metrics['corrections_applied']}")
-    print(f"   Average Improvement Score: {metrics['average_improvement_score']:.1%}")
+    print(f"   Average Improvement Score: {metrics['average_improvement_score']:.5%}")
     
 
 if __name__ == "__main__":

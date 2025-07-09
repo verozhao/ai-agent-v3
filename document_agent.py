@@ -86,6 +86,9 @@ class DocumentAgent:
             if tool_instance:
                 self.reasoning_engine.register_tool(tool_name, tool_instance)
         
+        # Load existing corrected documents from disk
+        self._load_existing_corrected_documents()
+        
         logger.info("Agent tools initialized and ready")
         return self
     
@@ -796,6 +799,46 @@ class DocumentAgent:
         """Get all corrected documents for consolidation"""
         return self.corrected_documents.copy()
     
+    def _load_existing_corrected_documents(self):
+        """Load existing corrected documents from the corrected_documents directory"""
+        try:
+            import os
+            import json
+            
+            corrected_docs_dir = "corrected_documents"
+            if not os.path.exists(corrected_docs_dir):
+                logger.info("No corrected_documents directory found")
+                return
+            
+            loaded_count = 0
+            for filename in os.listdir(corrected_docs_dir):
+                if filename.endswith("_corrected.json"):
+                    file_path = os.path.join(corrected_docs_dir, filename)
+                    try:
+                        with open(file_path, 'r') as f:
+                            corrected_doc_data = json.load(f)
+                        
+                        document_path = corrected_doc_data.get("document_path")
+                        if document_path:
+                            # Store in memory for quick access
+                            self.corrected_documents[document_path] = {
+                                "original_parsed_document": corrected_doc_data.get("original_parsed_document", {}),
+                                "corrected_parsed_document": corrected_doc_data.get("corrected_parsed_document", {}),
+                                "corrections_applied": corrected_doc_data.get("corrections_applied", []),
+                                "last_modified": corrected_doc_data.get("last_modified", ""),
+                                "pydantic_model": corrected_doc_data.get("pydantic_model")
+                            }
+                            loaded_count += 1
+                            logger.info(f"Loaded corrected document: {document_path}")
+                    
+                    except Exception as e:
+                        logger.warning(f"Failed to load corrected document {filename}: {e}")
+            
+            logger.info(f"Loaded {loaded_count} existing corrected documents from disk")
+        
+        except Exception as e:
+            logger.warning(f"Could not load existing corrected documents: {e}")
+    
     async def access_consolidated_documents_for_validation(self, fund_org_id: str = None) -> Dict[str, Any]:
         """Access consolidated documents for ground truth validation"""
         try:
@@ -864,16 +907,83 @@ class DocumentAgent:
         # Simple matching logic - can be enhanced
         corrected_data = corrected_doc.get("corrected_parsed_document", {})
         
-        # Match by fund organization ID and reporting date
-        if (corrected_data.get("fund_org_id") == consolidated_doc.get("fund_org_id") and
+        # Debug logging
+        logger.info(f"🔍 Matching corrected doc fund_name: '{corrected_data.get('fund_name')}'")
+        logger.info(f"🔍 Matching corrected doc fund_org_id: '{corrected_data.get('fund_org_id')}'")
+        logger.info(f"🔍 Matching corrected doc reporting_date: '{corrected_data.get('reporting_date')}'")
+        logger.info(f"🔍 Matching against consolidated doc fund_name: '{consolidated_doc.get('fund_name')}'")
+        logger.info(f"🔍 Matching against consolidated doc fund_org_id: '{consolidated_doc.get('fund_org_id')}'")
+        logger.info(f"🔍 Matching against consolidated doc reporting_date: '{consolidated_doc.get('reporting_date')}'")
+        
+        # Match by fund organization ID and reporting date (if both available)
+        corrected_org_id = corrected_data.get("fund_org_id")
+        consolidated_org_id = consolidated_doc.get("fund_org_id")
+        
+        if (corrected_org_id and consolidated_org_id and 
+            corrected_org_id != "None" and consolidated_org_id != "None" and
+            corrected_org_id == consolidated_org_id and
             corrected_data.get("reporting_date") == consolidated_doc.get("reporting_date")):
+            logger.info("✅ Match found by fund_org_id + reporting_date")
             return True
         
-        # Match by fund name if org_id not available
-        if corrected_data.get("fund_name") == consolidated_doc.get("fund_name"):
-            return True
+        # Enhanced fund name matching with better normalization
+        corrected_name = corrected_data.get("fund_name", "").strip()
+        consolidated_name = consolidated_doc.get("fund_name", "").strip()
         
+        if corrected_name and consolidated_name:
+            # Normalize both names for comparison
+            corrected_normalized = self._normalize_fund_name(corrected_name)
+            consolidated_normalized = self._normalize_fund_name(consolidated_name)
+            
+            # Exact match after normalization
+            if corrected_normalized == consolidated_normalized:
+                logger.info(f"✅ Match found by normalized fund_name: '{corrected_normalized}'")
+                return True
+            
+            # Partial match (one name contains the other)
+            if (corrected_normalized in consolidated_normalized or 
+                consolidated_normalized in corrected_normalized):
+                logger.info(f"✅ Match found by partial fund_name: '{corrected_normalized}' in '{consolidated_normalized}'")
+                return True
+            
+            # Try matching by key words (e.g., "ABRY Partners" should match "ABRY Partners VIII")
+            corrected_words = set(corrected_normalized.split())
+            consolidated_words = set(consolidated_normalized.split())
+            
+            # If more than 50% of words match, consider it a match
+            common_words = corrected_words & consolidated_words
+            if (len(common_words) >= min(len(corrected_words), len(consolidated_words)) * 0.5 and
+                len(common_words) >= 2):  # At least 2 words must match
+                logger.info(f"✅ Match found by word similarity: {common_words}")
+                return True
+        
+        logger.info("❌ No match found")
         return False
+    
+    def _normalize_fund_name(self, name: str) -> str:
+        """Normalize fund name for better matching"""
+        if not name:
+            return ""
+        
+        # Convert to lowercase and remove extra whitespace
+        normalized = name.lower().strip()
+        
+        # Remove common suffixes and variations
+        suffixes_to_remove = [
+            ', l.p.', ' l.p.', ' lp', ' llc', ' inc', ' ltd', ' limited',
+            ', lp', ' lp.', ' l.p', ' limited partnership',
+            ' fund', ' fund i', ' fund ii', ' fund iii', ' fund iv', ' fund v',
+            ' fund vi', ' fund vii', ' fund viii', ' fund ix', ' fund x',
+            ' i', ' ii', ' iii', ' iv', ' v', ' vi', ' vii', ' viii', ' ix', ' x'
+        ]
+        
+        for suffix in suffixes_to_remove:
+            normalized = normalized.replace(suffix, '')
+        
+        # Remove punctuation and extra spaces
+        normalized = normalized.replace(',', '').replace('.', '').replace('  ', ' ').strip()
+        
+        return normalized
     
     def _compare_documents(self, corrected_model: 'ParsedDocumentModel', 
                           consolidated_model: 'ParsedDocumentModel', 
@@ -1070,6 +1180,253 @@ class DocumentAgent:
             "tools_available": list(self.tools.keys()),
             "correction_patterns_learned": len(self.correction_patterns),
             "documents_in_memory": len(self.document_states)
+        }
+    
+    async def access_consolidated_documents_for_validation(self, fund_org_id: str = None) -> Dict[str, Any]:
+        """Access consolidated documents for ground truth validation"""
+        try:
+            # Get consolidated documents from Grant's API
+            consolidated_response = await self.analytics_client.get_consolidated_documents(fund_org_id)
+            
+            if not consolidated_response:
+                logger.warning("No consolidated documents available for validation")
+                return {"success": False, "error": "No consolidated documents available"}
+            
+            # Compare with our corrected documents
+            validation_results = []
+            
+            for doc_path, corrected_doc in self.corrected_documents.items():
+                # Try to find matching consolidated document
+                matching_consolidated = None
+                for consolidated_doc in consolidated_response.get("documents", []):
+                    if self._documents_match(corrected_doc, consolidated_doc):
+                        matching_consolidated = consolidated_doc
+                        break
+                
+                if matching_consolidated:
+                    # Measure accuracy improvement: original → corrected vs consolidated
+                    try:
+                        original_model = validate_corrected_document(corrected_doc["original_parsed_document"])
+                        corrected_model = validate_corrected_document(corrected_doc["corrected_parsed_document"])
+                        consolidated_model = validate_corrected_document(matching_consolidated)
+                        
+                        # Calculate accuracy improvement
+                        improvement_result = self._measure_accuracy_improvement(
+                            original_model, corrected_model, consolidated_model, doc_path
+                        )
+                        validation_results.append(improvement_result)
+                        
+                    except Exception as e:
+                        logger.error(f"Validation error for {doc_path}: {e}")
+                        validation_results.append({
+                            "document_path": doc_path,
+                            "validation_status": "error",
+                            "error": str(e)
+                        })
+                else:
+                    validation_results.append({
+                        "document_path": doc_path,
+                        "validation_status": "no_match",
+                        "message": "No matching consolidated document found"
+                    })
+            
+            # Calculate overall improvement metrics
+            accuracy_summary = self._calculate_overall_improvement(validation_results)
+            
+            return {
+                "success": True,
+                "validation_results": validation_results,
+                "consolidated_documents_count": len(consolidated_response.get("documents", [])),
+                "corrected_documents_count": len(self.corrected_documents),
+                "accuracy_summary": accuracy_summary
+            }
+            
+        except Exception as e:
+            logger.error(f"Error accessing consolidated documents: {e}")
+            return {"success": False, "error": str(e)}
+    
+    def _documents_match(self, corrected_doc: Dict[str, Any], consolidated_doc: Dict[str, Any]) -> bool:
+        """Check if corrected document matches consolidated document"""
+        # Simple matching logic - can be enhanced
+        corrected_data = corrected_doc.get("corrected_parsed_document", {})
+        
+        # Debug logging
+        logger.info(f"🔍 Matching corrected doc fund_name: '{corrected_data.get('fund_name')}'")
+        logger.info(f"🔍 Matching corrected doc fund_org_id: '{corrected_data.get('fund_org_id')}'")
+        logger.info(f"🔍 Matching corrected doc reporting_date: '{corrected_data.get('reporting_date')}'")
+        logger.info(f"🔍 Matching against consolidated doc fund_name: '{consolidated_doc.get('fund_name')}'")
+        logger.info(f"🔍 Matching against consolidated doc fund_org_id: '{consolidated_doc.get('fund_org_id')}'")
+        logger.info(f"🔍 Matching against consolidated doc reporting_date: '{consolidated_doc.get('reporting_date')}'")
+        
+        # Match by fund organization ID and reporting date
+        if (corrected_data.get("fund_org_id") == consolidated_doc.get("fund_org_id") and
+            corrected_data.get("reporting_date") == consolidated_doc.get("reporting_date")):
+            logger.info("✅ Match found by fund_org_id + reporting_date")
+            return True
+        
+        # Match by fund name if org_id not available
+        if corrected_data.get("fund_name") == consolidated_doc.get("fund_name"):
+            logger.info("✅ Match found by fund_name")
+            return True
+        
+        # Try partial fund name matching (remove common suffixes)
+        corrected_name = corrected_data.get("fund_name", "").strip()
+        consolidated_name = consolidated_doc.get("fund_name", "").strip()
+        
+        if corrected_name and consolidated_name:
+            # Remove common suffixes for matching
+            corrected_clean = corrected_name.replace(", L.P.", "").replace(" L.P.", "").replace("LP", "").strip()
+            consolidated_clean = consolidated_name.replace(", L.P.", "").replace(" L.P.", "").replace("LP", "").strip()
+            
+            if corrected_clean == consolidated_clean:
+                logger.info(f"✅ Match found by cleaned fund_name: '{corrected_clean}'")
+                return True
+        
+        logger.info("❌ No match found")
+        return False
+    
+    def _compare_documents(self, corrected_model: 'ParsedDocumentModel', 
+                          consolidated_model: 'ParsedDocumentModel', 
+                          document_path: str) -> Dict[str, Any]:
+        """Compare corrected document with consolidated ground truth"""
+        differences = []
+        
+        # Compare financial fields dynamically
+        corrected_financial_fields = corrected_model.get_financial_fields()
+        consolidated_financial_fields = consolidated_model.get_financial_fields()
+        
+        # Find common fields to compare
+        common_fields = set(corrected_financial_fields) & set(consolidated_financial_fields)
+        
+        for field in common_fields:
+            corrected_value = getattr(corrected_model, field, None)
+            consolidated_value = getattr(consolidated_model, field, None)
+            
+            if corrected_value != consolidated_value:
+                differences.append({
+                    "field": field,
+                    "corrected_value": corrected_value,
+                    "consolidated_value": consolidated_value,
+                    "difference": self._calculate_difference(corrected_value, consolidated_value)
+                })
+        
+        # Compare asset counts
+        corrected_assets = corrected_model.get_asset_count()
+        consolidated_assets = consolidated_model.get_asset_count()
+        
+        if corrected_assets != consolidated_assets:
+            differences.append({
+                "field": "asset_count",
+                "corrected_value": corrected_assets,
+                "consolidated_value": consolidated_assets,
+                "difference": abs(corrected_assets - consolidated_assets)
+            })
+        
+        # Calculate accuracy score
+        total_comparable_fields = len(common_fields) + 1  # +1 for asset_count
+        accuracy_score = 1.0 - (len(differences) / max(total_comparable_fields, 1))
+        
+        return {
+            "document_path": document_path,
+            "validation_status": "compared",
+            "accuracy_score": accuracy_score,
+            "differences_count": len(differences),
+            "differences": differences,
+            "is_accurate": len(differences) == 0
+        }
+    
+    def _calculate_difference(self, value1: Any, value2: Any) -> Any:
+        """Calculate difference between two values"""
+        if value1 is None or value2 is None:
+            return "null_difference"
+        
+        if isinstance(value1, (int, float)) and isinstance(value2, (int, float)):
+            return abs(value1 - value2)
+        
+        return "type_mismatch" if value1 != value2 else 0
+    
+    def _measure_accuracy_improvement(self, original_model: 'ParsedDocumentModel', 
+                                    corrected_model: 'ParsedDocumentModel',
+                                    consolidated_model: 'ParsedDocumentModel', 
+                                    document_path: str) -> Dict[str, Any]:
+        """Measure accuracy improvement: original → corrected vs consolidated ground truth"""
+        
+        # Calculate baseline accuracy (original vs consolidated)
+        baseline_result = self._compare_documents(original_model, consolidated_model, document_path)
+        baseline_accuracy = baseline_result["accuracy_score"]
+        
+        # Calculate improved accuracy (corrected vs consolidated) 
+        improved_result = self._compare_documents(corrected_model, consolidated_model, document_path)
+        improved_accuracy = improved_result["accuracy_score"]
+        
+        # Calculate improvement
+        improvement = improved_accuracy - baseline_accuracy
+        improvement_percentage = improvement * 100
+        
+        return {
+            "document_path": document_path,
+            "validation_status": "accuracy_measured",
+            "baseline_accuracy": baseline_accuracy,
+            "improved_accuracy": improved_accuracy, 
+            "improvement": improvement,
+            "improvement_percentage": improvement_percentage,
+            "baseline_differences": baseline_result["differences_count"],
+            "improved_differences": improved_result["differences_count"],
+            "differences_reduced": baseline_result["differences_count"] - improved_result["differences_count"],
+            "details": {
+                "baseline": baseline_result,
+                "improved": improved_result
+            }
+        }
+    
+    def _calculate_overall_improvement(self, validation_results: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Calculate overall accuracy improvement across all documents"""
+        
+        successful_measurements = [
+            result for result in validation_results 
+            if result.get("validation_status") == "accuracy_measured"
+        ]
+        
+        if not successful_measurements:
+            return {
+                "total_documents": len(validation_results),
+                "successful_measurements": 0,
+                "average_baseline_accuracy": 0.0,
+                "average_improved_accuracy": 0.0,
+                "average_improvement": 0.0,
+                "average_improvement_percentage": 0.0,
+                "documents_improved": 0,
+                "documents_unchanged": 0,
+                "documents_degraded": 0
+            }
+        
+        # Calculate averages
+        total_baseline = sum(r["baseline_accuracy"] for r in successful_measurements)
+        total_improved = sum(r["improved_accuracy"] for r in successful_measurements)
+        total_improvement = sum(r["improvement"] for r in successful_measurements)
+        
+        count = len(successful_measurements)
+        avg_baseline = total_baseline / count
+        avg_improved = total_improved / count
+        avg_improvement = total_improvement / count
+        avg_improvement_pct = avg_improvement * 100
+        
+        # Count improvement categories
+        improved_count = sum(1 for r in successful_measurements if r["improvement"] > 0.01)  # >1% improvement
+        unchanged_count = sum(1 for r in successful_measurements if abs(r["improvement"]) <= 0.01)  # ±1%
+        degraded_count = sum(1 for r in successful_measurements if r["improvement"] < -0.01)  # >1% worse
+        
+        return {
+            "total_documents": len(validation_results),
+            "successful_measurements": count,
+            "average_baseline_accuracy": round(avg_baseline, 3),
+            "average_improved_accuracy": round(avg_improved, 3), 
+            "average_improvement": round(avg_improvement, 3),
+            "average_improvement_percentage": round(avg_improvement_pct, 1),
+            "documents_improved": improved_count,
+            "documents_unchanged": unchanged_count,
+            "documents_degraded": degraded_count,
+            "improvement_rate": round(improved_count / count * 100, 1) if count > 0 else 0.0
         }
 
 # Export the AI agent
