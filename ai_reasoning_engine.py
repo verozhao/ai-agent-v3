@@ -1,6 +1,6 @@
 """
 AI Reasoning Engine - Core Intelligence for Financial Document Processing
-AI agent with conversational interface, multi-step reasoning, and tool use
+AI agent with multi-step reasoning and tool use
 """
 
 import asyncio
@@ -49,17 +49,16 @@ class AgentResponse:
     next_actions: List[str]
     metadata: Dict[str, Any]
 
-class FinancialEngine:
+class FinancialIntelligenceEngine:
     """
     Advanced AI reasoning engine for financial document processing
-    Implements chain-of-thought reasoning, tool use, and conversational interface
+    Implements chain-of-thought reasoning and tool use
     """
     
     def __init__(self):
         self.openai_client = None
         self.anthropic_client = None
         self.reasoning_history = []
-        self.conversation_context = []
         self.available_tools = {}
         self.setup_llm_clients()
         
@@ -582,4 +581,4 @@ Respond with:
             return None
 
 # Export the intelligence engine
-__all__ = ["FinancialEngine", "ReasoningTrace", "AgentResponse", "ReasoningStep"]
+__all__ = ["FinancialIntelligenceEngine", "ReasoningTrace", "AgentResponse", "ReasoningStep"]
