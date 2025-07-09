@@ -209,7 +209,7 @@ async def run_sample_integration_test():
     
     print("TETRIX AI FEEDBACK LOOP SYSTEM")
     print("=" * 80)
-    print("Integrated Real-World Testing with Grant's Analytics Microservice")
+    print("Integrated Testing with Grant's Analytics Microservice")
     print("Priority: Implementing feedback loop to fix discrepancies before consolidation")
     print("=" * 80)
     
