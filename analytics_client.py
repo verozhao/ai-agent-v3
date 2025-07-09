@@ -58,7 +58,6 @@ class TetrixAnalyticsClient:
     """Client for tetrix-analytics-microservice"""
     
     def __init__(self, base_url: str = None, vpn_required: bool = True):
-        # From meeting: http://internal-backen-micro-f3m5zasfnrzz-435617696.us-east-2.elb.amazonaws.com
         self.base_url = base_url or "http://internal-backen-micro-f3m5zasfnrzz-435617696.us-east-2.elb.amazonaws.com"
         self.vpn_required = vpn_required
         self.session = None
