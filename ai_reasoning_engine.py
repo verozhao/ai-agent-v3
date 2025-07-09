@@ -86,32 +86,6 @@ class FinancialIntelligenceEngine:
         
         if not self.openai_client and not self.anthropic_client:
             logger.warning("No LLM API keys found - AI reasoning will be limited")
-
-def parse_audit_trail_doc_type(
-    new_val: str, _: str = "document_type"
-) -> Dict[str, List[str]]:
-    """Extract document_type changes from an audit log string.
-    Parses text containing document_type transitions and returns the
-    original and modified values (case-preserved) as lists.
-    Args:
-        new_val (str): Raw audit string to parse.
-        _ (str, optional): Placeholder for compatibility. Defaults to "document_type".
-    Returns:
-        Dict[str, List[str]]: A dictionary with:
-            - "original_type": list containing the original document type, or empty if not found.
-            - "modified_type": list containing the modified document type, or empty if not found.
-    """
-    DOC_RE = re.compile(
-        r"document_type\s+\[<DocumentType\.\w+: '([^']+)'>]\s+to\s+\[<DocumentType\.\w+: '([^']+)'>]",
-        re.I,
-    )
-    m: Any = DOC_RE.search(new_val or "")
-    if not m:
-        return {"original_type": [], "modified_type": []}
-    return {
-        "original_type": [m.group(1)],
-        "modified_type": [m.group(2)],
-    }
     
     def register_tool(self, name: str, tool_instance):
         """Register a tool that the AI can use"""
