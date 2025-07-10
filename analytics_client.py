@@ -568,9 +568,9 @@ class TetrixAnalyticsClient:
                 documents = list(collection.find(query))
                 logger.info(f"Found {len(documents)} consolidated documents for fund_org_id: {fund_org_id}")
             else:
-                # Get all consolidated documents (limit to prevent memory issues)
-                documents = list(collection.find().limit(100))
-                logger.info(f"Found {len(documents)} consolidated documents (limited to 100)")
+                # Get all consolidated documents (no limit)
+                documents = list(collection.find())
+                logger.info(f"Found {len(documents)} consolidated documents (no limit)")
             
             # Close MongoDB connection
             client.close()
