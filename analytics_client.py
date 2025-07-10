@@ -376,13 +376,13 @@ class TetrixAnalyticsClient:
         """
         
         # For the current implementation, we call the same endpoint since we can't 
-        # actually submit improved documents to Grant's extraction pipeline yet
+        # actually submit improved documents to extraction pipeline yet
         # This is a limitation - ideally we'd have an endpoint to submit improved docs
         
         logger.info(f"Re-validating improved document for {original_doc_path}")
         logger.info("Note: Currently using same endpoint - future enhancement needed to submit improved docs")
         
-        # Call the same endpoint (this is the limitation - we need Grant to add an endpoint 
+        # Call the same endpoint (this is the limitation - TODO: add an endpoint 
         # that accepts improved documents for re-analysis)
         return await self.get_discrepancies_for_document(
             doc_path=original_doc_path,
@@ -570,7 +570,7 @@ class TetrixAnalyticsClient:
             else:
                 # Get all consolidated documents (no limit)
                 documents = list(collection.find())
-                logger.info(f"Found {len(documents)} consolidated documents (no limit)")
+                logger.info(f"Found {len(documents)} consolidated documents")
             
             # Close MongoDB connection
             client.close()
@@ -602,8 +602,7 @@ class TetrixAnalyticsClient:
                 return {
                     "success": False,
                     "error": "authentication_failed",
-                    "message": "MongoDB credentials invalid or network access required",
-                    "suggestion": "Check with Grant for current database credentials or VPN requirements"
+                    "message": "MongoDB credentials invalid or network access required"
                 }
             else:
                 logger.error(f"Check MongoDB connection details:")

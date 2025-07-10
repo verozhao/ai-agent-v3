@@ -175,10 +175,10 @@ class FeedbackLoopSystem:
         """
         try:
             original_total = original_analysis["total_issues"]
-            logger.info(f"📊 Measuring improvement: {original_total} total issues found")
-            logger.info(f"📊 Applied {len(corrections_applied)} corrections")
+            logger.info(f" Measuring improvement: {original_total} total issues found")
+            logger.info(f" Applied {len(corrections_applied)} corrections")
             if len(corrections_applied) == 0:
-                logger.info(f"📊 No corrections applied - no improvement")
+                logger.info(f" No corrections applied - no improvement")
                 return {
                     "validation_successful": True,
                     "original_issues": original_total,
@@ -190,7 +190,7 @@ class FeedbackLoopSystem:
             # Get consolidated document for ground truth validation
             consolidated_doc = await self._get_consolidated_document(document_path)
             if not consolidated_doc:
-                logger.warning(f"📊 No consolidated document found for {document_path} - using fallback calculation")
+                logger.warning(f" No consolidated document found for {document_path} - using fallback calculation")
                 return await self._fallback_improvement_calculation(original_analysis, corrections_applied)
             # Extract the correct subdocument for field comparison
             # (Assume the first matching underlying_client_entities.documents entry)
@@ -209,35 +209,78 @@ class FeedbackLoopSystem:
             # Only compare corrected fields that were originally wrong
             fields_fixed = 0
             fields_originally_wrong = 0
-            
+            missing_ground_truth_fields = []
+
+            def _recursive_find_field(d, field):
+                """Recursively search for a field in nested dicts/lists. Returns first match found."""
+                if isinstance(d, dict):
+                    if field in d and d[field] is not None:
+                        return d[field]
+                    for v in d.values():
+                        result = _recursive_find_field(v, field)
+                        if result is not None:
+                            return result
+                elif isinstance(d, list):
+                    for item in d:
+                        result = _recursive_find_field(item, field)
+                        if result is not None:
+                            return result
+                return None
+
+            def _get_ground_truth_value(field, ground_truth_data, consolidated_doc):
+                # 1. Try the standard location (nested doc)
+                value = ground_truth_data.get(field) if ground_truth_data else None
+                if value is not None:
+                    return value
+                # 2. Try top-level of consolidated_doc
+                value = consolidated_doc.get(field)
+                if value is not None:
+                    logger.info(f"Found {field} at top-level of consolidated_doc")
+                    return value
+                # 3. Try 'data' or 'consolidated_data' keys
+                for key in ['data', 'consolidated_data']:
+                    if key in consolidated_doc and isinstance(consolidated_doc[key], dict):
+                        value = consolidated_doc[key].get(field)
+                        if value is not None:
+                            logger.info(f"Found {field} in {key} of consolidated_doc")
+                            return value
+                # 4. Try recursive search
+                value = _recursive_find_field(consolidated_doc, field)
+                if value is not None:
+                    logger.info(f"Found {field} recursively in consolidated_doc")
+                    return value
+                # 5. Log structure for debugging
+                logger.warning(f"Field {field} not found in any expected location. Document structure: {json.dumps(consolidated_doc, default=str)[:1000]}")
+                return None
+
             for correction in corrections_applied:
                 field = correction.get("field")
                 original_value = correction.get("original_value")
                 corrected_value = correction.get("corrected_value")
-                ground_truth_value = ground_truth_data.get(field)
-                
+                ground_truth_value = _get_ground_truth_value(field, ground_truth_data, consolidated_doc)
                 # Log extracted, corrected, and consolidated data for this field
                 logger.info(f"Field: {field}")
                 logger.info(f"  Extracted (original): {original_value}")
                 logger.info(f"  Corrected: {corrected_value}")
                 logger.info(f"  Consolidated (ground truth): {ground_truth_value}")
-                
+                if ground_truth_value is None:
+                    missing_ground_truth_fields.append(field)
                 # Check if field was originally wrong (different from ground truth)
                 originally_wrong = not self._values_match(original_value, ground_truth_value)
-                
                 if originally_wrong:
                     fields_originally_wrong += 1
                     # Check if correction made it match ground truth
                     if self._values_match(corrected_value, ground_truth_value):
                         fields_fixed += 1
-            
             # Calculate improvement: of the fields that were wrong, how many did we fix?
             improvement_percentage = (fields_fixed / fields_originally_wrong * 100) if fields_originally_wrong > 0 else 0.0
             remaining_issues = original_total - fields_fixed
-            
-            logger.info(f"📊 Fields originally wrong: {fields_originally_wrong}")
-            logger.info(f"📊 Fields successfully fixed: {fields_fixed}")
-            logger.info(f"📊 Improvement calculation: {fields_fixed}/{fields_originally_wrong} ({improvement_percentage:.1f}%)")
+
+            logger.info(f" Fields originally wrong: {fields_originally_wrong}")
+            logger.info(f" Fields successfully fixed: {fields_fixed}")
+            logger.info(f" Improvement calculation: {fields_fixed}/{fields_originally_wrong} ({improvement_percentage:.1f}%)")
+            if missing_ground_truth_fields:
+                logger.warning(f"Missing ground truth for fields: {missing_ground_truth_fields}")
             return {
                 "validation_successful": True,
                 "original_issues": original_total,
@@ -252,7 +295,8 @@ class FeedbackLoopSystem:
                         "confidence": c.get("confidence", 0.0),
                         "method": c.get("correction_method", "unknown")
                     } for c in corrections_applied
-                ]
+                ],
+                "missing_ground_truth_fields": missing_ground_truth_fields
             }
         except Exception as e:
             logger.error(f"Failed to measure improvement: {e}")
@@ -275,8 +319,8 @@ class FeedbackLoopSystem:
             metadata_id = document_data.get("metadata_id")
             fund_name = document_data.get("fund_name")  # Keep for logging
             
-            logger.info(f"📊 Document metadata_id: {metadata_id}")
-            logger.info(f"📊 Document fund_name: {fund_name}")
+            logger.info(f" Document metadata_id: {metadata_id}")
+            logger.info(f" Document fund_name: {fund_name}")
             
             if not metadata_id:
                 logger.warning(f"No metadata_id found in document {document_path}")
@@ -289,12 +333,12 @@ class FeedbackLoopSystem:
                 
                 # Log available metadata_ids for debugging
                 available_metadata_ids = [doc.get("metadata_id") for doc in consolidated_docs if doc.get("metadata_id")]
-                logger.info(f"📊 Available metadata_ids in consolidated docs: {available_metadata_ids[:10]}... (showing first 10)")
+                logger.info(f" Available metadata_ids in consolidated docs: {available_metadata_ids[:10]}... (showing first 10)")
                 
                 # Search for document with matching metadata_id
                 for doc in consolidated_docs:
                     if self._documents_match_by_metadata_id(metadata_id, doc):
-                        logger.info(f"✅ Found consolidated document using metadata_id: {metadata_id}")
+                        logger.info(f" Found consolidated document using metadata_id: {metadata_id}")
                         return doc
                 
                 logger.warning(f"No consolidated document found with metadata_id: {metadata_id}")
@@ -318,12 +362,12 @@ class FeedbackLoopSystem:
                 for doc in documents:
                     consolidated_metadata_id = doc.get("metadata_id")
                     if consolidated_metadata_id == metadata_id:
-                        logger.info(f"✅ Nested metadata_id match: {metadata_id}")
+                        logger.info(f" Nested metadata_id match: {metadata_id}")
                         return True
             
             # Debug logging for first few documents
             if len(getattr(self, '_debug_logged', [])) < 5:
-                logger.info(f"🔍 Sample consolidated doc: underlying_client_entities={client_entities[:1]}")
+                logger.info(f" Sample consolidated doc: underlying_client_entities={client_entities[:1]}")
                 if not hasattr(self, '_debug_logged'):
                     self._debug_logged = []
                 self._debug_logged.append(metadata_id)
@@ -462,7 +506,7 @@ class FeedbackLoopSystem:
         # Calculate improvement percentage
         improvement_percentage = (issues_resolved / original_total * 100) if original_total > 0 else 0.0
         
-        logger.info(f"📊 Fallback calculation: {issues_resolved}/{original_total} issues resolved ({improvement_percentage:.1f}%)")
+        logger.info(f" Fallback calculation: {issues_resolved}/{original_total} issues resolved ({improvement_percentage:.1f}%)")
         
         return {
             "validation_successful": True,
@@ -487,13 +531,13 @@ class FeedbackLoopSystem:
         for discrepancy in discrepancies:
             if self._is_issue_resolved_by_corrections(discrepancy, corrections_applied):
                 issues_resolved += 1
-                logger.debug(f"✅ Discrepancy resolved: {getattr(discrepancy, 'field', 'unknown')}")
+                logger.debug(f" Discrepancy resolved: {getattr(discrepancy, 'field', 'unknown')}")
         
         # Check focus points resolved
         for focus_point in focus_points:
             if self._is_issue_resolved_by_corrections(focus_point, corrections_applied):
                 issues_resolved += 1
-                logger.debug(f"✅ Focus point resolved: {getattr(focus_point, 'field', 'unknown')}")
+                logger.debug(f" Focus point resolved: {getattr(focus_point, 'field', 'unknown')}")
         
         # Add bonus for high-confidence corrections that might resolve additional issues
         high_confidence_corrections = [
@@ -505,8 +549,8 @@ class FeedbackLoopSystem:
         bonus_resolutions = len(high_confidence_corrections) * 0.5  # 0.5 bonus per high-confidence correction
         issues_resolved += int(bonus_resolutions)
         
-        logger.info(f"📊 Issues resolved calculation: {issues_resolved} issues resolved")
-        logger.info(f"📊 High-confidence corrections: {len(high_confidence_corrections)}")
+        logger.info(f" Issues resolved calculation: {issues_resolved} issues resolved")
+        logger.info(f" High-confidence corrections: {len(high_confidence_corrections)}")
         
         return issues_resolved
     
@@ -527,12 +571,12 @@ class FeedbackLoopSystem:
             
             # Direct field match
             if correction_field == issue_field:
-                logger.debug(f"✅ Direct field match: {correction_field}")
+                logger.debug(f" Direct field match: {correction_field}")
                 return True
             
             # Related field corrections that could resolve this issue
             if self._are_fields_related(issue_field, correction_field):
-                logger.debug(f"✅ Related field match: {issue_field} ↔ {correction_field}")
+                logger.debug(f" Related field match: {issue_field} ↔ {correction_field}")
                 return True
         
         # Check if the issue would be resolved by the type of corrections we made
@@ -547,14 +591,14 @@ class FeedbackLoopSystem:
             # Check if this correction method addresses this issue type
             if (self._correction_addresses_issue_type(correction, issue_type) and
                 correction_confidence >= 0.7):  # Lower threshold for method-based resolution
-                logger.debug(f"✅ Method-based resolution: {correction_method} for {issue_type}")
+                logger.debug(f" Method-based resolution: {correction_method} for {issue_type}")
                 return True
             
             # High-confidence corrections for critical/high severity issues
             if (issue_severity in ["critical", "high"] and 
                 correction_confidence >= 0.8 and 
                 self._correction_addresses_issue_type(correction, issue_type)):
-                logger.debug(f"✅ High-confidence resolution: {correction_method} for {issue_severity} {issue_type}")
+                logger.debug(f" High-confidence resolution: {correction_method} for {issue_severity} {issue_type}")
                 return True
         
         return False
@@ -733,7 +777,7 @@ class FeedbackLoopSystem:
                 result = await self.process_document_with_feedback_loop(doc_path)
                 results.append(asdict(result))
                 
-                logger.info(f"✅ {doc_path}: {result.improvement_percentage:.1f}% improvement")
+                logger.info(f" {doc_path}: {result.improvement_percentage:.1f}% improvement")
             
             except Exception as e:
                 logger.error(f"❌ Failed to process {doc_path}: {e}")

@@ -148,15 +148,39 @@ def create_document_model_from_parsed_document(parsed_doc: Dict[str, Any]) -> Pa
     return ParsedDocumentModel(**parsed_doc)
 
 def validate_corrected_document(corrected_doc: Dict[str, Any]) -> ParsedDocumentModel:
-    """Validate corrected document using generic Pydantic model"""
-    model = ParsedDocumentModel(**corrected_doc)
-    
-    # Run additional validation
-    issues = model.validate_financial_consistency()
-    if issues:
-        print(f"Validation issues found: {issues}")
-    
-    return model
+    """Validate corrected or consolidated document using generic Pydantic model, with robust field extraction and improved logging."""
+    import json, logging
+    logger = logging.getLogger(__name__)
+    # If this is a consolidated document, try to auto-detect the main data layer
+    if 'underlying_client_entities' in corrected_doc:
+        for entity in corrected_doc.get('underlying_client_entities', []):
+            for doc in entity.get('documents', []):
+                if any(isinstance(v, (int, float)) for v in doc.values()):
+                    logger.warning(f"[validate_corrected_document] Found financial fields in nested consolidated doc. Keys: {list(doc.keys())}")
+                    model = ParsedDocumentModel(**doc)
+                    issues = model.validate_financial_consistency()
+                    if issues:
+                        logger.warning(f"[validate_corrected_document] Validation issues found: {issues}")
+                    return model
+        logger.warning(f"[validate_corrected_document] No financial fields found in any nested document in underlying_client_entities. Keys at this level: {[list(doc.keys()) for entity in corrected_doc.get('underlying_client_entities', []) for doc in entity.get('documents', [])]}")
+    if any(isinstance(v, (int, float)) for v in corrected_doc.values()):
+        logger.warning(f"[validate_corrected_document] Found financial fields at top-level. Keys: {list(corrected_doc.keys())}")
+        model = ParsedDocumentModel(**corrected_doc)
+        issues = model.validate_financial_consistency()
+        if issues:
+            logger.warning(f"[validate_corrected_document] Validation issues found: {issues}")
+        return model
+    for key in ['data', 'consolidated_data']:
+        if key in corrected_doc and isinstance(corrected_doc[key], dict):
+            if any(isinstance(v, (int, float)) for v in corrected_doc[key].values()):
+                logger.warning(f"[validate_corrected_document] Found financial fields in '{key}'. Keys: {list(corrected_doc[key].keys())}")
+                model = ParsedDocumentModel(**corrected_doc[key])
+                issues = model.validate_financial_consistency()
+                if issues:
+                    logger.warning(f"[validate_corrected_document] Validation issues found: {issues}")
+                return model
+    logger.error(f"[validate_corrected_document] Could not auto-detect financial fields in document. Top-level keys: {list(corrected_doc.keys())}. Structure: {json.dumps(corrected_doc, default=str)[:1000]}")
+    return ParsedDocumentModel()
 
 # Backward compatibility aliases
 def create_pe_fund_model_from_parsed_document(parsed_doc: Dict[str, Any]) -> ParsedDocumentModel:

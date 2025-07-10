@@ -1,5 +1,5 @@
 """
-Dynamic Fund Registry using Grant's API endpoints
+Dynamic Fund Registry using API endpoints
 Replace hardcoded fund data with real Tetrix API data
 """
 
@@ -36,7 +36,7 @@ class FundInfo:
             self.aliases = []
 
 class DynamicFundRegistry:
-    """Dynamic fund registry that fetches fund data from Grant's API"""
+    """Dynamic fund registry that fetches fund data from API"""
     
     def __init__(self, db_path: str = "fund_registry_dynamic.db"):
         self.db_path = db_path
@@ -108,7 +108,7 @@ class DynamicFundRegistry:
     
     async def fetch_fund_data_from_api(self, sample_document_paths: List[str] = None) -> List[FundInfo]:
         """
-        Fetch fund data from Grant's API by analyzing sample documents
+        Fetch fund data from API by analyzing sample documents
         This extracts fund names from real parsed documents
         """
         

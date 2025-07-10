@@ -415,7 +415,7 @@ class DocumentAgent:
         This is the key to fixing the broken feedback loop - we re-analyze the corrected document
         """
         
-        logger.info("🔍 Agent validating improvements by re-analyzing corrected document")
+        logger.info(" Agent validating improvements by re-analyzing corrected document")
         
         try:
             # Create improved document with corrections applied
@@ -483,7 +483,7 @@ class DocumentAgent:
             self.confidence_threshold = max(0.7, self.confidence_threshold - 0.02)
             logger.info(f"Agent learning: Lowered confidence threshold to {self.confidence_threshold}")
         
-        logger.info(f"🧠 Agent learned from processing {document_path} (improvement: {improvement_rate:.1f}%)")
+        logger.info(f" Agent learned from processing {document_path} (improvement: {improvement_rate:.1f}%)")
     
     def _calculate_issue_priority(self, severity: str, confidence: float, issue_type: str) -> float:
         """Calculate priority score for an issue"""
@@ -842,7 +842,7 @@ class DocumentAgent:
     async def access_consolidated_documents_for_validation(self, fund_org_id: str = None) -> Dict[str, Any]:
         """Access consolidated documents for ground truth validation"""
         try:
-            # Get consolidated documents from Grant's API
+            # Get consolidated documents from API
             consolidated_response = await self.analytics_client.get_consolidated_documents(fund_org_id)
             
             if not consolidated_response:
@@ -908,12 +908,12 @@ class DocumentAgent:
         corrected_data = corrected_doc.get("corrected_parsed_document", {})
         
         # Debug logging
-        logger.info(f"🔍 Matching corrected doc fund_name: '{corrected_data.get('fund_name')}'")
-        logger.info(f"🔍 Matching corrected doc fund_org_id: '{corrected_data.get('fund_org_id')}'")
-        logger.info(f"🔍 Matching corrected doc reporting_date: '{corrected_data.get('reporting_date')}'")
-        logger.info(f"🔍 Matching against consolidated doc fund_name: '{consolidated_doc.get('fund_name')}'")
-        logger.info(f"🔍 Matching against consolidated doc fund_org_id: '{consolidated_doc.get('fund_org_id')}'")
-        logger.info(f"🔍 Matching against consolidated doc reporting_date: '{consolidated_doc.get('reporting_date')}'")
+        logger.info(f" Matching corrected doc fund_name: '{corrected_data.get('fund_name')}'")
+        logger.info(f" Matching corrected doc fund_org_id: '{corrected_data.get('fund_org_id')}'")
+        logger.info(f" Matching corrected doc reporting_date: '{corrected_data.get('reporting_date')}'")
+        logger.info(f" Matching against consolidated doc fund_name: '{consolidated_doc.get('fund_name')}'")
+        logger.info(f" Matching against consolidated doc fund_org_id: '{consolidated_doc.get('fund_org_id')}'")
+        logger.info(f" Matching against consolidated doc reporting_date: '{consolidated_doc.get('reporting_date')}'")
         
         # Match by fund organization ID and reporting date (if both available)
         corrected_org_id = corrected_data.get("fund_org_id")
@@ -923,7 +923,7 @@ class DocumentAgent:
             corrected_org_id != "None" and consolidated_org_id != "None" and
             corrected_org_id == consolidated_org_id and
             corrected_data.get("reporting_date") == consolidated_doc.get("reporting_date")):
-            logger.info("✅ Match found by fund_org_id + reporting_date")
+            logger.info(" Match found by fund_org_id + reporting_date")
             return True
         
         # Enhanced fund name matching with better normalization
@@ -937,13 +937,13 @@ class DocumentAgent:
             
             # Exact match after normalization
             if corrected_normalized == consolidated_normalized:
-                logger.info(f"✅ Match found by normalized fund_name: '{corrected_normalized}'")
+                logger.info(f" Match found by normalized fund_name: '{corrected_normalized}'")
                 return True
             
             # Partial match (one name contains the other)
             if (corrected_normalized in consolidated_normalized or 
                 consolidated_normalized in corrected_normalized):
-                logger.info(f"✅ Match found by partial fund_name: '{corrected_normalized}' in '{consolidated_normalized}'")
+                logger.info(f" Match found by partial fund_name: '{corrected_normalized}' in '{consolidated_normalized}'")
                 return True
             
             # Try matching by key words (e.g., "ABRY Partners" should match "ABRY Partners VIII")
@@ -954,7 +954,7 @@ class DocumentAgent:
             common_words = corrected_words & consolidated_words
             if (len(common_words) >= min(len(corrected_words), len(consolidated_words)) * 0.5 and
                 len(common_words) >= 2):  # At least 2 words must match
-                logger.info(f"✅ Match found by word similarity: {common_words}")
+                logger.info(f" Match found by word similarity: {common_words}")
                 return True
         
         logger.info("❌ No match found")
@@ -1185,7 +1185,7 @@ class DocumentAgent:
     async def access_consolidated_documents_for_validation(self, fund_org_id: str = None) -> Dict[str, Any]:
         """Access consolidated documents for ground truth validation"""
         try:
-            # Get consolidated documents from Grant's API
+            # Get consolidated documents from API
             consolidated_response = await self.analytics_client.get_consolidated_documents(fund_org_id)
             
             if not consolidated_response:
@@ -1251,22 +1251,22 @@ class DocumentAgent:
         corrected_data = corrected_doc.get("corrected_parsed_document", {})
         
         # Debug logging
-        logger.info(f"🔍 Matching corrected doc fund_name: '{corrected_data.get('fund_name')}'")
-        logger.info(f"🔍 Matching corrected doc fund_org_id: '{corrected_data.get('fund_org_id')}'")
-        logger.info(f"🔍 Matching corrected doc reporting_date: '{corrected_data.get('reporting_date')}'")
-        logger.info(f"🔍 Matching against consolidated doc fund_name: '{consolidated_doc.get('fund_name')}'")
-        logger.info(f"🔍 Matching against consolidated doc fund_org_id: '{consolidated_doc.get('fund_org_id')}'")
-        logger.info(f"🔍 Matching against consolidated doc reporting_date: '{consolidated_doc.get('reporting_date')}'")
+        logger.info(f" Matching corrected doc fund_name: '{corrected_data.get('fund_name')}'")
+        logger.info(f" Matching corrected doc fund_org_id: '{corrected_data.get('fund_org_id')}'")
+        logger.info(f" Matching corrected doc reporting_date: '{corrected_data.get('reporting_date')}'")
+        logger.info(f" Matching against consolidated doc fund_name: '{consolidated_doc.get('fund_name')}'")
+        logger.info(f" Matching against consolidated doc fund_org_id: '{consolidated_doc.get('fund_org_id')}'")
+        logger.info(f" Matching against consolidated doc reporting_date: '{consolidated_doc.get('reporting_date')}'")
         
         # Match by fund organization ID and reporting date
         if (corrected_data.get("fund_org_id") == consolidated_doc.get("fund_org_id") and
             corrected_data.get("reporting_date") == consolidated_doc.get("reporting_date")):
-            logger.info("✅ Match found by fund_org_id + reporting_date")
+            logger.info(" Match found by fund_org_id + reporting_date")
             return True
         
         # Match by fund name if org_id not available
         if corrected_data.get("fund_name") == consolidated_doc.get("fund_name"):
-            logger.info("✅ Match found by fund_name")
+            logger.info(" Match found by fund_name")
             return True
         
         # Try partial fund name matching (remove common suffixes)
@@ -1279,7 +1279,7 @@ class DocumentAgent:
             consolidated_clean = consolidated_name.replace(", L.P.", "").replace(" L.P.", "").replace("LP", "").strip()
             
             if corrected_clean == consolidated_clean:
-                logger.info(f"✅ Match found by cleaned fund_name: '{corrected_clean}'")
+                logger.info(f" Match found by cleaned fund_name: '{corrected_clean}'")
                 return True
         
         logger.info("❌ No match found")

@@ -301,7 +301,7 @@ class FinancialToolkit:
             )
         """)
         
-        # Note: Fund data is now populated dynamically from Grant's API via DynamicFundRegistry
+        # Note: Fund data is now populated dynamically from API via DynamicFundRegistry
         # No hardcoded fund data - use fund_registry_dynamic.py for real-time fund information
         # Update the db if needed
         logger.info("Fund database initialized - use DynamicFundRegistry for real fund data from API")
@@ -309,7 +309,7 @@ class FinancialToolkit:
         return conn
     
     async def validate_fund_name(self, fund_name: str) -> Dict[str, Any]:
-        """Validate fund name using dynamic registry from Grant's API"""
+        """Validate fund name using dynamic registry from API"""
         try:
             # Try dynamic registry first (real API data)
             try:

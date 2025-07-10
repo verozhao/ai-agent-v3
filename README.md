@@ -5,7 +5,7 @@ An AI agent that connects to real financial documents and automatically fixes er
 ## What This Actually Does
 
 - Feeds with a document path and it goes to work
-- Connects to Grant's analytics service to get the actual PDF data
+- Connects to analytics service to get the actual PDF data
 - Finds mathematical discrepancies and suspicious patterns
 - Uses AI to understand what the numbers should be based on the real document content  
 - Calculates missing values from actual transaction history
@@ -34,13 +34,13 @@ pip install -r requirements.txt
 python main.py
 ```
 
-The system automatically detects if you're connected to Grant's network and uses real data. If not, it falls back to mock mode for testing.
+The system automatically detects if you're connected to network and uses real data. If not, it falls back to mock mode for testing.
 
 ## How It Works
 
 The magic happens in three steps:
 
-First, it calls Grant's analytics service with a document path and gets back the full parsed PDF content - not just flags, but actual financial data including asset details, transaction history, fund totals, and investment metrics.
+First, it calls analytics service with a document path and gets back the full parsed PDF content - not just flags, but actual financial data including asset details, transaction history, fund totals, and investment metrics.
 
 Then the AI agent analyzes discrepancies using this real data. For missing values, it performs actual calculations. For validation issues, it compares real numbers. For inconsistencies, it applies financial logic using the document context.
 
@@ -57,7 +57,7 @@ USE_MOCK_ANALYTICS="true"
 
 ## Core components handle different aspects
 
-`analytics_client.py` manages the connection to Grant's service and extracts the real parsed document content from the APIs.
+`analytics_client.py` manages the connection to service and extracts the real parsed document content from the APIs.
 
 `discrepancy_processor.py` contains the AI agents that understand financial logic and perform calculations using real document data.
 

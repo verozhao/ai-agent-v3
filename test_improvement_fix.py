@@ -116,7 +116,7 @@ class ImprovementScoreTester:
             matches_found = 0
             for i, consolidated_doc in enumerate(test_case['consolidated_docs']):
                 if self._documents_match(test_case['corrected_doc'], consolidated_doc):
-                    print(f"   ✅ MATCH {i+1}: {consolidated_doc['fund_name']}")
+                    print(f"    MATCH {i+1}: {consolidated_doc['fund_name']}")
                     matches_found += 1
                 else:
                     print(f"   ❌ NO MATCH {i+1}: {consolidated_doc['fund_name']}")
@@ -169,7 +169,7 @@ class ImprovementScoreTester:
     
     def analyze_improvement_score_issue(self):
         """Analyze why improvement scores are returning 0"""
-        print("🔍 Analysis: Why Improvement Scores Return 0")
+        print(" Analysis: Why Improvement Scores Return 0")
         print("=" * 60)
         
         print("""
@@ -239,7 +239,7 @@ def main():
     tester.analyze_improvement_score_issue()
     tester.demonstrate_fix()
     
-    print("\n✅ Analysis Complete!")
+    print("\n Analysis Complete!")
     print("\nNext Steps:")
     print("1. The improved document matching logic has been applied to document_agent.py")
     print("2. Test the system again to see if improvement scores are now non-zero")

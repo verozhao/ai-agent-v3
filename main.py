@@ -27,7 +27,7 @@ from analytics_client import TetrixAnalyticsClient, create_analytics_client
 from feedback_loop import FeedbackLoopSystem
 
 class TetrixProductionSystem:
-    """Production system integrating Grant's analytics with AI feedback loop"""
+    """Production system integrating analytics with AI feedback loop"""
     
     def __init__(self, use_mock_analytics: bool = False):
         self.use_mock_analytics = use_mock_analytics
@@ -55,14 +55,14 @@ class TetrixProductionSystem:
         logger.info("System components initialized successfully")
     
     async def test_connectivity(self) -> Dict[str, Any]:
-        """Test connectivity to Grant's analytics service"""
-        logger.info("Testing connectivity to Grant's analytics service...")
+        """Test connectivity to analytics service"""
+        logger.info("Testing connectivity to analytics service...")
         
         async with self.analytics_client:
             connectivity_result = await self.analytics_client.test_connection()
             
             if connectivity_result.get("connected", False):
-                logger.info("Successfully connected to Grant's analytics service")
+                logger.info("Successfully connected to analytics service")
                 return {
                     "success": True,
                     "connection_status": "connected",
@@ -70,7 +70,7 @@ class TetrixProductionSystem:
                     "vpn_status": connectivity_result.get("vpn_status", "unknown")
                 }
             else:
-                logger.warning("Failed to connect to Grant's analytics service")
+                logger.warning("Failed to connect to analytics service")
                 return {
                     "success": False,
                     "connection_status": "failed",
@@ -209,7 +209,7 @@ async def run_sample_integration_test():
     
     print("TETRIX AI FEEDBACK LOOP SYSTEM")
     print("=" * 80)
-    print("Integrated Testing with Grant's Analytics Microservice")
+    print("Integrated Testing with Analytics Microservice")
     print("Priority: Implementing feedback loop to fix discrepancies before consolidation")
     print("=" * 80)
     
@@ -222,7 +222,7 @@ async def run_sample_integration_test():
     system = TetrixProductionSystem(use_mock_analytics=use_mock)
     await system.initialize()
     
-    analytics_mode = "Mock" if use_mock else "Real Grant's Service"
+    analytics_mode = "Mock" if use_mock else "Real Service"
     print(f"   Analytics Mode: {analytics_mode}")
     print(f"   LLM Integration: {'Enabled' if has_openai_key else 'Disabled (MISSING OPENAI KEY)'}")
     
@@ -236,7 +236,7 @@ async def run_sample_integration_test():
     else:
         print(f"   Connection issue: {connectivity.get('error', 'Unknown')}")
         if not use_mock:
-            print("   Suggestion: Check VPN connection to Grant's internal network")
+            print("   Suggestion: Check VPN connection to internal network")
     
     # Test with real document paths
     print("\nPROCESSING REAL FINANCIAL DOCUMENTS...")
