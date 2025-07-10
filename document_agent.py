@@ -66,8 +66,8 @@ class DocumentAgent:
         
         # Agent configuration - focus on top issues only
         self.confidence_threshold = 0.6  # Lower threshold to attempt more corrections
-        self.max_discrepancies = 2 
-        self.max_focus_points = 2 
+        self.max_discrepancies = 5
+        self.max_focus_points = 5
         self.learning_enabled = True
         
         logger.info(f"Document Intelligence Agent initialized (top {self.max_discrepancies} discrepancies + {self.max_focus_points} focus points)")
