@@ -211,53 +211,61 @@ class FeedbackLoopSystem:
             fields_originally_wrong = 0
             missing_ground_truth_fields = []
 
-            def _recursive_find_field(d, field):
-                """Recursively search for a field in nested dicts/lists. Returns first match found."""
+            def _recursive_find_field(d, field, expected_type=None):
+                """Recursively search for a field in nested dicts/lists. Returns first match found that matches expected_type."""
                 if isinstance(d, dict):
-                    if field in d and d[field] is not None:
-                        return d[field]
+                    if field in d:
+                        v = d[field]
+                        # If expected_type is set, only return if type matches (or is None)
+                        if expected_type is None or isinstance(v, expected_type):
+                            # Skip audit logs (list of dicts with old_value/new_value)
+                            if isinstance(v, list) and v and isinstance(v[0], dict) and 'old_value' in v[0] and 'new_value' in v[0]:
+                                logger.warning(f"Found audit log for {field}, skipping.")
+                            else:
+                                return v
                     for v in d.values():
-                        result = _recursive_find_field(v, field)
+                        result = _recursive_find_field(v, field, expected_type)
                         if result is not None:
                             return result
                 elif isinstance(d, list):
                     for item in d:
-                        result = _recursive_find_field(item, field)
+                        result = _recursive_find_field(item, field, expected_type)
                         if result is not None:
                             return result
                 return None
 
-            def _get_ground_truth_value(field, ground_truth_data, consolidated_doc):
+            def _get_ground_truth_value(field, ground_truth_data, consolidated_doc, original_value=None):
+                expected_type = type(original_value) if original_value is not None else None
                 # 1. Try the standard location (nested doc)
                 value = ground_truth_data.get(field) if ground_truth_data else None
-                if value is not None:
+                if value is not None and (expected_type is None or isinstance(value, expected_type)):
                     return value
                 # 2. Try top-level of consolidated_doc
                 value = consolidated_doc.get(field)
-                if value is not None:
+                if value is not None and (expected_type is None or isinstance(value, expected_type)):
                     logger.info(f"Found {field} at top-level of consolidated_doc")
                     return value
                 # 3. Try 'data' or 'consolidated_data' keys
                 for key in ['data', 'consolidated_data']:
                     if key in consolidated_doc and isinstance(consolidated_doc[key], dict):
                         value = consolidated_doc[key].get(field)
-                        if value is not None:
+                        if value is not None and (expected_type is None or isinstance(value, expected_type)):
                             logger.info(f"Found {field} in {key} of consolidated_doc")
                             return value
-                # 4. Try recursive search
-                value = _recursive_find_field(consolidated_doc, field)
+                # 4. Try recursive search with type check
+                value = _recursive_find_field(consolidated_doc, field, expected_type)
                 if value is not None:
-                    logger.info(f"Found {field} recursively in consolidated_doc")
+                    logger.info(f"Found {field} recursively in consolidated_doc (type-matched)")
                     return value
                 # 5. Log structure for debugging
-                logger.warning(f"Field {field} not found in any expected location. Document structure: {json.dumps(consolidated_doc, default=str)[:1000]}")
+                logger.warning(f"Field {field} not found in any expected location or type. Document structure: {json.dumps(consolidated_doc, default=str)[:1000]}")
                 return None
 
             for correction in corrections_applied:
                 field = correction.get("field")
                 original_value = correction.get("original_value")
                 corrected_value = correction.get("corrected_value")
-                ground_truth_value = _get_ground_truth_value(field, ground_truth_data, consolidated_doc)
+                ground_truth_value = _get_ground_truth_value(field, ground_truth_data, consolidated_doc, original_value)
                 # Log extracted, corrected, and consolidated data for this field
                 logger.info(f"Field: {field}")
                 logger.info(f"  Extracted (original): {original_value}")
