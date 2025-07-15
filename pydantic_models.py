@@ -182,15 +182,6 @@ def validate_corrected_document(corrected_doc: Dict[str, Any]) -> ParsedDocument
     logger.error(f"[validate_corrected_document] Could not auto-detect financial fields in document. Top-level keys: {list(corrected_doc.keys())}. Structure: {json.dumps(corrected_doc, default=str)[:1000]}")
     return ParsedDocumentModel()
 
-def extract_consolidated_field(consolidated_doc, field):
-    value = consolidated_doc.get(field)
-    if isinstance(value, list) and value and isinstance(value[0], dict) and 'new_value' in value[0]:
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.info(f"[validate_corrected_document] Extracting {field}: using last new_value from change log array.")
-        return value[-1]['new_value']
-    return value
-
 # Backward compatibility aliases
 def create_pe_fund_model_from_parsed_document(parsed_doc: Dict[str, Any]) -> ParsedDocumentModel:
     """Backward compatibility - now uses generic model"""

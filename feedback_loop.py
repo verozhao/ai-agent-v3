@@ -234,33 +234,31 @@ class FeedbackLoopSystem:
                             return result
                 return None
 
-            def _extract_ground_truth_value(consolidated_doc, field):
-                value = consolidated_doc.get(field)
-                # If value is a list of dicts with 'new_value', use the last new_value
-                if isinstance(value, list) and value and isinstance(value[0], dict) and 'new_value' in value[0]:
-                    logger.info(f"Extracting {field}: using last new_value from change log array.")
-                    return value[-1]['new_value']
-                return value
-
             def _get_ground_truth_value(field, ground_truth_data, consolidated_doc, original_value=None):
+                expected_type = type(original_value) if original_value is not None else None
                 # 1. Try the standard location (nested doc)
                 value = ground_truth_data.get(field) if ground_truth_data else None
-                if value is not None:
+                if value is not None and (expected_type is None or isinstance(value, expected_type)):
                     return value
-                # 2. Try top-level of consolidated_doc (with extraction logic)
-                value = _extract_ground_truth_value(consolidated_doc, field)
-                if value is not None:
-                    logger.info(f"Found {field} at top-level of consolidated_doc (extracted value: {value})")
+                # 2. Try top-level of consolidated_doc
+                value = consolidated_doc.get(field)
+                if value is not None and (expected_type is None or isinstance(value, expected_type)):
+                    logger.info(f"Found {field} at top-level of consolidated_doc")
                     return value
                 # 3. Try 'data' or 'consolidated_data' keys
                 for key in ['data', 'consolidated_data']:
                     if key in consolidated_doc and isinstance(consolidated_doc[key], dict):
-                        value = _extract_ground_truth_value(consolidated_doc[key], field)
-                        if value is not None:
-                            logger.info(f"Found {field} in {key} of consolidated_doc (extracted value: {value})")
+                        value = consolidated_doc[key].get(field)
+                        if value is not None and (expected_type is None or isinstance(value, expected_type)):
+                            logger.info(f"Found {field} in {key} of consolidated_doc")
                             return value
-                # 4. Log structure for debugging
-                logger.warning(f"Field {field} not found in any expected location. Document structure: {json.dumps(consolidated_doc, default=str)[:1000]}")
+                # 4. Try recursive search with type check
+                value = _recursive_find_field(consolidated_doc, field, expected_type)
+                if value is not None:
+                    logger.info(f"Found {field} recursively in consolidated_doc (type-matched)")
+                    return value
+                # 5. Log structure for debugging
+                logger.warning(f"Field {field} not found in any expected location or type. Document structure: {json.dumps(consolidated_doc, default=str)[:1000]}")
                 return None
 
             for correction in corrections_applied:
