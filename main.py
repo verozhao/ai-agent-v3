@@ -243,8 +243,8 @@ async def run_sample_integration_test():
     
     test_documents = [
         "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e532",  # Real document with 6 discrepancies
-        "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534",
-        "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535"
+        # "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534",
+        # "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535"
     ]
     
     # Process documents with AI Agent
