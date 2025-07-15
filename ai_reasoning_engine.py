@@ -14,6 +14,7 @@ from dataclasses import dataclass, asdict
 from enum import Enum
 import openai
 from anthropic import AsyncAnthropic
+from pdf_reader import PDFDocumentReader
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +61,7 @@ class FinancialEngine:
         self.anthropic_client = None
         self.reasoning_history = []
         self.available_tools = {}
+        self.pdf_reader = PDFDocumentReader()  # <--- NEW
         self.setup_llm_clients()
         
     def setup_llm_clients(self):
@@ -285,6 +287,286 @@ Respond with structured analysis in this format:
             output=analysis_result,
             execution_time=execution_time
         )
+    
+    async def _analyze_extraction_quality(self, discrepancy: Dict[str, Any], 
+                                    document_context: Dict[str, Any],
+                                    pdf_context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Analyze if this is an extraction error vs data error, now with optional direct PDF context."""
+        # Try to get PDF context if not provided
+        if pdf_context is None:
+            pdf_path = self._extract_pdf_path(document_context, discrepancy)
+            if pdf_path:
+                try:
+                    pdf_context = await self.pdf_reader.read_pdf_for_validation(pdf_path)
+                    logger.info(f"Loaded PDF context for extraction analysis from {pdf_path}")
+                except Exception as e:
+                    logger.warning(f"Could not read PDF for extraction analysis: {e}")
+                    pdf_context = None
+            else:
+                logger.info("No PDF path found for extraction analysis; proceeding without PDF context.")
+        
+        extraction_error_prompt = f"""
+You are analyzing a potential PDF extraction error vs actual data quality issue.
+
+DISCREPANCY:
+- Field: {discrepancy.get('field')}
+- Extracted Value: {discrepancy.get('current_value')}
+- Expected/Consolidated Value: {discrepancy.get('expected_value')}
+
+DOCUMENT CONTEXT:
+{json.dumps(document_context, indent=2)[:1000]}...
+
+{f"PDF CONTEXT (if available): {json.dumps(pdf_context, indent=2)[:500]}..." if pdf_context else ""}
+
+IMPORTANT CONTEXT:
+- If Expected Value is None/null, the fund may not have reported this metric
+- Common extraction errors:
+  1. Field misalignment (value from row above/below)
+  2. Similar field confusion (invested vs contributed capital)
+  3. Column shifts in tables
+  4. OCR errors in numbers
+  5. Date/text in numeric fields
+
+SPECIFIC CHECKS:
+- Is the extracted value similar to any other field's value in the document?
+- Does the magnitude suggest a different field (e.g., 3.5B for invested vs contributed)?
+- Are there nearby fields with similar names that could be confused?
+
+ANALYSIS NEEDED:
+1. Is this likely an extraction error or genuine data issue?
+2. If extraction error, what type?
+3. Should we trust the extracted value?
+4. Is a None/null in consolidated normal for this field?
+
+Consider:
+- "total_contributed_capital" vs "total_invested_capital" are different metrics
+- Not all funds report all metrics every period
+- Extraction might grab wrong cell from PDF table
+- Large round numbers (like 3,538,536,554) might be from wrong field
+
+Respond with JSON:
+{{
+    "error_type": "extraction_error|data_quality_issue|missing_metric|field_confusion",
+    "confidence": 0.0-1.0,
+    "reasoning": "detailed explanation",
+    "likely_source_field": "field name if extraction error",
+    "recommended_action": "skip_correction|apply_correction|flag_for_manual_review|investigate_further"
+}}
+"""
+        
+        try:
+            if self.openai_client:
+                response = await self.openai_client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[{"role": "user", "content": extraction_error_prompt}],
+                    temperature=0.1,
+                    max_tokens=800
+                )
+                
+                analysis_text = response.choices[0].message.content
+                
+                # Parse JSON response
+                try:
+                    json_start = analysis_text.find('{')
+                    json_end = analysis_text.rfind('}') + 1
+                    if json_start >= 0 and json_end > json_start:
+                        analysis_result = json.loads(analysis_text[json_start:json_end])
+                    else:
+                        # Fallback parsing
+                        analysis_result = self._parse_extraction_analysis_fallback(analysis_text)
+                except json.JSONDecodeError:
+                    analysis_result = self._parse_extraction_analysis_fallback(analysis_text)
+                
+            else:
+                # No LLM available - use rule-based analysis
+                analysis_result = self._rule_based_extraction_analysis(discrepancy, document_context)
+            
+            # Enhance analysis with additional checks
+            enhanced_analysis = self._enhance_extraction_analysis(analysis_result, discrepancy, document_context)
+            
+            return enhanced_analysis
+            
+        except Exception as e:
+            logger.error(f"Extraction quality analysis failed: {e}")
+            # Return conservative analysis on error
+            return {
+                "error_type": "unknown",
+                "confidence": 0.3,
+                "reasoning": f"Analysis failed: {str(e)}",
+                "likely_source_field": None,
+                "recommended_action": "flag_for_manual_review",
+                "analysis_failed": True
+            }
+
+def _parse_extraction_analysis_fallback(self, analysis_text: str) -> Dict[str, Any]:
+    """Fallback parsing when JSON extraction fails"""
+    
+    result = {
+        "error_type": "unknown",
+        "confidence": 0.5,
+        "reasoning": analysis_text,
+        "likely_source_field": None,
+        "recommended_action": "flag_for_manual_review"
+    }
+    
+    # Try to extract key information from text
+    text_lower = analysis_text.lower()
+    
+    # Determine error type
+    if "extraction error" in text_lower:
+        result["error_type"] = "extraction_error"
+    elif "missing metric" in text_lower or "not reported" in text_lower:
+        result["error_type"] = "missing_metric"
+    elif "field confusion" in text_lower or "wrong field" in text_lower:
+        result["error_type"] = "field_confusion"
+    elif "data quality" in text_lower:
+        result["error_type"] = "data_quality_issue"
+    
+    # Extract confidence if mentioned
+    import re
+    confidence_match = re.search(r'confidence[:\s]+([0-9.]+)', text_lower)
+    if confidence_match:
+        try:
+            result["confidence"] = float(confidence_match.group(1))
+        except:
+            pass
+    
+    # Determine action
+    if "skip" in text_lower or "don't correct" in text_lower:
+        result["recommended_action"] = "skip_correction"
+    elif "manual review" in text_lower:
+        result["recommended_action"] = "flag_for_manual_review"
+    elif "apply" in text_lower or "correct" in text_lower:
+        result["recommended_action"] = "apply_correction"
+    
+    return result
+
+def _rule_based_extraction_analysis(self, discrepancy: Dict[str, Any], 
+                                  document_context: Dict[str, Any]) -> Dict[str, Any]:
+    """Rule-based analysis when LLM is not available"""
+    
+    field = discrepancy.get("field", "")
+    current_value = discrepancy.get("current_value")
+    expected_value = discrepancy.get("expected_value")
+    
+    # Check for None expected value
+    if expected_value is None:
+        return {
+            "error_type": "missing_metric",
+            "confidence": 0.8,
+            "reasoning": f"Consolidated document has no value for {field} - likely not reported for this period",
+            "likely_source_field": None,
+            "recommended_action": "skip_correction"
+        }
+    
+    # Check for field confusion patterns
+    if "contributed" in field and current_value:
+        # Check if value matches invested capital
+        invested_capital = document_context.get("total_invested_capital")
+        if invested_capital and abs(current_value - invested_capital) < 1000:
+            return {
+                "error_type": "field_confusion",
+                "confidence": 0.9,
+                "reasoning": f"Value {current_value} matches total_invested_capital - likely extraction error",
+                "likely_source_field": "total_invested_capital",
+                "recommended_action": "skip_correction"
+            }
+    
+    # Check for obvious magnitude differences
+    if current_value and expected_value:
+        ratio = current_value / expected_value if expected_value != 0 else float('inf')
+        if ratio > 10 or ratio < 0.1:
+            return {
+                "error_type": "extraction_error",
+                "confidence": 0.7,
+                "reasoning": f"Large magnitude difference (ratio: {ratio:.2f}) suggests extraction error",
+                "likely_source_field": None,
+                "recommended_action": "flag_for_manual_review"
+            }
+    
+    # Default: assume data quality issue
+    return {
+        "error_type": "data_quality_issue",
+        "confidence": 0.5,
+        "reasoning": "No clear extraction error patterns detected",
+        "likely_source_field": None,
+        "recommended_action": "apply_correction"
+    }
+
+def _enhance_extraction_analysis(self, analysis_result: Dict[str, Any],
+                               discrepancy: Dict[str, Any],
+                               document_context: Dict[str, Any]) -> Dict[str, Any]:
+    """Enhance the analysis with additional context and validation"""
+    
+    # Add field-specific intelligence
+    field = discrepancy.get("field", "")
+    current_value = discrepancy.get("current_value")
+    
+    # Check for common confusion pairs
+    confusion_pairs = {
+        "total_contributed_capital": ["total_invested_capital", "total_called_capital", "total_committed_capital"],
+        "total_invested_capital": ["total_contributed_capital", "total_active_investments_cost_basis"],
+        "gross_irr": ["net_irr", "gross_moic"],
+        "realized_value": ["unrealized_value", "total_value"]
+    }
+    
+    if field in confusion_pairs and current_value is not None:
+        for similar_field in confusion_pairs[field]:
+            similar_value = document_context.get(similar_field)
+            if similar_value is not None:
+                # Check if values are suspiciously close
+                if isinstance(current_value, (int, float)) and isinstance(similar_value, (int, float)):
+                    if abs(current_value - similar_value) < abs(current_value) * 0.01:  # Within 1%
+                        analysis_result["field_confusion_detected"] = True
+                        analysis_result["confused_with"] = similar_field
+                        analysis_result["confidence"] = min(analysis_result.get("confidence", 0.5) * 0.7, 0.9)
+                        if analysis_result.get("error_type") == "data_quality_issue":
+                            analysis_result["error_type"] = "field_confusion"
+                        break
+    
+    # Add extraction pattern detection
+    extraction_patterns = []
+    
+    # Pattern 1: Round number that's too precise (likely from wrong field)
+    if isinstance(current_value, (int, float)) and current_value > 1000000:
+        if str(int(current_value))[-3:] not in ['000', '500']:  # Not ending in round numbers
+            extraction_patterns.append("non_round_large_number")
+    
+    # Pattern 2: Value magnitude doesn't match field type
+    if "contributed" in field.lower() and "invested" in field.lower():
+        # These should be relatively close in magnitude
+        if current_value and document_context.get("total_fund_size"):
+            fund_size = document_context.get("total_fund_size")
+            if current_value > fund_size * 1.5:
+                extraction_patterns.append("value_exceeds_fund_size")
+    
+    # Pattern 3: Text in numeric field
+    if current_value and isinstance(current_value, str):
+        if any(char.isalpha() for char in str(current_value)):
+            extraction_patterns.append("text_in_numeric_field")
+            analysis_result["error_type"] = "extraction_error"
+            analysis_result["confidence"] = 0.95
+    
+    analysis_result["extraction_patterns"] = extraction_patterns
+    
+    # Adjust confidence based on patterns
+    if len(extraction_patterns) > 0:
+        analysis_result["confidence"] *= (0.8 ** len(extraction_patterns))
+    
+    # Final recommendation adjustment
+    if analysis_result.get("confidence", 0) < 0.5:
+        analysis_result["recommended_action"] = "flag_for_manual_review"
+    elif analysis_result.get("error_type") in ["extraction_error", "field_confusion"]:
+        if analysis_result.get("confidence", 0) > 0.7:
+            analysis_result["recommended_action"] = "skip_correction"
+        else:
+            analysis_result["recommended_action"] = "investigate_further"
+    
+    # Add metadata
+    analysis_result["analysis_timestamp"] = datetime.now().isoformat()
+    analysis_result["discrepancy_id"] = discrepancy.get("discrepancy_id", "unknown")
+    
+    return analysis_result
     
     async def _plan_correction(self, discrepancy: Dict[str, Any], 
                              document_context: Dict[str, Any], 
@@ -887,6 +1169,21 @@ Respond with JSON:
             "changes_made": ["Basic validation applied"],
             "confidence": 0.6
         }
+
+    def _extract_pdf_path(self, document_context: Dict[str, Any], discrepancy: Optional[Dict[str, Any]] = None) -> Optional[str]:
+        """Try to extract the PDF file path from document context or discrepancy."""
+        # Try common keys
+        for key in ["pdf_path", "document_path", "file_path", "pdfFileName", "pdf_file_name", "file_name"]:
+            if key in document_context and document_context[key]:
+                return document_context[key]
+            if discrepancy and key in discrepancy and discrepancy[key]:
+                return discrepancy[key]
+        # Try nested locations
+        if "metadata" in document_context and isinstance(document_context["metadata"], dict):
+            for key in ["pdf_path", "document_path", "file_path", "pdfFileName", "pdf_file_name", "file_name"]:
+                if key in document_context["metadata"] and document_context["metadata"][key]:
+                    return document_context["metadata"][key]
+        return None
 
 # Export the intelligence engine
 __all__ = ["FinancialEngine", "ReasoningTrace", "AgentResponse", "ReasoningStep"]

@@ -9733,3 +9733,75 @@
 2025-07-10 16:06:15,609 - feedback_loop - INFO - Measured improvement: 123 → 123 issues (0.0% improvement)
 2025-07-10 16:06:15,617 - __main__ - INFO - corrections_applied type: <class 'list'>, value: [{'field': 'total_contributed_capital', 'original_value': 3538536554.0, 'corrected_value': 3115000000, 'reasoning': 'The total_contributed_capital should match the total_committed_capital as all committed capital should have been contributed by the investors.', 'confidence': 0.9, 'timestamp': '2025-07-10T16:04:13.001074', 'correction_method': 'ai_reasoning'}, {'field': 'assets.CP Energy.realized_value', 'original_value': 50000000.0, 'corrected_value': 2392238361, 'reasoning': 'The correct realized value of CP Energy based on transaction records and financial performance', 'confidence': 0.9, 'timestamp': '2025-07-10T16:04:22.742861', 'correction_method': 'ai_reasoning'}, {'field': 'total_contributed_capital', 'original_value': 3538536554.0, 'corrected_value': 3115000000, 'reasoning': 'The Total Contributed Capital should match the Total Committed Capital as investors commit a certain amount of capital to the fund.', 'confidence': 0.9, 'timestamp': '2025-07-10T16:04:30.283496', 'correction_method': 'ai_reasoning'}, {'field': 'total_fund_net_asset_value', 'original_value': 4571728921.0, 'corrected_value': 4571728921, 'reasoning': 'The current value is the actual reported Total Fund Net Asset Value in the document.', 'confidence': 0.9, 'timestamp': '2025-07-10T16:04:35.310132', 'correction_method': 'ai_reasoning'}, {'field': 'total_active_investments_cost_basis', 'original_value': None, 'corrected_value': 2742711698, 'reasoning': 'The correct value for total_active_investments_cost_basis is directly provided in the document.', 'confidence': 0.75, 'timestamp': '2025-07-10T16:04:39.121747', 'correction_method': 'ai_reasoning'}, {'field': 'total_fund_net_asset_value', 'original_value': None, 'corrected_value': 4571728921.0, 'reasoning': 'The correct value is the sum of total_investments_unrealized_and_realized, which is 4571728921.0.', 'confidence': 0.75, 'timestamp': '2025-07-10T16:04:44.286683', 'correction_method': 'ai_reasoning'}, {'field': 'total_distribution_to_partners', 'original_value': None, 'corrected_value': 4571728921.0, 'reasoning': "The total_distribution_to_partners value in the document is already provided as 0.0, indicating that this is the correct value based on the fund's financial data.", 'confidence': 0.75, 'timestamp': '2025-07-10T16:04:51.251310', 'correction_method': 'ai_reasoning'}, {'field': 'total_credit_facility', 'original_value': None, 'corrected_value': 50000000, 'reasoning': 'Based on the total committed capital of $3,115,000,000, a reasonable estimate for the total credit facility would be 1.6% of the total committed capital.', 'confidence': 0.75, 'timestamp': '2025-07-10T16:04:56.078492', 'correction_method': 'ai_reasoning'}, {'field': 'net_IRR', 'original_value': None, 'corrected_value': 0.01, 'reasoning': 'Correcting the net_IRR calculation based on the expected value of 0.01', 'confidence': 0.75, 'timestamp': '2025-07-10T16:05:01.050930', 'correction_method': 'ai_reasoning'}]
 2025-07-10 16:06:15,618 - __main__ - INFO - SUCCESS PEFundPortfolioExtraction/67ee89d7ecbb614e1103e532: 123 issues, 0.0% improvement
+2025-07-15 14:06:07,936 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
+2025-07-15 14:06:07,936 - analytics_client - INFO - Using real analytics client
+2025-07-15 14:06:07,936 - feedback_loop - INFO - Intelligent Feedback Loop System initialized
+2025-07-15 14:06:07,936 - __main__ - INFO - System components initialized successfully
+2025-07-15 14:06:07,937 - __main__ - INFO - Testing connectivity to analytics service...
+2025-07-15 14:06:38,867 - __main__ - INFO - Initializing Tetrix AI Feedback Loop System...
+2025-07-15 14:06:38,867 - analytics_client - INFO - Using real analytics client
+2025-07-15 14:06:38,868 - feedback_loop - INFO - Intelligent Feedback Loop System initialized
+2025-07-15 14:06:38,868 - __main__ - INFO - System components initialized successfully
+2025-07-15 14:06:38,868 - __main__ - INFO - Testing connectivity to analytics service...
+2025-07-15 14:07:40,551 - __main__ - WARNING - Failed to connect to analytics service
+2025-07-15 14:07:40,555 - __main__ - INFO - Starting batch processing of 3 documents
+2025-07-15 14:07:40,555 - __main__ - INFO - Processing document with AI Agent: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e532
+2025-07-15 14:07:40,628 - ai_reasoning_engine - INFO - OpenAI client initialized
+2025-07-15 14:07:40,628 - analytics_client - INFO - Using real analytics client
+2025-07-15 14:07:40,628 - document_agent - INFO - Document Intelligence Agent initialized (top 5 discrepancies + 5 focus points)
+2025-07-15 14:07:40,628 - analytics_client - INFO - Using real analytics client
+2025-07-15 14:07:40,628 - analytics_client - INFO - Using real analytics client
+2025-07-15 14:07:40,628 - ai_reasoning_engine - INFO - Registered tool: fund_registry
+2025-07-15 14:07:40,628 - ai_reasoning_engine - INFO - Registered tool: analytics_client
+2025-07-15 14:07:40,628 - ai_reasoning_engine - INFO - Registered tool: reasoning_engine
+2025-07-15 14:07:40,630 - document_agent - INFO - Loaded corrected document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e532
+2025-07-15 14:07:40,632 - document_agent - INFO - Loaded corrected document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-15 14:07:40,633 - document_agent - INFO - Loaded corrected document: PEFundPortfolioExtraction/6744d0d5dea60a0bb05c7179
+2025-07-15 14:07:40,633 - document_agent - INFO - Loaded 3 existing corrected documents from disk
+2025-07-15 14:07:40,633 - document_agent - INFO - Agent tools initialized and ready
+2025-07-15 14:07:40,633 - feedback_loop - INFO - Starting intelligent feedback loop for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e532
+2025-07-15 14:07:40,633 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-15 14:07:40,772 - analytics_client - WARNING - Strategy extraction_flags failed: 401 - {"detail":"Missing headers"}
+2025-07-15 14:07:40,772 - analytics_client - ERROR - All analytics endpoint strategies failed for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e532
+2025-07-15 14:07:40,773 - __main__ - INFO - corrections_applied type: <class 'list'>, value: []
+2025-07-15 14:07:40,773 - __main__ - INFO - SUCCESS PEFundPortfolioExtraction/67ee89d7ecbb614e1103e532: 0 issues, 100.0% improvement
+2025-07-15 14:07:40,773 - __main__ - INFO - Processing document with AI Agent: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-15 14:07:40,818 - ai_reasoning_engine - INFO - OpenAI client initialized
+2025-07-15 14:07:40,818 - analytics_client - INFO - Using real analytics client
+2025-07-15 14:07:40,818 - document_agent - INFO - Document Intelligence Agent initialized (top 5 discrepancies + 5 focus points)
+2025-07-15 14:07:40,818 - analytics_client - INFO - Using real analytics client
+2025-07-15 14:07:40,818 - analytics_client - INFO - Using real analytics client
+2025-07-15 14:07:40,819 - ai_reasoning_engine - INFO - Registered tool: fund_registry
+2025-07-15 14:07:40,819 - ai_reasoning_engine - INFO - Registered tool: analytics_client
+2025-07-15 14:07:40,819 - ai_reasoning_engine - INFO - Registered tool: reasoning_engine
+2025-07-15 14:07:40,819 - document_agent - INFO - Loaded corrected document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e532
+2025-07-15 14:07:40,819 - document_agent - INFO - Loaded corrected document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-15 14:07:40,820 - document_agent - INFO - Loaded corrected document: PEFundPortfolioExtraction/6744d0d5dea60a0bb05c7179
+2025-07-15 14:07:40,820 - document_agent - INFO - Loaded 3 existing corrected documents from disk
+2025-07-15 14:07:40,820 - document_agent - INFO - Agent tools initialized and ready
+2025-07-15 14:07:40,820 - feedback_loop - INFO - Starting intelligent feedback loop for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-15 14:07:40,820 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-15 14:07:40,915 - analytics_client - WARNING - Strategy extraction_flags failed: 401 - {"detail":"Missing headers"}
+2025-07-15 14:07:40,915 - analytics_client - ERROR - All analytics endpoint strategies failed for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534
+2025-07-15 14:07:40,917 - __main__ - INFO - corrections_applied type: <class 'list'>, value: []
+2025-07-15 14:07:40,917 - __main__ - INFO - SUCCESS PEFundPortfolioExtraction/67ee89d7ecbb614e1103e534: 0 issues, 100.0% improvement
+2025-07-15 14:07:40,917 - __main__ - INFO - Processing document with AI Agent: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-15 14:07:40,967 - ai_reasoning_engine - INFO - OpenAI client initialized
+2025-07-15 14:07:40,967 - analytics_client - INFO - Using real analytics client
+2025-07-15 14:07:40,967 - document_agent - INFO - Document Intelligence Agent initialized (top 5 discrepancies + 5 focus points)
+2025-07-15 14:07:40,967 - analytics_client - INFO - Using real analytics client
+2025-07-15 14:07:40,967 - analytics_client - INFO - Using real analytics client
+2025-07-15 14:07:40,968 - ai_reasoning_engine - INFO - Registered tool: fund_registry
+2025-07-15 14:07:40,968 - ai_reasoning_engine - INFO - Registered tool: analytics_client
+2025-07-15 14:07:40,968 - ai_reasoning_engine - INFO - Registered tool: reasoning_engine
+2025-07-15 14:07:40,968 - document_agent - INFO - Loaded corrected document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e532
+2025-07-15 14:07:40,969 - document_agent - INFO - Loaded corrected document: PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533
+2025-07-15 14:07:40,969 - document_agent - INFO - Loaded corrected document: PEFundPortfolioExtraction/6744d0d5dea60a0bb05c7179
+2025-07-15 14:07:40,969 - document_agent - INFO - Loaded 3 existing corrected documents from disk
+2025-07-15 14:07:40,969 - document_agent - INFO - Agent tools initialized and ready
+2025-07-15 14:07:40,969 - feedback_loop - INFO - Starting intelligent feedback loop for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-15 14:07:40,969 - analytics_client - INFO - Trying strategy: extraction_flags
+2025-07-15 14:07:41,066 - analytics_client - WARNING - Strategy extraction_flags failed: 401 - {"detail":"Missing headers"}
+2025-07-15 14:07:41,067 - analytics_client - ERROR - All analytics endpoint strategies failed for PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535
+2025-07-15 14:07:41,068 - __main__ - INFO - corrections_applied type: <class 'list'>, value: []
+2025-07-15 14:07:41,068 - __main__ - INFO - SUCCESS PEFundPortfolioExtraction/67ee89d7ecbb614e1103e535: 0 issues, 100.0% improvement
