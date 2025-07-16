@@ -69,14 +69,27 @@ class TetrixAnalyticsClient:
             "last_connection_test": None
         }
         
+        # Load environment variables from .env file
+        try:
+            from dotenv import load_dotenv
+            load_dotenv()
+        except ImportError:
+            pass
+            
+        # Load API key from environment
+        self.internal_api_key = os.getenv("INTERNAL_API_KEY")
+        self.headers = {
+            "Content-Type": "application/json",
+            "User-Agent": "tetrix-ai-feedback-loop/1.0"
+        }
+        if self.internal_api_key:
+            self.headers["tetrix-internal-api-key"] = self.internal_api_key
+        
     async def __aenter__(self):
         """Async context manager entry"""
         self.session = aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=30),
-            headers={
-                "Content-Type": "application/json",
-                "User-Agent": "tetrix-ai-feedback-loop/1.0"
-            }
+            headers=self.headers
         )
         return self
     
@@ -86,54 +99,24 @@ class TetrixAnalyticsClient:
             await self.session.close()
     
     async def test_connection(self) -> Dict[str, Any]:
-        """Test connection to analytics microservice"""
+        """Test connection to analytics microservice using actual working endpoint"""
         
-        # Multiple heartbeat endpoints to try
-        heartbeat_endpoints = [
-            "/heartbeat",
-            "/",
-            "/health", 
-            "/tetrix-analytics-microservice/heartbeat",
-            "/tetrix-analytics-microservice/",
-            "/tetrix-analytics-microservice/health"
-        ]
-        
-        for endpoint in heartbeat_endpoints:
-            try:
-                start_time = time.time()
-                
-                async with self.session.get(f"{self.base_url}{endpoint}") as response:
-                    response_time = time.time() - start_time
-                    
-                    if response.status == 200:
-                        self.metrics["last_connection_test"] = datetime.now().isoformat()
-                        return {
-                            "connected": True,
-                            "status_code": response.status,
-                            "response_time": response_time,
-                            "vpn_status": "connected" if self.vpn_required else "not_required",
-                            "message": f"Successfully connected to tetrix-analytics-microservice via {endpoint}",
-                            "endpoint_used": endpoint
-                        }
-                    
-            except aiohttp.ClientConnectorError as e:
-                # Network-level failure, don't continue with other endpoints
-                return {
-                    "connected": False,
-                    "error": f"Connection failed: {str(e)}",
-                    "vpn_check": "Ensure VPN is connected" if self.vpn_required else "Check network connectivity"
-                }
-            except Exception as e:
-                # Continue trying other endpoints
-                continue
-        
-        # If all heartbeat endpoints fail, test if we can reach the service at all
-        # by trying a known working endpoint with a real document path
+        # Create temporary session for testing if one doesn't exist
+        session = self.session
+        if session is None:
+            session = aiohttp.ClientSession(
+                timeout=aiohttp.ClientTimeout(total=30),
+                headers=self.headers
+            )
+            should_close = True
+        else:
+            should_close = False
+            
         try:
             start_time = time.time()
             test_doc_path = "PEFundPortfolioExtraction/67ee89d7ecbb614e1103e533"
             
-            async with self.session.get(
+            async with session.get(
                 f"{self.base_url}/tetrix-analytics-microservice/discrepancies/extraction_flags/{test_doc_path}"
             ) as response:
                 response_time = time.time() - start_time
@@ -146,9 +129,15 @@ class TetrixAnalyticsClient:
                         "status_code": response.status,
                         "response_time": response_time,
                         "vpn_status": "connected" if self.vpn_required else "not_required",
-                        "message": "Service fully operational via extraction_flags endpoint",
-                        "endpoint_used": "extraction_flags",
-                        "note": "Heartbeat endpoint not available, but service is working perfectly"
+                        "message": "Successfully connected to tetrix-analytics-microservice",
+                        "endpoint_used": "extraction_flags"
+                    }
+                elif response.status == 401:
+                    return {
+                        "connected": False,
+                        "error": "Authentication failed - check INTERNAL_API_KEY",
+                        "status_code": response.status,
+                        "vpn_check": "Check API key configuration"
                     }
                 elif response.status in [404, 422]:
                     self.metrics["last_connection_test"] = datetime.now().isoformat()
@@ -157,9 +146,15 @@ class TetrixAnalyticsClient:
                         "status_code": response.status,
                         "response_time": response_time,
                         "vpn_status": "connected" if self.vpn_required else "not_required",
-                        "message": "Service reachable but endpoint test returned error",
-                        "endpoint_used": "extraction_flags",
-                        "note": "Service is accessible but heartbeat endpoint unavailable"
+                        "message": "Service reachable but test document not found",
+                        "endpoint_used": "extraction_flags"
+                    }
+                else:
+                    error_text = await response.text()
+                    return {
+                        "connected": False,
+                        "error": f"Service returned {response.status}: {error_text}",
+                        "status_code": response.status
                     }
                 
         except aiohttp.ClientConnectorError as e:
@@ -169,15 +164,15 @@ class TetrixAnalyticsClient:
                 "vpn_check": "Ensure VPN is connected" if self.vpn_required else "Check network connectivity"
             }
         except Exception as e:
-            pass
-        
-        # Complete failure
-        return {
-            "connected": False,
-            "error": "All connection attempts failed",
-            "endpoints_tested": heartbeat_endpoints,
-            "vpn_check": "Ensure VPN is connected" if self.vpn_required else "Check network connectivity"
-        }
+            return {
+                "connected": False,
+                "error": f"Connection test failed: {str(e)}",
+                "vpn_check": "Check network connectivity and API configuration"
+            }
+        finally:
+            # Clean up temporary session if we created one
+            if should_close and session:
+                await session.close()
     
     async def get_discrepancies_for_document(self, doc_path: str, client_entity_or_org: str = "client_entity",
                                            ce_or_org_id: str = "default") -> AnalyticsResponse:
