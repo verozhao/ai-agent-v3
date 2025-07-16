@@ -114,8 +114,8 @@ class TetrixProductionSystem:
                     "success": feedback_result.validation_successful,
                     "document_path": document_path,
                     "total_issues": feedback_result.original_issues,
-                    "discrepancies": feedback_result.original_issues,  # Combined for backward compatibility
-                    "focus_points": 0,
+                    "discrepancies": feedback_result.original_discrepancies,
+                    "focus_points": feedback_result.original_focus_points,
                     "corrections_applied": len(feedback_result.corrections_applied),
                     "corrections": feedback_result.corrections_applied,
                     "improvement_score": feedback_result.improvement_percentage / 100,

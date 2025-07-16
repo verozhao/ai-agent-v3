@@ -23,6 +23,8 @@ class FeedbackLoopResult:
     """Complete result from intelligent feedback loop"""
     document_path: str
     original_issues: int
+    original_discrepancies: int
+    original_focus_points: int
     corrected_issues: int
     improvement_percentage: float
     corrections_applied: List[Dict[str, Any]]
@@ -126,6 +128,8 @@ class FeedbackLoopSystem:
         result = FeedbackLoopResult(
             document_path=document_path,
             original_issues=original_total_issues,
+            original_discrepancies=len(original_analysis.get("discrepancies", [])),
+            original_focus_points=len(original_analysis.get("focus_points", [])),
             corrected_issues=remaining_issues,
             improvement_percentage=improvement_percentage,
             corrections_applied=agent_result["document_state"]["corrections_applied"],
@@ -334,13 +338,13 @@ class FeedbackLoopSystem:
                     # Check if correction made it match ground truth
                     if self._values_match(corrected_value, ground_truth_value):
                         fields_fixed += 1
-            # Calculate improvement: of the fields that were wrong, how many did we fix?
-            improvement_percentage = (fields_fixed / fields_originally_wrong * 100) if fields_originally_wrong > 0 else 0.0
+            # Calculate improvement: what percentage of original issues were fixed?
+            improvement_percentage = (fields_fixed / original_total * 100) if original_total > 0 else 0.0
             remaining_issues = original_total - fields_fixed
 
             logger.info(f" Fields originally wrong: {fields_originally_wrong}")
             logger.info(f" Fields successfully fixed: {fields_fixed}")
-            logger.info(f" Improvement calculation: {fields_fixed}/{fields_originally_wrong} ({improvement_percentage:.1f}%)")
+            logger.info(f" Improvement calculation: {fields_fixed}/{original_total} ({improvement_percentage:.1f}%)")
             if missing_ground_truth_fields:
                 logger.warning(f"Missing ground truth for fields: {missing_ground_truth_fields}")
             return {
@@ -799,6 +803,8 @@ class FeedbackLoopSystem:
         return FeedbackLoopResult(
             document_path=document_path,
             original_issues=0,
+            original_discrepancies=0,
+            original_focus_points=0,
             corrected_issues=0,
             improvement_percentage=100.0,
             corrections_applied=[],
@@ -815,6 +821,8 @@ class FeedbackLoopSystem:
         return FeedbackLoopResult(
             document_path=document_path,
             original_issues=0,
+            original_discrepancies=0,
+            original_focus_points=0,
             corrected_issues=0,
             improvement_percentage=0.0,
             corrections_applied=[],
