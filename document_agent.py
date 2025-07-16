@@ -41,10 +41,23 @@ class DocumentAgent:
     - Learns from feedback and improves over time
     """
     
-    def __init__(self):
+    def __init__(self, mode: str = "production"):
+        """
+        Initialize Document Agent with mode configuration
+        
+        Args:
+            mode: "training", "testing", or "production"
+                - training: Uses enhanced AI reasoning, consolidated document available for training/learning
+                - testing: Uses enhanced AI reasoning, consolidated document available for evaluation
+                - production: Uses enhanced AI reasoning, no consolidated document available
+        """
         # Core AI capabilities
         self.reasoning_engine = FinancialEngine()
         self.analytics_client = create_analytics_client(use_mock=False)
+        
+        # Agent mode configuration
+        self.mode = mode.lower()
+        self.consolidated_document = None  # Will store ground truth when available
         
         # Tools available to the agent
         self.tools = {
@@ -70,7 +83,7 @@ class DocumentAgent:
         self.max_focus_points = 1000
         self.learning_enabled = True
         
-        logger.info(f"Document Intelligence Agent initialized (top {self.max_discrepancies} discrepancies + {self.max_focus_points} focus points)")
+        logger.info(f"Document Intelligence Agent initialized in {self.mode.upper()} mode (top {self.max_discrepancies} discrepancies + {self.max_focus_points} focus points)")
     
     async def __aenter__(self):
         """Initialize async components"""
@@ -98,7 +111,7 @@ class DocumentAgent:
             await self.tools["fund_registry"].__aexit__(exc_type, exc_val, exc_tb)
         await self.analytics_client.__aexit__(exc_type, exc_val, exc_tb)
     
-    async def process_document_intelligently(self, document_path: str) -> Dict[str, Any]:
+    async def process_document_intelligently(self, document_path: str, consolidated_document: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Main method: Autonomously process a document with AI reasoning
         
@@ -114,6 +127,11 @@ class DocumentAgent:
         start_time = time.time()
         
         logger.info(f"Agent starting intelligent processing of {document_path}")
+        
+        # Store consolidated document for reference during corrections
+        self.consolidated_document = consolidated_document
+        if consolidated_document:
+            logger.info(f"Agent received consolidated document with {len(consolidated_document.get('assets', []))} assets for ground truth reference")
         
         # Step 1: Initialize document state
         document_state = await self._initialize_document_state(document_path)
@@ -345,11 +363,27 @@ class DocumentAgent:
             logger.info(f"Agent reasoning about correction {i+1}/{len(corrections)}: {issue['field']}")
             
             try:
-                # Use AI reasoning for corrections
+                # Mode-specific correction logic
+                ground_truth_correction = None
+                
+                # Check if we should use ground truth based on mode
+                if self.mode in ["training", "testing"] and self.consolidated_document:
+                    ground_truth_correction = self._get_ground_truth_correction(issue)
+                
+                # All modes use enhanced AI reasoning for corrections
                 reasoning_response = await self.reasoning_engine.reason_about_discrepancy(
                     issue, 
-                    document_state.corrected_parsed_document
+                    document_state.corrected_parsed_document,
+                    enhanced_context=self._create_enhanced_context(issue, document_state)
                 )
+                
+                # Log ground truth for comparison if available (training/testing only)
+                if ground_truth_correction:
+                    ai_value = reasoning_response.final_decision.get('corrected_value')
+                    gt_value = ground_truth_correction['value']
+                    logger.info(f"[{self.mode.upper()}] AI correction: {ai_value} | Ground truth: {gt_value}")
+                else:
+                    logger.info(f"[{self.mode.upper()}] Using enhanced AI reasoning for {issue['field']}")
                 
                 # Safely append reasoning chain
                 if hasattr(reasoning_response, 'reasoning_chain') and reasoning_response.reasoning_chain:
@@ -723,6 +757,241 @@ class DocumentAgent:
             "reasoning": "Fallback correction applied with safe defaults",
             "confidence": 0.6
         }
+    
+    def _get_ground_truth_correction(self, issue: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Get ground truth correction from consolidated document if available"""
+        if not hasattr(self, 'consolidated_document') or not self.consolidated_document:
+            return None
+            
+        field_name = issue.get('field')
+        if not field_name or not field_name.startswith('assets.'):
+            return None
+            
+        try:
+            # Parse field: assets.AssetName.field_name
+            parts = field_name.split('.')
+            if len(parts) < 3:
+                return None
+                
+            asset_name = parts[1]
+            field = parts[2]
+            
+            # Find the asset in consolidated document
+            assets = self.consolidated_document.get('assets', [])
+            for asset in assets:
+                if isinstance(asset, dict):
+                    # Try multiple name variations
+                    names_to_check = [
+                        asset.get('name', ''),
+                        asset.get('original_name', ''),
+                        asset.get('alias', ''),
+                        asset.get('company_name', '')
+                    ]
+                    
+                    # Check if asset matches
+                    if any(asset_name.lower() in name.lower() or name.lower() in asset_name.lower() 
+                           for name in names_to_check if name):
+                        
+                        # Get the field value
+                        value = asset.get(field)
+                        if value is not None:
+                            return {
+                                'field': field_name,
+                                'value': value,
+                                'asset_name': asset.get('name', asset_name),
+                                'method': 'ground_truth_lookup'
+                            }
+        except Exception as e:
+            logger.error(f"Error getting ground truth for {field_name}: {e}")
+            return None
+        
+        return None
+    
+    def _create_ground_truth_response(self, ground_truth_correction: Dict[str, Any]) -> Any:
+        """Create a reasoning response based on ground truth data"""
+        from ai_reasoning_engine import AgentResponse
+        
+        return AgentResponse(
+            success=True,
+            confidence=0.95,  # High confidence since it's from ground truth
+            final_decision={
+                'action': 'correct',
+                'field': ground_truth_correction['field'],
+                'corrected_value': ground_truth_correction['value'],
+                'reasoning': f"Using ground truth value from consolidated document asset '{ground_truth_correction['asset_name']}': {ground_truth_correction['value']}",
+                'confidence': 0.95,
+                'method': 'ground_truth_lookup'
+            },
+            reasoning_chain=[]
+        )
+    
+    def _create_enhanced_context(self, issue: Dict[str, Any], document_state: DocumentState) -> Dict[str, Any]:
+        """Create enhanced context for AI reasoning to improve production performance"""
+        
+        field_name = issue.get('field', '')
+        
+        # Enhanced context for asset-specific fields
+        if field_name.startswith('assets.'):
+            return self._create_asset_context(issue, document_state)
+        
+        # Enhanced context for fund-level fields
+        return self._create_fund_context(issue, document_state)
+    
+    def _create_asset_context(self, issue: Dict[str, Any], document_state: DocumentState) -> Dict[str, Any]:
+        """Create enhanced context for asset-specific field corrections"""
+        
+        field_name = issue.get('field', '')
+        parts = field_name.split('.')
+        
+        if len(parts) < 3:
+            return {}
+            
+        asset_name = parts[1]
+        field = parts[2]
+        
+        # Extract all asset information from document for context
+        document_assets = document_state.corrected_parsed_document.get('assets', [])
+        current_asset = None
+        
+        for asset in document_assets:
+            if isinstance(asset, dict) and asset.get('name') == asset_name:
+                current_asset = asset
+                break
+        
+        # Create context with asset-specific analysis
+        context = {
+            'field_type': 'asset_specific',
+            'asset_name': asset_name,
+            'field': field,
+            'current_asset_data': current_asset or {},
+            'analysis_hints': self._get_asset_analysis_hints(field, current_asset),
+            'calculation_context': self._get_calculation_context(field, current_asset, document_assets)
+        }
+        
+        return context
+    
+    def _create_fund_context(self, issue: Dict[str, Any], document_state: DocumentState) -> Dict[str, Any]:
+        """Create enhanced context for fund-level field corrections"""
+        
+        field_name = issue.get('field', '')
+        
+        # Extract relevant fund-level data
+        fund_data = {
+            'total_value': document_state.corrected_parsed_document.get('total_value'),
+            'total_invested': document_state.corrected_parsed_document.get('total_invested'),
+            'net_moic': document_state.corrected_parsed_document.get('net_moic'),
+            'dpi': document_state.corrected_parsed_document.get('dpi'),
+            'assets': document_state.corrected_parsed_document.get('assets', [])
+        }
+        
+        context = {
+            'field_type': 'fund_level',
+            'field': field_name,
+            'fund_data': fund_data,
+            'analysis_hints': self._get_fund_analysis_hints(field_name, fund_data),
+            'calculation_context': self._get_fund_calculation_context(field_name, fund_data)
+        }
+        
+        return context
+    
+    def _get_asset_analysis_hints(self, field: str, asset_data: Dict[str, Any]) -> List[str]:
+        """Get analysis hints for asset-specific fields"""
+        
+        hints = []
+        
+        if field == 'total_invested':
+            hints.append("total_invested should be the cumulative amount invested in this specific asset")
+            hints.append("Look for investment amounts, capital calls, or committed capital specific to this asset")
+            
+        elif field == 'realized_value':
+            hints.append("realized_value is the actual cash returned from this asset (distributions, exits)")
+            hints.append("Should be 0 if no distributions have occurred yet")
+            
+        elif field == 'unrealized_value':
+            hints.append("unrealized_value is the current market value of the unrealized position")
+            hints.append("Should be 0 if the asset has been fully exited")
+            
+        elif field == 'total_value':
+            hints.append("total_value = realized_value + unrealized_value for this asset")
+            hints.append("Calculate from other fields if available")
+            
+        elif field == 'gross_moic':
+            hints.append("gross_moic = total_value / total_invested for this asset")
+            hints.append("Should be a ratio, typically between 0.1 and 10.0")
+            
+        elif field == 'gross_irr':
+            hints.append("gross_irr is the internal rate of return for this asset")
+            hints.append("Should be a percentage/decimal, can be negative for poor investments")
+            
+        elif field == 'fund_ownership':
+            hints.append("fund_ownership is the percentage of this asset owned by the fund")
+            hints.append("Should be between 0 and 1 (or 0% to 100%)")
+            
+        return hints
+    
+    def _get_fund_analysis_hints(self, field: str, fund_data: Dict[str, Any]) -> List[str]:
+        """Get analysis hints for fund-level fields"""
+        
+        hints = []
+        
+        if field == 'total_value':
+            hints.append("Fund total_value should be sum of all asset total_values")
+            hints.append("Calculate from asset data if available")
+            
+        elif field == 'total_invested':
+            hints.append("Fund total_invested should be sum of all asset total_invested amounts")
+            hints.append("This is the total capital deployed across all assets")
+            
+        elif field == 'net_moic':
+            hints.append("net_moic = total_value / total_invested for the entire fund")
+            hints.append("Should account for management fees and carry")
+            
+        elif field == 'dpi':
+            hints.append("dpi = total_distributions / total_invested")
+            hints.append("Distributions to Paid-In capital ratio")
+            
+        return hints
+    
+    def _get_calculation_context(self, field: str, asset_data: Dict[str, Any], all_assets: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Get calculation context for asset fields"""
+        
+        context = {}
+        
+        if not asset_data:
+            return context
+            
+        # Extract relevant values for calculations
+        total_invested = asset_data.get('total_invested')
+        realized_value = asset_data.get('realized_value')
+        unrealized_value = asset_data.get('unrealized_value')
+        total_value = asset_data.get('total_value')
+        
+        # Provide calculation suggestions based on available data
+        if field == 'total_value' and realized_value is not None and unrealized_value is not None:
+            context['suggested_calculation'] = f"realized_value ({realized_value}) + unrealized_value ({unrealized_value})"
+            
+        elif field == 'gross_moic' and total_value is not None and total_invested is not None and total_invested > 0:
+            context['suggested_calculation'] = f"total_value ({total_value}) / total_invested ({total_invested})"
+            
+        return context
+    
+    def _get_fund_calculation_context(self, field: str, fund_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Get calculation context for fund-level fields"""
+        
+        context = {}
+        assets = fund_data.get('assets', [])
+        
+        if field == 'total_value':
+            asset_values = [asset.get('total_value', 0) for asset in assets if isinstance(asset, dict)]
+            if asset_values:
+                context['suggested_calculation'] = f"Sum of asset total_values: {sum(asset_values)}"
+                
+        elif field == 'total_invested':
+            asset_investments = [asset.get('total_invested', 0) for asset in assets if isinstance(asset, dict)]
+            if asset_investments:
+                context['suggested_calculation'] = f"Sum of asset total_invested: {sum(asset_investments)}"
+        
+        return context
     
     def _update_performance_metrics(self, correction_results: Dict[str, Any], 
                                   validation_results: Dict[str, Any]):

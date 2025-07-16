@@ -29,8 +29,9 @@ from feedback_loop import FeedbackLoopSystem
 class TetrixProductionSystem:
     """Production system integrating analytics with AI feedback loop"""
     
-    def __init__(self, use_mock_analytics: bool = False):
+    def __init__(self, use_mock_analytics: bool = False, agent_mode: str = "production"):
         self.use_mock_analytics = use_mock_analytics
+        self.agent_mode = agent_mode
         self.analytics_client = None
         self.feedback_loop = None
         self.evaluation_system = None
@@ -50,7 +51,7 @@ class TetrixProductionSystem:
         self.analytics_client = create_analytics_client(use_mock=self.use_mock_analytics)
         
         # Initialize intelligent feedback loop system with AI agent
-        self.feedback_loop = FeedbackLoopSystem()
+        self.feedback_loop = FeedbackLoopSystem(agent_mode=self.agent_mode)
         
         logger.info("System components initialized successfully")
     
@@ -217,12 +218,17 @@ async def run_sample_integration_test():
     print("\nINITIALIZING SYSTEM...")
     
     has_openai_key = bool(os.getenv("OPENAI_API_KEY"))
-    use_mock = False
     
-    system = TetrixProductionSystem(use_mock_analytics=use_mock)
+    # Use global variables set by command line arguments
+    global use_mock, agent_mode
+    use_mock = getattr(globals(), 'use_mock', False)
+    agent_mode = getattr(globals(), 'agent_mode', 'production')
+    
+    system = TetrixProductionSystem(use_mock_analytics=use_mock, agent_mode=agent_mode)
     await system.initialize()
     
     analytics_mode = "Mock" if use_mock else "Real Service"
+    print(f"   Agent Mode: {agent_mode.upper()}")
     print(f"   Analytics Mode: {analytics_mode}")
     print(f"   LLM Integration: {'Enabled' if has_openai_key else 'Disabled (MISSING OPENAI KEY)'}")
     
@@ -353,5 +359,23 @@ async def run_sample_integration_test():
     
 
 if __name__ == "__main__":
-    print("Starting Tetrix AI Feedback Loop System Integration Test...")
-    asyncio.run(run_sample_integration_test())
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='Tetrix AI Feedback Loop System')
+    parser.add_argument('--mode', choices=['training', 'testing', 'production'], 
+                       default='production', help='Agent operation mode')
+    parser.add_argument('--mock', action='store_true', 
+                       help='Use mock analytics service')
+    
+    args = parser.parse_args()
+    
+    print(f"Starting Tetrix AI Feedback Loop System in {args.mode.upper()} mode...")
+    
+    # Update the run_sample_integration_test to use command line arguments
+    async def run_with_mode():
+        global use_mock, agent_mode
+        use_mock = args.mock
+        agent_mode = args.mode
+        await run_sample_integration_test()
+    
+    asyncio.run(run_with_mode())

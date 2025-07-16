@@ -95,7 +95,8 @@ class FinancialEngine:
         logger.info(f"Registered tool: {name}")
     
     async def reason_about_discrepancy(self, discrepancy: Dict[str, Any],
-                                     document_context: Dict[str, Any]) -> AgentResponse:
+                                     document_context: Dict[str, Any], 
+                                     enhanced_context: Dict[str, Any] = None) -> AgentResponse:
         """
         Use advanced reasoning to analyze and correct a financial discrepancy
         
@@ -107,15 +108,15 @@ class FinancialEngine:
         reasoning_chain = []
         
         # Step 1: ANALYZE - Deep analysis of the discrepancy
-        analysis_trace = await self._analyze_discrepancy(discrepancy, document_context)
+        analysis_trace = await self._analyze_discrepancy(discrepancy, document_context, enhanced_context)
         reasoning_chain.append(analysis_trace)
         
         # Step 2: PLAN - Create a correction strategy
-        plan_trace = await self._plan_correction(discrepancy, document_context, analysis_trace.output)
+        plan_trace = await self._plan_correction(discrepancy, document_context, analysis_trace.output, enhanced_context)
         reasoning_chain.append(plan_trace)
         
         # Step 3: EXECUTE - Apply the correction with reasoning
-        execution_trace = await self._execute_correction(discrepancy, document_context, plan_trace.output)
+        execution_trace = await self._execute_correction(discrepancy, document_context, plan_trace.output, enhanced_context)
         reasoning_chain.append(execution_trace)
         
         # Step 4: VERIFY - Validate the correction makes sense
@@ -178,11 +179,26 @@ class FinancialEngine:
         )
     
     async def _analyze_discrepancy(self, discrepancy: Dict[str, Any], 
-                                 document_context: Dict[str, Any]) -> ReasoningTrace:
+                                 document_context: Dict[str, Any], 
+                                 enhanced_context: Dict[str, Any] = None) -> ReasoningTrace:
         """Step 1: Deep analysis of what's wrong and why"""
         
         start_time = time.time()
         
+        # Build enhanced analysis prompt
+        enhanced_info = ""
+        if enhanced_context:
+            enhanced_info = f"""
+ENHANCED CONTEXT:
+{json.dumps(enhanced_context, indent=2)[:1000]}...
+
+ANALYSIS HINTS:
+{chr(10).join('- ' + hint for hint in enhanced_context.get('analysis_hints', []))}
+
+CALCULATION CONTEXT:
+{json.dumps(enhanced_context.get('calculation_context', {}), indent=2)}
+"""
+
         analysis_prompt = f"""
 You are a financial expert analyzing a discrepancy in a private equity fund document.
 
@@ -197,11 +213,14 @@ DISCREPANCY DETAILS:
 DOCUMENT CONTEXT:
 {json.dumps(document_context, indent=2)[:1000]}...
 
+{enhanced_info}
+
 ANALYSIS TASK:
 1. **What exactly is wrong?** Analyze the specific nature of this discrepancy
 2. **Why did this happen?** Identify the likely root cause (data entry error, calculation mistake, etc.)
 3. **What are the implications?** How does this affect the document's accuracy?
 4. **Financial context**: Does this make sense from a business perspective?
+5. **Asset-specific analysis**: If this is an asset field, consider asset-specific context
 
 Respond with structured analysis in this format:
 {{
@@ -570,7 +589,8 @@ Respond with JSON:
     
     async def _plan_correction(self, discrepancy: Dict[str, Any], 
                              document_context: Dict[str, Any], 
-                             analysis: Dict[str, Any]) -> ReasoningTrace:
+                             analysis: Dict[str, Any], 
+                             enhanced_context: Dict[str, Any] = None) -> ReasoningTrace:
         """Step 2: Create an intelligent correction plan"""
         
         start_time = time.time()
@@ -665,14 +685,56 @@ Respond with JSON:
     
     async def _execute_correction(self, discrepancy: Dict[str, Any], 
                                 document_context: Dict[str, Any], 
-                                plan: Dict[str, Any]) -> ReasoningTrace:
+                                plan: Dict[str, Any], 
+                                enhanced_context: Dict[str, Any] = None) -> ReasoningTrace:
         """Step 3: Execute the correction with intelligent value derivation"""
         
         start_time = time.time()
         
-        # Intelligent value derivation based on plan
+        # Enhanced value derivation using context
         correction_value = plan.get("correction_value")
         correction_method = plan.get("correction_method", "default")
+        
+        # Use enhanced context for better calculations
+        if enhanced_context and enhanced_context.get("calculation_context"):
+            calc_context = enhanced_context["calculation_context"]
+            suggested_calc = calc_context.get("suggested_calculation")
+            
+            if suggested_calc and correction_value in [None, "null", 0]:
+                # Try to use suggested calculation
+                logger.info(f"Using suggested calculation: {suggested_calc}")
+                try:
+                    # Extract calculation from suggestion
+                    if "Sum of" in suggested_calc:
+                        # Extract the sum value
+                        import re
+                        numbers = re.findall(r'\d+\.?\d*', suggested_calc)
+                        if numbers:
+                            correction_value = float(numbers[-1])  # Use the calculated sum
+                    elif " / " in suggested_calc:
+                        # Division calculation
+                        parts = suggested_calc.split(" / ")
+                        if len(parts) == 2:
+                            try:
+                                nums = [float(re.findall(r'\d+\.?\d*', part)[0]) for part in parts]
+                                if len(nums) == 2 and nums[1] != 0:
+                                    correction_value = nums[0] / nums[1]
+                            except:
+                                pass
+                    elif " + " in suggested_calc:
+                        # Addition calculation
+                        import re
+                        numbers = re.findall(r'\d+\.?\d*', suggested_calc)
+                        if len(numbers) >= 2:
+                            correction_value = sum(float(num) for num in numbers)
+                            
+                    if correction_value is not None:
+                        logger.info(f"Enhanced calculation result: {correction_value}")
+                        correction_method = "enhanced_calculation"
+                except Exception as e:
+                    logger.warning(f"Enhanced calculation failed: {e}")
+        
+        # Intelligent value derivation based on plan (fallback)
         
         # Smart value processing and calculation
         if correction_value and correction_value != "null":

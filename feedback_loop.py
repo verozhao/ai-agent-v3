@@ -44,10 +44,16 @@ class FeedbackLoopSystem:
     4. Provides realistic feedback on correction effectiveness
     """
     
-    def __init__(self):
-        """Initialize the intelligent feedback loop system"""
+    def __init__(self, agent_mode: str = "production"):
+        """
+        Initialize the intelligent feedback loop system
+        
+        Args:
+            agent_mode: "training", "testing", or "production"
+        """
         self.document_agent = None
         self.analytics_client = None
+        self.agent_mode = agent_mode
         self.system_metrics = {
             "total_documents_processed": 0,
             "total_issues_found": 0,
@@ -58,11 +64,11 @@ class FeedbackLoopSystem:
         self.last_corrections_applied = []  # Track last corrections for improvement calculation
         self.processing_history = []  # Track processing history
         
-        logger.info("Intelligent Feedback Loop System initialized")
+        logger.info(f"Intelligent Feedback Loop System initialized in {self.agent_mode.upper()} mode")
     
     async def __aenter__(self):
         """Initialize system components"""
-        self.document_agent = DocumentAgent()
+        self.document_agent = DocumentAgent(mode=self.agent_mode)
         self.analytics_client = create_analytics_client(use_mock=False)
         await self.document_agent.__aenter__()
         await self.analytics_client.__aenter__()
@@ -93,8 +99,11 @@ class FeedbackLoopSystem:
         
         logger.info(f"Original analysis: {original_total_issues} issues found")
         
-        # Step 2: Use AI agent to intelligently correct the document
-        agent_result = await self.document_agent.process_document_intelligently(document_path)
+        # Step 2: Get consolidated document for agent reference
+        consolidated_doc = await self._get_consolidated_document(document_path)
+        
+        # Step 3: Use AI agent to intelligently correct the document
+        agent_result = await self.document_agent.process_document_intelligently(document_path, consolidated_doc)
         
         if not agent_result["success"]:
             logger.error(f"AI Agent failed to process document: {agent_result.get('error', 'Unknown error')}")
@@ -106,7 +115,7 @@ class FeedbackLoopSystem:
         
         logger.info(f"AI Agent applied {len(corrections_applied)} intelligent corrections")
         
-        # Step 3: Measure actual improvement by analyzing corrected document
+        # Step 4: Measure actual improvement by analyzing corrected document
         improvement_measurement = await self._measure_actual_improvement(
             document_path,
             original_analysis,
@@ -119,10 +128,10 @@ class FeedbackLoopSystem:
         
         logger.info(f"Measured improvement: {original_total_issues} → {remaining_issues} issues ({improvement_percentage:.1f}% improvement)")
         
-        # Step 4: Update system metrics
+        # Step 5: Update system metrics
         self._update_system_metrics(original_total_issues, len(corrections_applied), improvement_percentage, time.time() - start_time)
         
-        # Step 5: Generate recommendations
+        # Step 6: Generate recommendations
         next_actions = self._generate_recommendations(improvement_percentage, remaining_issues)
         
         result = FeedbackLoopResult(
