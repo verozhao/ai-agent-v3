@@ -220,7 +220,18 @@ class FeedbackLoopSystem:
                         if expected_type is None or isinstance(v, expected_type):
                             # Skip audit logs (list of dicts with old_value/new_value)
                             if isinstance(v, list) and v and isinstance(v[0], dict) and 'old_value' in v[0] and 'new_value' in v[0]:
-                                logger.warning(f"Found audit log for {field}, skipping.")
+                                logger.warning(f"Found audit log for {field}, extracting actual value from audit log.")
+                                # Try to get the actual value from audit log
+                                latest_entry = v[0]  # Get the most recent audit entry
+                                if 'new_value' in latest_entry and latest_entry['new_value'] is not None:
+                                    actual_value = latest_entry['new_value']
+                                    if expected_type is None or isinstance(actual_value, expected_type):
+                                        return actual_value
+                                elif 'old_value' in latest_entry and latest_entry['old_value'] is not None:
+                                    actual_value = latest_entry['old_value']
+                                    if expected_type is None or isinstance(actual_value, expected_type):
+                                        return actual_value
+                                return None  # Skip if we can't extract value from audit log
                             else:
                                 return v
                     for v in d.values():
@@ -236,15 +247,51 @@ class FeedbackLoopSystem:
 
             def _get_ground_truth_value(field, ground_truth_data, consolidated_doc, original_value=None):
                 expected_type = type(original_value) if original_value is not None else None
+                
+                # Handle asset-specific fields (e.g., "assets.CP Energy.realized_value")
+                if field.startswith("assets.") and "." in field[7:]:  # Check if it's an asset field
+                    parts = field.split(".")
+                    if len(parts) >= 3:
+                        asset_name = parts[1]
+                        asset_field = parts[2]
+                        
+                        # Search for the asset by name in the consolidated document
+                        assets = consolidated_doc.get("assets", [])
+                        if isinstance(assets, list):
+                            for asset in assets:
+                                if isinstance(asset, dict):
+                                    # Try multiple asset name matching approaches
+                                    asset_names_to_try = [
+                                        asset.get("name", ""),
+                                        asset.get("original_name", ""),
+                                        asset.get("alias", ""),
+                                        asset.get("company_name", "")
+                                    ]
+                                    
+                                    # Also try fuzzy matching for asset names
+                                    if any(asset_name.lower() in name.lower() or name.lower() in asset_name.lower() 
+                                          for name in asset_names_to_try if name):
+                                        value = asset.get(asset_field)
+                                        if value is not None and (expected_type is None or isinstance(value, expected_type)):
+                                            logger.info(f"Found {field} in asset {asset.get('name', 'unknown')} as {asset_field}")
+                                            return value
+                        
+                        # If exact asset not found, log available assets for debugging
+                        available_assets = [asset.get("name", "unknown") for asset in assets if isinstance(asset, dict)]
+                        logger.warning(f"Asset '{asset_name}' not found for field '{field}'. Available assets: {available_assets[:10]}")
+                
+                # Standard field lookup (non-asset fields)
                 # 1. Try the standard location (nested doc)
                 value = ground_truth_data.get(field) if ground_truth_data else None
                 if value is not None and (expected_type is None or isinstance(value, expected_type)):
                     return value
+                    
                 # 2. Try top-level of consolidated_doc
                 value = consolidated_doc.get(field)
                 if value is not None and (expected_type is None or isinstance(value, expected_type)):
                     logger.info(f"Found {field} at top-level of consolidated_doc")
                     return value
+                    
                 # 3. Try 'data' or 'consolidated_data' keys
                 for key in ['data', 'consolidated_data']:
                     if key in consolidated_doc and isinstance(consolidated_doc[key], dict):
@@ -252,13 +299,20 @@ class FeedbackLoopSystem:
                         if value is not None and (expected_type is None or isinstance(value, expected_type)):
                             logger.info(f"Found {field} in {key} of consolidated_doc")
                             return value
+                            
                 # 4. Try recursive search with type check
                 value = _recursive_find_field(consolidated_doc, field, expected_type)
                 if value is not None:
                     logger.info(f"Found {field} recursively in consolidated_doc (type-matched)")
                     return value
-                # 5. Log structure for debugging
-                logger.warning(f"Field {field} not found in any expected location or type. Document structure: {json.dumps(consolidated_doc, default=str)[:1000]}")
+                    
+                # 5. For debugging, show document structure but limit output
+                structure_summary = {
+                    "top_level_keys": list(consolidated_doc.keys()) if isinstance(consolidated_doc, dict) else "not_dict",
+                    "assets_count": len(consolidated_doc.get("assets", [])) if isinstance(consolidated_doc.get("assets"), list) else "no_assets",
+                    "sample_asset_names": [asset.get("name", "unknown") for asset in consolidated_doc.get("assets", [])[:3] if isinstance(asset, dict)]
+                }
+                logger.warning(f"Field {field} not found in any expected location or type. Document structure summary: {structure_summary}")
                 return None
 
             for correction in corrections_applied:

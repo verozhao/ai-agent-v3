@@ -753,6 +753,7 @@ class DocumentAgent:
         
         # Store in memory for quick access
         self.corrected_documents[document_path] = {
+            "metadata_id": document_state.original_parsed_document.get("metadata_id"),
             "original_parsed_document": document_state.original_parsed_document,
             "corrected_parsed_document": document_state.corrected_parsed_document,
             "corrections_applied": document_state.corrections_applied,
@@ -775,6 +776,7 @@ class DocumentAgent:
             # Prepare data for JSON serialization
             corrected_doc_data = {
                 "document_path": document_path,
+                "metadata_id": document_state.original_parsed_document.get("metadata_id"),
                 "original_parsed_document": document_state.original_parsed_document,
                 "corrected_parsed_document": document_state.corrected_parsed_document,
                 "corrections_applied": document_state.corrections_applied,
@@ -822,6 +824,7 @@ class DocumentAgent:
                         if document_path:
                             # Store in memory for quick access
                             self.corrected_documents[document_path] = {
+                                "metadata_id": corrected_doc_data.get("metadata_id"),
                                 "original_parsed_document": corrected_doc_data.get("original_parsed_document", {}),
                                 "corrected_parsed_document": corrected_doc_data.get("corrected_parsed_document", {}),
                                 "corrections_applied": corrected_doc_data.get("corrections_applied", []),
@@ -903,62 +906,41 @@ class DocumentAgent:
             return {"success": False, "error": str(e)}
     
     def _documents_match(self, corrected_doc: Dict[str, Any], consolidated_doc: Dict[str, Any]) -> bool:
-        """Check if corrected document matches consolidated document"""
-        # Simple matching logic - can be enhanced
-        corrected_data = corrected_doc.get("corrected_parsed_document", {})
+        """Check if corrected document matches consolidated document using metadata_id"""
+        # Get metadata_id from corrected document
+        metadata_id = corrected_doc.get("metadata_id")
         
+        if not metadata_id:
+            logger.warning("No metadata_id found in corrected document")
+            return False
+            
         # Debug logging
-        logger.info(f" Matching corrected doc fund_name: '{corrected_data.get('fund_name')}'")
-        logger.info(f" Matching corrected doc fund_org_id: '{corrected_data.get('fund_org_id')}'")
-        logger.info(f" Matching corrected doc reporting_date: '{corrected_data.get('reporting_date')}'")
-        logger.info(f" Matching against consolidated doc fund_name: '{consolidated_doc.get('fund_name')}'")
-        logger.info(f" Matching against consolidated doc fund_org_id: '{consolidated_doc.get('fund_org_id')}'")
-        logger.info(f" Matching against consolidated doc reporting_date: '{consolidated_doc.get('reporting_date')}'")
+        logger.info(f" Matching using metadata_id: '{metadata_id}'")
         
-        # Match by fund organization ID and reporting date (if both available)
-        corrected_org_id = corrected_data.get("fund_org_id")
-        consolidated_org_id = consolidated_doc.get("fund_org_id")
-        
-        if (corrected_org_id and consolidated_org_id and 
-            corrected_org_id != "None" and consolidated_org_id != "None" and
-            corrected_org_id == consolidated_org_id and
-            corrected_data.get("reporting_date") == consolidated_doc.get("reporting_date")):
-            logger.info(" Match found by fund_org_id + reporting_date")
-            return True
-        
-        # Enhanced fund name matching with better normalization
-        corrected_name = corrected_data.get("fund_name", "").strip()
-        consolidated_name = consolidated_doc.get("fund_name", "").strip()
-        
-        if corrected_name and consolidated_name:
-            # Normalize both names for comparison
-            corrected_normalized = self._normalize_fund_name(corrected_name)
-            consolidated_normalized = self._normalize_fund_name(consolidated_name)
+        # Use metadata_id matching like feedback_loop.py does
+        return self._documents_match_by_metadata_id(metadata_id, consolidated_doc)
+    
+    def _documents_match_by_metadata_id(self, metadata_id: str, consolidated_doc: Dict[str, Any]) -> bool:
+        """Check if documents match by searching nested underlying_client_entities.documents[].metadata_id"""
+        try:
+            # Search nested structure
+            client_entities = consolidated_doc.get("underlying_client_entities", [])
+            for entity in client_entities:
+                documents = entity.get("documents", [])
+                for doc in documents:
+                    consolidated_metadata_id = doc.get("metadata_id")
+                    if consolidated_metadata_id == metadata_id:
+                        logger.info(f" ✅ Nested metadata_id match: {metadata_id}")
+                        return True
             
-            # Exact match after normalization
-            if corrected_normalized == consolidated_normalized:
-                logger.info(f" Match found by normalized fund_name: '{corrected_normalized}'")
-                return True
+            # Debug logging for first few documents
+            logger.info(f" ❌ No metadata_id match found for: {metadata_id}")
+            logger.info(f" Available nested metadata_ids: {[doc.get('metadata_id') for entity in client_entities for doc in entity.get('documents', []) if doc.get('metadata_id')][:5]}")
             
-            # Partial match (one name contains the other)
-            if (corrected_normalized in consolidated_normalized or 
-                consolidated_normalized in corrected_normalized):
-                logger.info(f" Match found by partial fund_name: '{corrected_normalized}' in '{consolidated_normalized}'")
-                return True
-            
-            # Try matching by key words (e.g., "ABRY Partners" should match "ABRY Partners VIII")
-            corrected_words = set(corrected_normalized.split())
-            consolidated_words = set(consolidated_normalized.split())
-            
-            # If more than 50% of words match, consider it a match
-            common_words = corrected_words & consolidated_words
-            if (len(common_words) >= min(len(corrected_words), len(consolidated_words)) * 0.5 and
-                len(common_words) >= 2):  # At least 2 words must match
-                logger.info(f" Match found by word similarity: {common_words}")
-                return True
-        
-        logger.info("❌ No match found")
-        return False
+            return False
+        except Exception as e:
+            logger.error(f"Error in nested metadata_id matching: {e}")
+            return False
     
     def _normalize_fund_name(self, name: str) -> str:
         """Normalize fund name for better matching"""
@@ -1245,45 +1227,6 @@ class DocumentAgent:
             logger.error(f"Error accessing consolidated documents: {e}")
             return {"success": False, "error": str(e)}
     
-    def _documents_match(self, corrected_doc: Dict[str, Any], consolidated_doc: Dict[str, Any]) -> bool:
-        """Check if corrected document matches consolidated document"""
-        # Simple matching logic - can be enhanced
-        corrected_data = corrected_doc.get("corrected_parsed_document", {})
-        
-        # Debug logging
-        logger.info(f" Matching corrected doc fund_name: '{corrected_data.get('fund_name')}'")
-        logger.info(f" Matching corrected doc fund_org_id: '{corrected_data.get('fund_org_id')}'")
-        logger.info(f" Matching corrected doc reporting_date: '{corrected_data.get('reporting_date')}'")
-        logger.info(f" Matching against consolidated doc fund_name: '{consolidated_doc.get('fund_name')}'")
-        logger.info(f" Matching against consolidated doc fund_org_id: '{consolidated_doc.get('fund_org_id')}'")
-        logger.info(f" Matching against consolidated doc reporting_date: '{consolidated_doc.get('reporting_date')}'")
-        
-        # Match by fund organization ID and reporting date
-        if (corrected_data.get("fund_org_id") == consolidated_doc.get("fund_org_id") and
-            corrected_data.get("reporting_date") == consolidated_doc.get("reporting_date")):
-            logger.info(" Match found by fund_org_id + reporting_date")
-            return True
-        
-        # Match by fund name if org_id not available
-        if corrected_data.get("fund_name") == consolidated_doc.get("fund_name"):
-            logger.info(" Match found by fund_name")
-            return True
-        
-        # Try partial fund name matching (remove common suffixes)
-        corrected_name = corrected_data.get("fund_name", "").strip()
-        consolidated_name = consolidated_doc.get("fund_name", "").strip()
-        
-        if corrected_name and consolidated_name:
-            # Remove common suffixes for matching
-            corrected_clean = corrected_name.replace(", L.P.", "").replace(" L.P.", "").replace("LP", "").strip()
-            consolidated_clean = consolidated_name.replace(", L.P.", "").replace(" L.P.", "").replace("LP", "").strip()
-            
-            if corrected_clean == consolidated_clean:
-                logger.info(f" Match found by cleaned fund_name: '{corrected_clean}'")
-                return True
-        
-        logger.info("❌ No match found")
-        return False
     
     def _compare_documents(self, corrected_model: 'ParsedDocumentModel', 
                           consolidated_model: 'ParsedDocumentModel', 
