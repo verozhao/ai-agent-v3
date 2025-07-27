@@ -1,6 +1,6 @@
 """
 Document Intelligence Agent - Autonomous AI Agent for Financial Document Correction
-A real AI agent that uses reasoning, tools, and autonomous decision-making to fix document issues
+A AI agent that uses reasoning, tools, and autonomous decision-making to fix document issues
 """
 
 import asyncio

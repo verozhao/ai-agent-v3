@@ -1,6 +1,6 @@
 """
-Tetrix AI Feedback Loop System - Main Entry Point
-Integrated with Analytics Microservice for Real-World Financial Document Processing
+AI Agent Feedback Loop System - Main Entry Point
+Integrated with Analytics Microservice for Financial Document Processing
 """
 
 import asyncio

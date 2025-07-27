@@ -1,6 +1,5 @@
 """
 Dynamic Fund Registry using API endpoints
-Replace hardcoded fund data with real Tetrix API data
 """
 
 import asyncio

@@ -238,7 +238,7 @@ Respond with structured analysis in this format:
                 response = await self.openai_client.chat.completions.create(
                     model="gpt-3.5-turbo",
                     messages=[{"role": "user", "content": analysis_prompt}],
-                    temperature=0.1,
+                    temperature=0,
                     max_tokens=800
                 )
                 
