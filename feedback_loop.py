@@ -224,6 +224,20 @@ class FeedbackLoopSystem:
             fields_originally_wrong = 0
             missing_ground_truth_fields = []
 
+            correction_accuracy = []
+            for correction in corrections_applied:
+                field = correction.get("field")
+                corrected_value = correction.get("corrected_value")
+                ground_truth_value = _get_ground_truth_value(field, ground_truth_data, consolidated_doc, original_value)
+                
+                is_correct = self._values_match(corrected_value, ground_truth_value)
+                correction_accuracy.append({
+                    "field": field,
+                    "corrected_value": corrected_value,
+                    "ground_truth_value": ground_truth_value,
+                    "is_correct": is_correct
+                })
+
             def _recursive_find_field(d, field, expected_type=None):
                 """Recursively search for a field in nested dicts/lists. Returns first match found that matches expected_type."""
                 if isinstance(d, dict):
@@ -347,7 +361,7 @@ class FeedbackLoopSystem:
                     # Check if correction made it match ground truth
                     if self._values_match(corrected_value, ground_truth_value):
                         fields_fixed += 1
-            # Calculate improvement: what percentage of original issues were fixed?
+            # Calculate improvement: what percentage of total discrepancies + focus points were correctly fixed?
             improvement_percentage = (fields_fixed / original_total * 100) if original_total > 0 else 0.0
             remaining_issues = original_total - fields_fixed
 
@@ -371,8 +385,12 @@ class FeedbackLoopSystem:
                         "method": c.get("correction_method", "unknown")
                     } for c in corrections_applied
                 ],
-                "missing_ground_truth_fields": missing_ground_truth_fields
+                "missing_ground_truth_fields": missing_ground_truth_fields,
+                "correction_accuracy": correction_accuracy,
+                "correct_corrections": sum(1 for c in correction_accuracy if c["is_correct"]),
+                "incorrect_corrections": sum(1 for c in correction_accuracy if not c["is_correct"])
             }
+            
         except Exception as e:
             logger.error(f"Failed to measure improvement: {e}")
             return await self._fallback_improvement_calculation(original_analysis, corrections_applied)

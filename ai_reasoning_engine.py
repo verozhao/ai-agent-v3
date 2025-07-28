@@ -1246,6 +1246,16 @@ Respond with JSON:
                 if key in document_context["metadata"] and document_context["metadata"][key]:
                     return document_context["metadata"][key]
         return None
+    
+    def get_token_count(self, text: str) -> int:
+        """Get token count for text"""
+        try:
+            import tiktoken
+            encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+            return len(encoding.encode(text))
+        except:
+            # Fallback: estimate ~4 characters per token
+            return len(text) // 4
 
 # Export the intelligence engine
 __all__ = ["FinancialEngine", "ReasoningTrace", "AgentResponse", "ReasoningStep"]
