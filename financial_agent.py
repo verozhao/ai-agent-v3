@@ -218,10 +218,9 @@ Provide detailed analysis with specific financial reasoning and concrete correct
         ]
         
         response = await self.openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="o3",
             messages=messages,
-            temperature=0.1,  # Low temperature for precise financial analysis
-            max_tokens=2000
+            max_completion_tokens=2000
         )
         
         return {
@@ -235,7 +234,7 @@ Provide detailed analysis with specific financial reasoning and concrete correct
         
         message = await self.anthropic_client.messages.create(
             model="claude-3-sonnet-20241022",
-            max_tokens=2000,
+            max_completion_tokens=2000,
             temperature=0.1,
             system=self.financial_system_prompt,
             messages=[{"role": "user", "content": prompt}]

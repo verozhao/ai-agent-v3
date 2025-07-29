@@ -219,25 +219,7 @@ class FeedbackLoopSystem:
             if not ground_truth_data:
                 logger.warning(f"No ground truth data found for metadata_id: {metadata_id}")
                 return await self._fallback_improvement_calculation(original_analysis, corrections_applied)
-            # Only compare corrected fields that were originally wrong
-            fields_fixed = 0
-            fields_originally_wrong = 0
-            missing_ground_truth_fields = []
-
-            correction_accuracy = []
-            for correction in corrections_applied:
-                field = correction.get("field")
-                corrected_value = correction.get("corrected_value")
-                ground_truth_value = _get_ground_truth_value(field, ground_truth_data, consolidated_doc, original_value)
-                
-                is_correct = self._values_match(corrected_value, ground_truth_value)
-                correction_accuracy.append({
-                    "field": field,
-                    "corrected_value": corrected_value,
-                    "ground_truth_value": ground_truth_value,
-                    "is_correct": is_correct
-                })
-
+            # Define helper functions first
             def _recursive_find_field(d, field, expected_type=None):
                 """Recursively search for a field in nested dicts/lists. Returns first match found that matches expected_type."""
                 if isinstance(d, dict):
@@ -342,41 +324,83 @@ class FeedbackLoopSystem:
                 logger.warning(f"Field {field} not found in any expected location or type. Document structure summary: {structure_summary}")
                 return None
 
+            # Only compare corrected fields that were originally wrong
+            fields_fixed = 0
+            fields_originally_wrong = 0
+            missing_ground_truth_fields = []
+
+            correction_accuracy = []
             for correction in corrections_applied:
                 field = correction.get("field")
-                original_value = correction.get("original_value")
                 corrected_value = correction.get("corrected_value")
+                original_value = correction.get("original_value")
                 ground_truth_value = _get_ground_truth_value(field, ground_truth_data, consolidated_doc, original_value)
-                # Log extracted, corrected, and consolidated data for this field
+                
+                is_correct = self._values_match(corrected_value, ground_truth_value)
+                correction_accuracy.append({
+                    "field": field,
+                    "corrected_value": corrected_value,
+                    "ground_truth_value": ground_truth_value,
+                    "is_correct": is_correct
+                })
+
+            # Create a map of corrections for easy lookup
+            correction_map = {c.get("field"): c for c in corrections_applied}
+            
+            # Check all original issues (discrepancies + focus points) against ground truth
+            all_original_issues = original_analysis.get("discrepancies", []) + original_analysis.get("focus_points", [])
+            fields_matching_ground_truth = 0
+            
+            for issue in all_original_issues:
+                field = issue.field
+                original_value = issue.current_value
+                
+                # Get the final value (corrected if correction was applied, otherwise original)
+                if field in correction_map:
+                    final_value = correction_map[field].get("corrected_value")
+                else:
+                    final_value = original_value
+                
+                # Get ground truth value
+                ground_truth_value = _get_ground_truth_value(field, ground_truth_data, consolidated_doc, original_value)
+                
+                # Log for debugging
                 logger.info(f"Field: {field}")
-                logger.info(f"  Extracted (original): {original_value}")
-                logger.info(f"  Corrected: {corrected_value}")
-                logger.info(f"  Consolidated (ground truth): {ground_truth_value}")
+                logger.info(f"  Original: {original_value}")
+                logger.info(f"  Final: {final_value}")
+                logger.info(f"  Ground truth: {ground_truth_value}")
+                
                 if ground_truth_value is None:
                     missing_ground_truth_fields.append(field)
-                # Check if field was originally wrong (different from ground truth)
-                originally_wrong = not self._values_match(original_value, ground_truth_value)
-                if originally_wrong:
+                    continue
+                
+                # Check if final value matches ground truth
+                if self._values_match(final_value, ground_truth_value):
+                    fields_matching_ground_truth += 1
+                
+                # Track originally wrong fields for reporting
+                if not self._values_match(original_value, ground_truth_value):
                     fields_originally_wrong += 1
-                    # Check if correction made it match ground truth
-                    if self._values_match(corrected_value, ground_truth_value):
+                    if self._values_match(final_value, ground_truth_value):
                         fields_fixed += 1
-            # Calculate improvement: what percentage of total discrepancies + focus points were correctly fixed?
-            improvement_percentage = (fields_fixed / original_total * 100) if original_total > 0 else 0.0
-            remaining_issues = original_total - fields_fixed
+            
+            # Calculate improvement: what percentage of total issues now match ground truth?
+            improvement_percentage = (fields_matching_ground_truth / original_total * 100) if original_total > 0 else 0.0
+            remaining_issues = original_total - fields_matching_ground_truth
 
             logger.info(f" Fields originally wrong: {fields_originally_wrong}")
             logger.info(f" Fields successfully fixed: {fields_fixed}")
-            logger.info(f" Improvement calculation: {fields_fixed}/{original_total} ({improvement_percentage:.1f}%)")
+            logger.info(f" Fields matching ground truth: {fields_matching_ground_truth}")
+            logger.info(f" Improvement calculation: {fields_matching_ground_truth}/{original_total} ({improvement_percentage:.1f}%)")
             if missing_ground_truth_fields:
                 logger.warning(f"Missing ground truth for fields: {missing_ground_truth_fields}")
             return {
                 "validation_successful": True,
                 "original_issues": original_total,
-                "issues_resolved": fields_fixed,
+                "issues_resolved": fields_matching_ground_truth,
                 "remaining_issues": remaining_issues,
                 "improvement_percentage": improvement_percentage,
-                "measurement_method": "corrected_fields_only",
+                "measurement_method": "all_fields_vs_ground_truth",
                 "corrections_applied_count": len(corrections_applied),
                 "correction_details": [
                     {

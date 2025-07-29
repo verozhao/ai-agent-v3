@@ -236,10 +236,9 @@ Respond with structured analysis in this format:
         try:
             if self.openai_client:
                 response = await self.openai_client.chat.completions.create(
-                    model="gpt-3.5-turbo",
+                    model="o3",
                     messages=[{"role": "user", "content": analysis_prompt}],
-                    temperature=0,
-                    max_tokens=800
+                    max_completion_tokens=800
                 )
                 
                 analysis_text = response.choices[0].message.content
@@ -376,10 +375,9 @@ Respond with JSON:
         try:
             if self.openai_client:
                 response = await self.openai_client.chat.completions.create(
-                    model="gpt-3.5-turbo",
+                    model="o3",
                     messages=[{"role": "user", "content": extraction_error_prompt}],
-                    temperature=0.1,
-                    max_tokens=800
+                    max_completion_tokens=800
                 )
                 
                 analysis_text = response.choices[0].message.content
@@ -636,10 +634,9 @@ Respond with JSON:
         try:
             if self.openai_client:
                 response = await self.openai_client.chat.completions.create(
-                    model="gpt-3.5-turbo",
+                    model="o3",
                     messages=[{"role": "user", "content": planning_prompt}],
-                    temperature=0.1,
-                    max_tokens=600
+                    max_completion_tokens=600
                 )
                 
                 plan_text = response.choices[0].message.content
@@ -1058,10 +1055,9 @@ Respond with JSON:
         try:
             if self.openai_client:
                 response = await self.openai_client.chat.completions.create(
-                    model="gpt-3.5-turbo",
+                    model="o3",
                     messages=[{"role": "user", "content": reflection_prompt}],
-                    temperature=0.1,
-                    max_tokens=800
+                    max_completion_tokens=800
                 )
                 
                 reflection_text = response.choices[0].message.content
@@ -1148,10 +1144,9 @@ Respond with JSON:
         try:
             if self.openai_client:
                 response = await self.openai_client.chat.completions.create(
-                    model="gpt-3.5-turbo",
+                    model="o3",
                     messages=[{"role": "user", "content": improvement_prompt}],
-                    temperature=0.1,
-                    max_tokens=600
+                    max_completion_tokens=600
                 )
                 
                 improvement_text = response.choices[0].message.content
@@ -1251,7 +1246,7 @@ Respond with JSON:
         """Get token count for text"""
         try:
             import tiktoken
-            encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+            encoding = tiktoken.encoding_for_model("o3")
             return len(encoding.encode(text))
         except:
             # Fallback: estimate ~4 characters per token
